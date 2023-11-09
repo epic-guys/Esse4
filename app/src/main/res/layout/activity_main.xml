@@ -13,7 +13,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="666669"
-            android:id="@+id/textinput_matricola" />
+            android:id="@+id/textinput_matricola"
+            android:inputType="text" />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,5 +27,9 @@
             android:text="Accedi"
             android:id="@+id/login_button" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_fullname" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

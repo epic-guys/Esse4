@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'org.epic_guys.esse4'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "org.epic_guys.esse4"

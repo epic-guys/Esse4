@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,7 +35,7 @@ public class API {
         return instance == null ? instance = new API() : instance;
     }
 
-    public static boolean login (String username, String password) throws Exception{
+    public static CompletableFuture<Boolean> login (String username, String password) {
         String auth = Credentials.basic(
                 username,
                 password

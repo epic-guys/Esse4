@@ -1,10 +1,8 @@
 package models.API;
 
-import android.widget.TextView;
-import android.widget.Toast;
+import android.util.Log;
 
 import org.conscrypt.BuildConfig;
-import org.epic_guys.esse4.R;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,37 +44,39 @@ public class API {
                 .addHeader("Authorization", auth)
                 .build();
 
+
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
         API.getInstance().client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? e.getMessage(): "Unknown error"));
+                throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? e.getMessage(): "Unknown error"));
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.code() == 200){
+                    try {
+                        //log data to console
+                        System.out.println(response);
 
-                    if(response.code() == 200){
+                        JSONObject json = new JSONObject(response.body().string());
+                        API.getInstance().jwt = json.getString("jwt");
+                        // Meglio mettere qui isLogged in modo che se si lancia un'eccezione resta false
                         API.getInstance().isLogged = true;
-                        try {
-                            //log data to console
-                            System.out.println(response);
-
-                            JSONObject json = new JSONObject(response.body().string());
-                            API.getInstance().jwt = json.getString("jwt");
-                        }
-                        catch (JSONException e){
-                            throw new RuntimeException("Could not parse response: " + (BuildConfig.DEBUG ? e.getMessage(): "Unknown error"));
-                        }
-                    } else {
-                        API.getInstance().isLogged = false;
-                        return;
                     }
+                    catch (JSONException e){
+                        API.getInstance().isLogged = false;
+                        Log.w("TAG_API", (BuildConfig.DEBUG ? "Could not parse response: " + e.getMessage() : "Unknown error"));
+                        // throw new RuntimeException("Could not parse response: " + (BuildConfig.DEBUG ? e.getMessage(): "Unknown error"));
+                    }
+                } else {
+                    API.getInstance().isLogged = false;
+                }
+                future.complete(API.getInstance().isLogged);
             }
         });
 
-        //this is a race condition, so until the request is not completed, we should wait
-        //TODO: find a better way to do this
-        return API.getInstance().isLogged;
+        return future;
     }
 
     private static void newJWT(String username, String password){

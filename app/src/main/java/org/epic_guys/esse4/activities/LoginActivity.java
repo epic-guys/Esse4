@@ -19,30 +19,23 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         Button loginButton = findViewById(R.id.login_button);
-        loginButton.setOnClickListener((view -> {
+        loginButton.setOnClickListener(view -> {
             EditText matricolaInput = findViewById(R.id.textinput_matricola);
             EditText passwordInput = findViewById(R.id.textinput_password);
 
             String matricola = matricolaInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            try{
-                boolean res = API.login(matricola,password);
-
-                if(res){
-                    Toast.makeText(this, "Login effettuato", Toast.LENGTH_SHORT).show();
+            API.login(matricola, password).thenAccept(isLogged -> {
+                if(isLogged) {
+                    // FIXME Questo toast rompe tutto, non so perché
+                    // Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
+                    TextView fullname_view = findViewById(R.id.text_fullname);
+                    fullname_view.setText(API.getBasicData());
                 } else {
-                    Toast.makeText(this, "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
                 }
-            }
-            catch (Exception e){
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            TextView fullname_view = findViewById(R.id.text_fullname);
-
-            fullname_view.setText(API.getBasicData());
-
-        }));
+            });
+        });
     }
 }

@@ -2,12 +2,16 @@ package models.API;
 
 import android.util.Log;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.conscrypt.BuildConfig;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 
 import okhttp3.Call;
@@ -25,7 +29,7 @@ public class API {
     private boolean isLogged = false;
     public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
 
-    private API(){
+    private API() {
         this.client = new OkHttpClient.Builder().build();
     }
 
@@ -61,6 +65,7 @@ public class API {
 
                         JSONObject json = new JSONObject(response.body().string());
                         API.getInstance().jwt = json.getString("jwt");
+
                         // Meglio mettere qui isLogged in modo che se si lancia un'eccezione resta false
                         API.getInstance().isLogged = true;
                     }
@@ -79,13 +84,21 @@ public class API {
         return future;
     }
 
-    private static void newJWT(String username, String password){
+    public static boolean isJwtValid() {
+        Claims claims = Jwts.claims().build();
+        return claims.getExpiration().after(Date.from(Instant.now()));
+    }
 
+    public static boolean refreshJwt() {
+        OkHttpClient client = getInstance().client;
+        Request request = new Request.Builder()
+
+                .build();
+
+        throw new UnsupportedOperationException("TODO");
     }
 
     public static String getBasicData(){
-        return API.getInstance().jwt;
+        return API.getInstance().jwt.toString();
     }
-
-
 }

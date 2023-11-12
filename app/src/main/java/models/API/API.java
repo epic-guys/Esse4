@@ -3,6 +3,8 @@ package models.API;
 import android.util.Log;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import org.conscrypt.BuildConfig;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +27,7 @@ public class API {
     private static API instance;
     private OkHttpClient client;
 
-    private String jwt;
+    private Jwt<?, ?> jwt;
     private boolean isLogged = false;
     public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
 
@@ -64,7 +66,16 @@ public class API {
                         System.out.println(response);
 
                         JSONObject json = new JSONObject(response.body().string());
-                        API.getInstance().jwt = json.getString("jwt");
+
+
+                        JwtParser parser = Jwts.parser().build();
+                        Jwt<?, ?> j = parser.parse(json.getString("jwt"));
+
+
+
+                        // API.getInstance().jwt = json.getString("jwt");
+                        API.getInstance().jwt = j;
+
 
                         // Meglio mettere qui isLogged in modo che se si lancia un'eccezione resta false
                         API.getInstance().isLogged = true;
@@ -85,8 +96,13 @@ public class API {
     }
 
     public static boolean isJwtValid() {
-        Claims claims = Jwts.claims().build();
-        return claims.getExpiration().after(Date.from(Instant.now()));
+        // Claims claims = Jwts.claims().build();
+        JwtParser parser = Jwts.parser().build();
+        // Jwt<?, ?> jwt = parser.parse(API.getInstance().jwt);
+
+
+        return false;
+        // return claims.getExpiration().after(Date.from(Instant.now()));
     }
 
     public static boolean refreshJwt() {

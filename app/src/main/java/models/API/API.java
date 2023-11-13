@@ -145,15 +145,16 @@ public class API {
                         JSONObject json = new JSONObject(response.body().string());
 
                         //here I take the data I need, so:
+                        // Matricola = { user{ userId } }
                         // FirstName = { user{ firstName } }
                         // LastName = { user{ lastName } }
                         // Type of degree
                         // Student's type
-                        // Year of study = {user { } } AnnoCorso
+                        // Year of study = {user { trattiCarriera[ 0{ dettaglioTratto{ annoCorso } } ] } }
                         // Enrolment date
-                        // Degree's Programme
+                        // Degree's Programme = "[" + {user { trattiCarriera[ 0{ dettaglioTratto{ cdsCod } } ] } } + "] - " + {user { trattiCarriera[ 0{ cdsDes } ] } }
                         // Study System
-                        // Part-time
+                        // Part-time = {user { trattiCarriera[ 0{ dettaglioTratto{ ptFlag } } ] } }
 
                     } catch (JSONException e) {
                         API.getInstance().isLogged = false;

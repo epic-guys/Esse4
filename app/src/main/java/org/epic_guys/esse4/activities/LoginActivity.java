@@ -27,19 +27,23 @@ public class LoginActivity extends AppCompatActivity {
             String matricola = matricolaInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            API.login(matricola, password).thenAccept(isLogged -> {
-                if(isLogged) {
-                    TextView fullname_view = findViewById(R.id.text_fullname);
-                    fullname_view.setText(API.getBasicData().join().getNome());
-                    runOnUiThread(() ->
-                            Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show()
-                    );
-                } else {
+            API.login(matricola, password).thenComposeAsync(isLogged -> {
+                if (isLogged)
+                    return API.getBasicData();
+                else {
                     runOnUiThread(() ->
                             Toast.makeText(getApplicationContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show()
                     );
+                    throw new RuntimeException("Failed to login");
                 }
+            }).thenAccept(persona -> {
+                    TextView fullname_view = findViewById(R.id.text_fullname);
+                    fullname_view.setText(persona.getNome());
+                    runOnUiThread(() ->
+                            Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show()
+                    );
             });
+
         });
     }
 }

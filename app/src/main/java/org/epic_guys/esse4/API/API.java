@@ -6,6 +6,8 @@ import android.util.Log;
 import io.jsonwebtoken.*;
 import org.epic_guys.esse4.API.services.AnagraficheService;
 import org.epic_guys.esse4.API.services.ApiService;
+import org.epic_guys.esse4.API.services.JwtService;
+import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
 import okhttp3.*;
 import org.conscrypt.BuildConfig;
@@ -32,15 +34,23 @@ public class API {
     private static API instance;
     private OkHttpClient client;
     private Retrofit retrofit;
-    private JwtParser jwtParser;
-    private Jws<Claims> jws;
-    private Jwk<PublicKey> jwk;
+    private Jwt jwt;
     private boolean isLogged = false;
     public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
 
 
     private API() {
-        this.client = new OkHttpClient.Builder().build();
+        this.client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request request = chain.request();
+                    if (jwt != null) {
+                        request = chain.request().newBuilder()
+                                .addHeader("Authorization", "Bearer " + jwt.getJwt())
+                                .build();
+                    }
+                    return chain.proceed(request);
+                })
+                .build();
 
         this.retrofit = new Retrofit.Builder()
                 .client(this.client)
@@ -54,9 +64,7 @@ public class API {
     }
 
 
-    /**
-     * ROTTA NON USARE.
-     */
+    /*
     @NotNull
     public static CompletableFuture<Void> fetchJwk() {
         Request request = new Request.Builder()
@@ -89,49 +97,51 @@ public class API {
 
         return future;
     }
+     */
 
     @NotNull
     public static CompletableFuture<Boolean> login (String username, String password) {
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
+
         String auth = Credentials.basic(
                 username,
                 password
         );
 
-        Request request = new Request.Builder()
-                .url(BASE_URL + "login/jwt/new/")
-                .addHeader("Authorization", auth)
+        // We use a new one only this time, to use basic authentication
+        OkHttpClient basicClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request authenticated = chain.request().newBuilder()
+                            .addHeader("Authorization", auth)
+                            .build();
+                    return chain.proceed(authenticated);
+                })
+                .build();
+        Retrofit basicRetrofit = new Retrofit.Builder()
+                .client(basicClient)
+                .baseUrl(API.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
 
-        final CompletableFuture<Boolean> future = new CompletableFuture<>();
-        API.getInstance().client.newCall(request).enqueue(new Callback() {
-
+        basicRetrofit.create(JwtService.class)
+                .newJwt()
+                .enqueue(new retrofit2.Callback<Jwt>() {
             @Override
-            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
-                throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? e.getMessage() : "Unknown error"));
+            public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
+                // throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? t.getMessage() : "Unknown error"));
+                future.completeExceptionally(t);
             }
 
             @Override
-            public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException {
+            public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
                 if (response.code() == 200) {
-                    try {
-                        API.fetchJwk().join();
-                        
-                        //log data to console
-                        Log.i("API_TAG", response.toString());
+                    // API.fetchJwk().join();
 
-                        JSONObject json = new JSONObject(response.body().string());
-                        String jwt = json.getString("jwt");
-
-                        API.getInstance().jws = API.getInstance().jwtParser.parseSignedClaims(jwt);
-
-                        API.getInstance().isLogged = true;
-                    } catch (JSONException e) {
-                        API.getInstance().isLogged = false;
-                        Log.w("TAG_API", (BuildConfig.DEBUG ? "Could not parse response: " + e.getMessage() : "Unknown error"));
-                        future.completeExceptionally(e);
-                        // throw new RuntimeException("Could not parse response: " + (BuildConfig.DEBUG ? e.getMessage(): "Unknown error"));
-                    }
+                    //log data to console
+                    Log.i("API_TAG", response.toString());
+                    API.getInstance().jwt = response.body();
+                    API.getInstance().isLogged = true;
                 } else {
                     API.getInstance().isLogged = false;
                 }
@@ -177,7 +187,8 @@ public class API {
 
                     @Override
                     public void onFailure(Call<List<Persona>> call, Throwable t) {
-                        throw new RuntimeException("Could not fetch data: " + (BuildConfig.DEBUG ? t.getMessage() : "Server error"));
+                        // throw new RuntimeException("Could not fetch data: " + (BuildConfig.DEBUG ? t.getMessage() : "Server error"));
+                        future.completeExceptionally(t);
                     }
                });
 
@@ -191,10 +202,9 @@ public class API {
     /**
      * @return Whether the expiration date is before the current time.
      */
-    public static boolean isValidJws() {
+    public static boolean isValidJwt() {
         return API.getInstance()
-                .jws.getPayload()
-                .getExpiration()
+                .jwt.getExpiration()
                 .after(Date.from(Instant.now()));
     }
 

@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
             API.login(matricola, password).thenAccept(isLogged -> {
                 if(isLogged) {
                     TextView fullname_view = findViewById(R.id.text_fullname);
-                    fullname_view.setText(API.getBasicData());
+                    fullname_view.setText(API.getBasicData().join().get("nome"));
                     // FIXME Questo toast rompe tutto, non so perché
                     runOnUiThread(() ->
                             Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show()

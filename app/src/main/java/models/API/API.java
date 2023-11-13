@@ -172,10 +172,10 @@ public class API {
     }
 
     public static CompletableFuture<Picture> getPhoto(){
-        
+        throw new UnsupportedOperationException();
     }
 
-        public static boolean isValidJws() {
+    public static boolean isValidJws() {
         // Controllo se la scadenza è dopo del momento attuale
         return API.getInstance()
                 .jws.getPayload()

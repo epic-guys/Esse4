@@ -1,6 +1,5 @@
 package org.epic_guys.esse4.activities;
 
-import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -10,7 +9,7 @@ import android.widget.Toast;
 
 import org.epic_guys.esse4.R;
 
-import models.API.API;
+import org.epic_guys.esse4.API.API;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,8 +30,7 @@ public class LoginActivity extends AppCompatActivity {
             API.login(matricola, password).thenAccept(isLogged -> {
                 if(isLogged) {
                     TextView fullname_view = findViewById(R.id.text_fullname);
-                    fullname_view.setText(API.getBasicData().join().get("nome"));
-                    // FIXME Questo toast rompe tutto, non so perché
+                    fullname_view.setText(API.getBasicData().join().getNome());
                     runOnUiThread(() ->
                             Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show()
                     );

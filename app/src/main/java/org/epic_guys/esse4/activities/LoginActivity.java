@@ -1,6 +1,10 @@
 package org.epic_guys.esse4.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +14,8 @@ import android.widget.Toast;
 import org.epic_guys.esse4.R;
 
 import org.epic_guys.esse4.API.API;
+
+import android.util.Log;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -37,11 +43,39 @@ public class LoginActivity extends AppCompatActivity {
                     throw new RuntimeException("Failed to login");
                 }
             }).thenAccept(persona -> {
-                    TextView fullname_view = findViewById(R.id.text_fullname);
-                    fullname_view.setText(persona.getNome());
-                    runOnUiThread(() ->
-                            Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show()
-                    );
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
+                        Log.i("LoginActivity", "Login effettuato");
+
+                        Account a = new Account(matricola, "org.epic_guys.esse4");
+
+                        Bundle usrData = new Bundle();
+
+                        AccountManager am = AccountManager.get(this);
+                        Log.i("LoginActivity", "AccountManager: " + am.toString());
+
+                        Log.i("LoginActivity", "Adding account");
+
+                        if(am.addAccountExplicitly(
+                                a,
+                                password,
+                                usrData
+                        )){
+                            Bundle result = new Bundle();
+                            result.putString(AccountManager.KEY_ACCOUNT_NAME, matricola);
+                            result.putString(AccountManager.KEY_ACCOUNT_TYPE, "org.epic_guys.esse4");
+                        }
+
+                        Log.i("LoginActivity", "Account: " + a.toString());
+
+                        Intent mainActivity = new Intent(this, MainActivity.class);
+                        startActivity(mainActivity);
+                        Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
+                        finish();
+                    });
+
+                    //TextView fullname_view = findViewById(R.id.text_fullname);
+                    //fullname_view.setText(persona.getNome());
             });
 
         });

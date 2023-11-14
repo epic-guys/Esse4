@@ -1,5 +1,10 @@
 package org.epic_guys.esse4.API;
 
+import android.accounts.AccountManager;
+import android.credentials.Credential;
+import android.credentials.CredentialDescription;
+import android.credentials.CredentialManager;
+import android.credentials.RegisterCredentialDescriptionRequest;
 import android.graphics.Picture;
 import android.util.Log;
 
@@ -30,7 +35,7 @@ public class API {
     private OkHttpClient client;
     private Retrofit retrofit;
     private Jwt jwt;
-    private boolean isLogged = false;
+    public static /*temp*/ boolean isLogged = false; //TEMPORARY FIX FOR LOGIN (see MainActivity.java)
     public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
 
     private Jwt getJwt() {
@@ -139,9 +144,12 @@ public class API {
                     // API.fetchJwk().join();
 
                     //log data to console
-                    Log.i("API_TAG", response.toString());
+                    Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login successful");
                     API.getInstance().jwt = response.body();
-                    API.getInstance().isLogged = true;
+                    API.isLogged = true;
+                    Log.i("API_TAG", API.isLogged ? "Logged in" : "Not logged in");
+
+
                 } else {
                     API.getInstance().isLogged = false;
                 }
@@ -163,7 +171,7 @@ public class API {
                     public void onResponse(@NotNull Call<List<Persona>> call, @NotNull Response<List<Persona>> response) {
                         if (response.code() == 200) {
                             //log data to console
-                            Log.i("API_TAG", response.toString());
+                            Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Anagrafiche Service Fetch successful");
 
                             //here I take the data I need, so:
                             // Matricola = { user{ userId } }

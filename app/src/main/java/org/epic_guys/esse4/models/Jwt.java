@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class Jwt {
+public class Jwt implements ApiResource {
     private final String jwt;
     private transient Map<String, String> payload;
 
@@ -18,7 +18,9 @@ public class Jwt {
     private Map<String, String> getPayload() {
         if (payload == null) {
             Gson gson = new Gson();
+            Base64.Decoder base64 = Base64.getDecoder();
             String payload = jwt.split("\\.")[2];
+            payload = new String(base64.decode(payload));
             this.payload = gson.fromJson(payload, Map.class);
         }
         return payload;
@@ -28,7 +30,13 @@ public class Jwt {
         return getPayload().get(key);
     }
 
-    public String getJwt() {
+
+    /**
+     * @return The JWT as a String.
+     */
+    @NotNull
+    @Override
+    public String toString() {
         return jwt;
     }
 

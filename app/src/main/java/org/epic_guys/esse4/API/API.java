@@ -8,28 +8,23 @@ import android.credentials.RegisterCredentialDescriptionRequest;
 import android.graphics.Picture;
 import android.util.Log;
 
-import io.jsonwebtoken.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Credentials;
+import okhttp3.Request;
 import org.epic_guys.esse4.API.services.AnagraficheService;
 import org.epic_guys.esse4.API.services.ApiService;
 import org.epic_guys.esse4.API.services.JwtService;
+import org.epic_guys.esse4.exceptions.ApiException;
 import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
-import okhttp3.*;
-import org.conscrypt.BuildConfig;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.security.PublicKey;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import io.jsonwebtoken.io.Parser;
-import io.jsonwebtoken.security.Jwk;
-import io.jsonwebtoken.security.Jwks;
+import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -43,14 +38,19 @@ public class API {
     public static /*temp*/ boolean isLogged = false; //TEMPORARY FIX FOR LOGIN (see MainActivity.java)
     public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
 
+    private Jwt getJwt() {
+        return jwt;
+    }
+
 
     private API() {
         this.client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request request = chain.request();
+                    Jwt jwt = this.getJwt();
                     if (jwt != null) {
                         request = chain.request().newBuilder()
-                                .addHeader("Authorization", "Bearer " + jwt.getJwt())
+                                .addHeader("Authorization", "Bearer " + jwt)
                                 .build();
                     }
                     return chain.proceed(request);
@@ -216,12 +216,34 @@ public class API {
                 .after(Date.from(Instant.now()));
     }
 
-    public static boolean refreshJws() {
-        OkHttpClient client = getInstance().client;
-        Request request = new Request.Builder()
-                .build();
+    /**
+     * Refreshes the current JWT and stores it.
+     */
+    public static CompletableFuture<Void> refreshJwt() {
+        final CompletableFuture<Void> future = new CompletableFuture<>();
+        JwtService jwtService = API.getService(JwtService.class);
+        Jwt jwt = API.getInstance().jwt;
+        jwtService.refreshJwt(jwt.toString())
+                .enqueue(new Callback<Jwt>() {
+                    @Override
+                    public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
+                        if (response.isSuccessful()) {
+                            API.getInstance().jwt = response.body();
+                            future.complete(null);
+                        }
+                        else {
+                            future.completeExceptionally(
+                                    new ApiException("Response " + response.code() + " when refreshing JWT."));
+                        }
+                    }
 
-        throw new UnsupportedOperationException("TODO");
+                    @Override
+                    public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
+                        future.completeExceptionally(t);
+                    }
+                });
+        
+        return future;
     }
 
     /**

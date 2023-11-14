@@ -1,6 +1,6 @@
 package org.epic_guys.esse4.models;
 
-public class Persona {
+public class Persona implements ApiResource {
     private String persId;
     private String cognome;
     private String nome;

@@ -1,6 +1,7 @@
 package org.epic_guys.esse4;
 
 import org.epic_guys.esse4.API.services.AnagraficheService;
+import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
 import okhttp3.*;
 import org.junit.Test;
@@ -43,5 +44,11 @@ public class RetrofitTest {
         // for (Persona p : response.body()) {
         //    System.out.println(p.getNome() + " " + p.getCognome());
         // }
+    }
+
+    @Test
+    public void testJwt() {
+        Jwt jwt = new Jwt("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImVzc2UzIn0.eyJzdWIiOiI4ODg4NTEiLCJwcm9maWxlIjoiU1RVREVOVEUiLCJmaXNjYWxDb2RlIjoiRlZSTFZTMDJSMDZEMzI1QyIsImlzcyI6ImVzc2UzIiwiZXhwIjoxNjk5OTgxMzQ5LCJpYXQiOjE2OTk5ODA0NDksInRlbmFudCI6IlVOSVZFIn0.skW3sEJ1CnG3fLmp8saCKKP621DOXFXX3pUymXiD4s6LP7zpl4pzVlZpTA6REP8on5zvplt03bHIOzLHYxqaejtlE8hv8IuoJn1iYP6pmsBCzCxetghYSjal6GUHMJI9iiuoLtXY1hBFCNyuuZTA6-fK1nXaP9xgHcGAzL2MuC4dMEaBjYV9wHds2z6-GsbNOaCYLX50FPlmEPQtnLfCxOeYqNy_pSTIDlZIzuWuPw5mT0vqK_5kTPwsYhFOnlqUKPVik62idPxt3uCT1NO4M0UXZLfDbFHPx88-8QLCQo7OLrvc1AWsLogHhIkMb7FmU8MzPNI3L08_WZOlt8Tk6Q");
+        System.out.println(jwt.getPayload().getExpirationTime());
     }
 }

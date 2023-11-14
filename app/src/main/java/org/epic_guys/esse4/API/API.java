@@ -204,7 +204,7 @@ public class API {
      */
     public static boolean isValidJwt() {
         return API.getInstance()
-                .jwt.getExpiration()
+                .jwt.getPayload().getExpirationTime()
                 .after(Date.from(Instant.now()));
     }
 

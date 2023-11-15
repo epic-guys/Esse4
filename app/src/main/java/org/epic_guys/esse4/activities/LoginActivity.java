@@ -44,9 +44,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }).thenAccept(persona -> {
                     runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
-                        Log.i("LoginActivity", "Login effettuato");
-
+                                Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
+                                Log.i("LoginActivity", "Login effettuato");
+                            });
                         Account a = new Account(matricola, "org.epic_guys.esse4");
 
                         Bundle usrData = new Bundle();
@@ -55,6 +55,19 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i("LoginActivity", "AccountManager: " + am.toString());
 
                         Log.i("LoginActivity", "Adding account");
+
+                        am.addAccountExplicitly(
+                                a,
+                                password,
+                                usrData
+                        );// why this operation blocks everything?
+
+                        /*
+                        2023-11-15 14:40:35.265  7181-7191  epic_guys.esse4         org.epic_guys.esse4                  W  Cleared Reference was only reachable from finalizer (only reported once)
+                        2023-11-15 14:45:27.329  7377-7388  System                  org.epic_guys.esse4                  W  A resource failed to call close.
+                        */
+
+                        Log.i("LoginActivity", "Account added");
 
                         if(am.addAccountExplicitly(
                                 a,
@@ -72,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(mainActivity);
                         Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
                         finish();
-                    });
+                    //});
 
                     //TextView fullname_view = findViewById(R.id.text_fullname);
                     //fullname_view.setText(persona.getNome());

@@ -1,7 +1,10 @@
 package org.epic_guys.esse4.activities;
 
-import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +13,11 @@ import android.widget.Toast;
 
 import org.epic_guys.esse4.R;
 
-import models.API.API;
+import org.epic_guys.esse4.API.API;
+
+import android.util.Log;
+
+import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,20 +35,38 @@ public class LoginActivity extends AppCompatActivity {
             String matricola = matricolaInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            API.login(matricola, password).thenAccept(isLogged -> {
-                if(isLogged) {
-                    TextView fullname_view = findViewById(R.id.text_fullname);
-                    fullname_view.setText(API.getBasicData());
-                    // FIXME Questo toast rompe tutto, non so perché
-                    runOnUiThread(() ->
-                            Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show()
-                    );
-                } else {
+            API.login(matricola, password).thenComposeAsync(isLogged -> {
+                if (isLogged)
+                    return API.getBasicData();
+                else {
                     runOnUiThread(() ->
                             Toast.makeText(getApplicationContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show()
                     );
+                    throw new RuntimeException("Failed to login");
                 }
+            }).thenAccept(persona -> {
+                    runOnUiThread(() -> {
+                                Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
+                                Log.i("LoginActivity", "Login effettuato");
+                            });
+
+                    try {
+                        SecurePreferences.setValue("matricola", matricola, this);
+                        SecurePreferences.setValue("password", password, this);
+
+                        Log.i("LoginActivity", "Account added");
+                    }
+                    catch (Exception e) {
+                        Log.e("LoginActivity", "Failed to save credentials");
+                    }
+
+
+                    Intent mainActivity = new Intent(this, MainActivity.class);
+                    startActivity(mainActivity);
+                    Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
+                    finish();
             });
+
         });
     }
 }

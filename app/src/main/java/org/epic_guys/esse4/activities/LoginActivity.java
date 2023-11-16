@@ -17,6 +17,8 @@ import org.epic_guys.esse4.API.API;
 
 import android.util.Log;
 
+import de.adorsys.android.securestoragelibrary.SecurePreferences;
+
 public class LoginActivity extends AppCompatActivity {
 
 
@@ -49,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                             });
 
                     try {
-                        SecurePreferences.setValue(this, "matricola", matricola);
-                        SecurePreferences.setValue(this, "password", password);
+                        SecurePreferences.setValue("matricola", matricola, this);
+                        SecurePreferences.setValue("password", password, this);
 
                         Log.i("LoginActivity", "Account added");
                     }

@@ -24,17 +24,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-            AccountManager am = AccountManager.get(this);
-            Account[] accounts = am.getAccountsByType("org.epic_guys.esse4");
-            Log.i("MainActivity", "Accounts: " + accounts.length);
-            if (accounts.length == 0) {
-                Log.i("MainActivity", "No accounts found");
+        // check if secure preferences are set, if not launch login activity
+        try{
+            String matricola = SecurePreferences.getStringValue(this, "matricola", null);
+            String password = SecurePreferences.getStringValue(this, "password", null);
+
+            if (matricola == null || password == null)
                 launchLoginActivity();
-            } else {
-                Log.i("MainActivity", "Account found");
-                // Manage account, get token, etc.
-                // if login fails, delete account and return to login activity
-            }
+
+            // try to login with saved credentials
+            API.login(matricola, password).thenComposeAsync(isLogged -> {
+                if (isLogged)
+                    return API.getBasicData();
+                else {
+                    launchLoginActivity();
+                    throw new RuntimeException("Failed to login");
+                }
+            }).thenAccept(persona -> {
+                runOnUiThread(() -> {
+                    Log.i("MainActivity", "Login effettuato");
+                });
+            });
+        }
+        catch (Exception e) {
+            launchLoginActivity();
+        }
 
         setContentView(R.layout.activity_main);
 

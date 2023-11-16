@@ -47,48 +47,22 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
                                 Log.i("LoginActivity", "Login effettuato");
                             });
-                        Account a = new Account(matricola, "org.epic_guys.esse4");
 
-                        Bundle usrData = new Bundle();
-
-                        AccountManager am = AccountManager.get(this);
-                        Log.i("LoginActivity", "AccountManager: " + am.toString());
-
-                        Log.i("LoginActivity", "Adding account");
-
-                        am.addAccountExplicitly(
-                                a,
-                                password,
-                                usrData
-                        );// why this operation blocks everything?
-
-                        /*
-                        2023-11-15 14:40:35.265  7181-7191  epic_guys.esse4         org.epic_guys.esse4                  W  Cleared Reference was only reachable from finalizer (only reported once)
-                        2023-11-15 14:45:27.329  7377-7388  System                  org.epic_guys.esse4                  W  A resource failed to call close.
-                        */
+                    try {
+                        SecurePreferences.setValue(this, "matricola", matricola);
+                        SecurePreferences.setValue(this, "password", password);
 
                         Log.i("LoginActivity", "Account added");
+                    }
+                    catch (Exception e) {
+                        Log.e("LoginActivity", "Failed to save credentials");
+                    }
 
-                        if(am.addAccountExplicitly(
-                                a,
-                                password,
-                                usrData
-                        )){
-                            Bundle result = new Bundle();
-                            result.putString(AccountManager.KEY_ACCOUNT_NAME, matricola);
-                            result.putString(AccountManager.KEY_ACCOUNT_TYPE, "org.epic_guys.esse4");
-                        }
 
-                        Log.i("LoginActivity", "Account: " + a.toString());
-
-                        Intent mainActivity = new Intent(this, MainActivity.class);
-                        startActivity(mainActivity);
-                        Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
-                        finish();
-                    //});
-
-                    //TextView fullname_view = findViewById(R.id.text_fullname);
-                    //fullname_view.setText(persona.getNome());
+                    Intent mainActivity = new Intent(this, MainActivity.class);
+                    startActivity(mainActivity);
+                    Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
+                    finish();
             });
 
         });

@@ -17,6 +17,8 @@ import org.epic_guys.esse4.API.API;
 
 import android.util.Log;
 
+import de.adorsys.android.securestoragelibrary.SecurePreferences;
+
 public class LoginActivity extends AppCompatActivity {
 
 
@@ -44,38 +46,25 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }).thenAccept(persona -> {
                     runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
-                        Log.i("LoginActivity", "Login effettuato");
+                                Toast.makeText(getApplicationContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
+                                Log.i("LoginActivity", "Login effettuato");
+                            });
 
-                        Account a = new Account(matricola, "org.epic_guys.esse4");
+                    try {
+                        SecurePreferences.setValue("matricola", matricola, this);
+                        SecurePreferences.setValue("password", password, this);
 
-                        Bundle usrData = new Bundle();
+                        Log.i("LoginActivity", "Account added");
+                    }
+                    catch (Exception e) {
+                        Log.e("LoginActivity", "Failed to save credentials");
+                    }
 
-                        AccountManager am = AccountManager.get(this);
-                        Log.i("LoginActivity", "AccountManager: " + am.toString());
 
-                        Log.i("LoginActivity", "Adding account");
-
-                        if(am.addAccountExplicitly(
-                                a,
-                                password,
-                                usrData
-                        )){
-                            Bundle result = new Bundle();
-                            result.putString(AccountManager.KEY_ACCOUNT_NAME, matricola);
-                            result.putString(AccountManager.KEY_ACCOUNT_TYPE, "org.epic_guys.esse4");
-                        }
-
-                        Log.i("LoginActivity", "Account: " + a.toString());
-
-                        Intent mainActivity = new Intent(this, MainActivity.class);
-                        startActivity(mainActivity);
-                        Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
-                        finish();
-                    });
-
-                    //TextView fullname_view = findViewById(R.id.text_fullname);
-                    //fullname_view.setText(persona.getNome());
+                    Intent mainActivity = new Intent(this, MainActivity.class);
+                    startActivity(mainActivity);
+                    Log.i("LoginActivity", "Starting MainActivity, finishing LoginActivity");
+                    finish();
             });
 
         });

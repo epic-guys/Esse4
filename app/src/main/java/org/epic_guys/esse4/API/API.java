@@ -11,6 +11,8 @@ import android.util.Log;
 import okhttp3.OkHttpClient;
 import okhttp3.Credentials;
 import okhttp3.Request;
+
+import org.conscrypt.BuildConfig;
 import org.epic_guys.esse4.API.services.AnagraficheService;
 import org.epic_guys.esse4.API.services.ApiService;
 import org.epic_guys.esse4.API.services.JwtService;

@@ -23,6 +23,7 @@ import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -144,20 +145,14 @@ public class API {
 
             @Override
             public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
-                if (response.code() == 200) {
-                    // API.fetchJwk().join();
-
-                    //log data to console
+                boolean success = response.code() == 200;
+                if (success) {
                     Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login successful");
                     API.getInstance().jwt = response.body();
-                    API.isLogged = true;
-                    Log.i("API_TAG", API.isLogged ? "Logged in" : "Not logged in");
-
-
                 } else {
-                    API.getInstance().isLogged = false;
+                    Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login failed");
                 }
-                future.complete(API.getInstance().isLogged);
+                future.complete(success);
             }
         });
 
@@ -210,13 +205,41 @@ public class API {
         return future;
     }
 
-    public static CompletableFuture<Picture> getPhoto(){
-        throw new UnsupportedOperationException();
+    public static CompletableFuture<Bitmap> getPhoto() {
+        final CompletableFuture<Bitmap> future = new CompletableFuture<>();
+        Persona persona = API.getInstance().loggedPersona;
+
+        Request request = new Request.Builder()
+                .url(API.BASE_URL + "/anagrafica-service-v2/persone/" + /*persId*/ persona.getPersId() + "/foto").build();
+
+        API.getInstance().client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
+                future.completeExceptionally(e);
+            }
+            @Override
+            public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
+                if (response.code() == 200) {
+                    //log data to console
+                    ;
+
+                    try {
+                        byte[] imgBytes = response.body().bytes();
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+                        future.complete(bitmap);
+                    }catch (Exception e) {
+                        future.completeExceptionally(e);
+                    }
+
+
+                    Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Photo Fetch successful");
+                }
+            }
+        });
+
+        return future;
     }
 
-    /**
-     * @return Whether the expiration date is before the current time.
-     */
     public static boolean isValidJwt() {
         return API.getInstance()
                 .jwt.getPayload().getExpirationTime()

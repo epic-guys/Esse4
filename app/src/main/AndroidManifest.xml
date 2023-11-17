@@ -8,11 +8,12 @@
 
 
 <application
+        tools:replace="android:label,android:icon,android:theme"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Esse4"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Esse4"
@@ -20,7 +21,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="Esse4"
             android:theme="@style/Theme.Esse4">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -5,6 +5,8 @@ import android.credentials.Credential;
 import android.credentials.CredentialDescription;
 import android.credentials.CredentialManager;
 import android.credentials.RegisterCredentialDescriptionRequest;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Picture;
 import android.util.Log;
 
@@ -37,7 +39,7 @@ public class API {
     private OkHttpClient client;
     private Retrofit retrofit;
     private Jwt jwt;
-    public static /*temp*/ boolean isLogged = false; //TEMPORARY FIX FOR LOGIN (see MainActivity.java)
+    private Persona loggedPersona;
     public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
 
     private Jwt getJwt() {
@@ -159,7 +161,9 @@ public class API {
             }
         });
 
-        return future;
+        return future.thenCombine(API.getBasicData(),(isLogged, persona) -> {
+            return isLogged;
+        });
     }
 
     public static CompletableFuture<Persona> getBasicData(){
@@ -187,8 +191,9 @@ public class API {
                             // Study System
                             // Part-time = {user { trattiCarriera[ 0{ dettaglioTratto{ ptFlag } } ] } }
                             try {
-                                Persona p = response.body().get(0);
-                                future.complete(p);
+                                Persona persona = response.body().get(0);
+                                API.getInstance().loggedPersona = persona;
+                                future.complete(persona);
                             } catch (NullPointerException e) {
                                 future.completeExceptionally(e);
                             }

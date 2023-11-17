@@ -3,6 +3,7 @@ package org.epic_guys.esse4.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,44 +46,57 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e) {
             Log.i("MainActivity", "Secure preferences not set");
             launchLoginActivity();
+            return;
         }
         if (matricola.equals("") || password.equals("")) {
             launchLoginActivity();
-        }else{
+            return;
+        }
+
+        runOnUiThread(() -> {
+            Log.i("MainActivity", "Returned to main activity");
+        });
+
+        // try to login with saved credentials
+        API.login(matricola, password).thenCompose(isLogged -> {
+            if (isLogged) {
+                Log.i("MainActivity", "Login effettuato, richiedo dati");
+                return API.getBasicData();
+            }
+            else {
+                throw new RuntimeException("Failed to login");
+            }
+        }).thenAccept(persona -> {
             runOnUiThread(() -> {
-                Log.i("MainActivity", "Returned to main activity");
+                Log.i("MainActivity", "Login effettuato");
+                Toast.makeText(this, "Benvenuto " + persona.getNome(), Toast.LENGTH_SHORT).show();
+            });
+        }).exceptionally(e -> {
+            runOnUiThread(() -> {
+                Log.i("MainActivity", "Login fallito");
+                Toast.makeText(this, "Login fallito", Toast.LENGTH_SHORT).show();
             });
 
-            // try to login with saved credentials
-            API.login(matricola, password).thenComposeAsync(isLogged -> {
-                if (isLogged)
-                    return API.getBasicData();
-                else {
-                    throw new RuntimeException("Failed to login");
-                }
-            }).thenAccept(persona -> {
-                runOnUiThread(() -> {
-                    Log.i("MainActivity", "Login effettuato");
-                    Toast.makeText(this, "Benvenuto " + persona.getNome(), Toast.LENGTH_SHORT).show();
-                });
-            }).exceptionally(e -> {
-                runOnUiThread(() -> {
-                    Log.i("MainActivity", "Login fallito");
-                    Toast.makeText(this, "Login fallito", Toast.LENGTH_SHORT).show();
-                });
-
-                launchLoginActivity();
-                return null;
-            });
+            launchLoginActivity();
+            return null;
+        });
 
         setContentView(R.layout.activity_main);
 
-            //logout button
-            findViewById(R.id.btn_logout).setOnClickListener(v -> {
-                SecurePreferences.setValue("matricola", "", this);
-                SecurePreferences.setValue("password", "", this);
-                launchLoginActivity();
+        ImageView profilePicture = findViewById(R.id.profile_picture);
+
+        API.getPhoto().thenAccept(bitmap -> {
+            runOnUiThread(() -> {
+                profilePicture.setImageBitmap(bitmap);
             });
-        }
+        });
+
+
+        //logout button
+        findViewById(R.id.btn_logout).setOnClickListener(v -> {
+            SecurePreferences.setValue("matricola", "", this);
+            SecurePreferences.setValue("password", "", this);
+            launchLoginActivity();
+        });
     }
 }

@@ -48,6 +48,10 @@ public class API {
     }
 
 
+    public static Persona getLoggedPersona() {
+        return API.getInstance().loggedPersona;
+    }
+
     private API() {
         this.client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
@@ -72,42 +76,6 @@ public class API {
     public static API getInstance(){
         return instance == null ? instance = new API() : instance;
     }
-
-
-    /*
-    @NotNull
-    public static CompletableFuture<Void> fetchJwk() {
-        Request request = new Request.Builder()
-                .url(BASE_URL + "jwt/jwk")
-                .build();
-
-        final CompletableFuture<Void> future = new CompletableFuture<>();
-        API.getInstance().client.newCall(request).enqueue(new okhttp3.Callback() {
-            @Override
-            public void onFailure(@NotNull okhttp3.Call call, @NotNull IOException e) {
-                future.completeExceptionally(e);
-            }
-
-            @Override
-            public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) throws IOException {
-                Parser<Jwk<?>> parser = Jwks.parser().build();
-                try {
-                    JSONObject json = new JSONObject(response.body().string());
-                    String jwk = json.getJSONArray("keys").getJSONObject(0).toString();
-                API.getInstance().jwk = (Jwk<PublicKey>) parser.parse(jwk);
-                API.getInstance().jwtParser = Jwts.parser()
-                        .verifyWith(API.getInstance().jwk.toKey())
-                        .build();
-                future.complete(null);
-                } catch (JSONException e) {
-                    future.completeExceptionally(e);
-                }
-            }
-        });
-
-        return future;
-    }
-     */
 
     @NotNull
     public static CompletableFuture<Boolean> login (String username, String password) {
@@ -146,15 +114,15 @@ public class API {
             public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
                 boolean success = response.code() == 200;
                 if (success) {
-                    Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login successful");
                     API.getInstance().jwt = response.body();
                     Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
                 } else {
-                    Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login failed");
+                    Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
                 }
                 future.complete(success);
             }
         });
+
 
         return future;
     }
@@ -170,7 +138,7 @@ public class API {
                     public void onResponse(@NotNull Call<List<Persona>> call, @NotNull Response<List<Persona>> response) {
                         if (response.code() == 200) {
                             //log data to console
-                            Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Anagrafiche Service Fetch successful");
+                            Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Anagrafiche Service Fetch successful");
 
                             //here I take the data I need, so:
                             // Matricola = { user{ userId } }
@@ -230,7 +198,7 @@ public class API {
                     }
 
 
-                    Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Photo Fetch successful");
+                    Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Photo Fetch successful");
                 }
             }
         });

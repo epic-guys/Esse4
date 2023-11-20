@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.epic_guys.esse4.API.API;
 
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.models.Persona;
 
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
@@ -22,8 +23,11 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         String matricola = "";
         String password = "";
 
@@ -78,11 +82,10 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
-
         //logout button
         findViewById(R.id.btn_logout).setOnClickListener(v -> {
-            SecurePreferences.setValue("matricola", "", this);
-            SecurePreferences.setValue("password", "", this);
+            SecurePreferences.removeValue("matricola", this);
+            SecurePreferences.removeValue("password", this);
             launchLoginActivity();
         });
     }

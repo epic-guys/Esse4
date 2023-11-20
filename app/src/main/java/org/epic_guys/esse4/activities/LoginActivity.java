@@ -29,13 +29,16 @@ public class LoginActivity extends AppCompatActivity {
 
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(view -> {
+
+            Log.i("LoginActivity", "Login Requested from button");
+
             EditText matricolaInput = findViewById(R.id.textinput_matricola);
             EditText passwordInput = findViewById(R.id.textinput_password);
 
             String matricola = matricolaInput.getText().toString();
             String password = passwordInput.getText().toString();
 
-            API.login(matricola, password).thenComposeAsync(isLogged -> {
+            API.login(matricola, password).thenCompose(isLogged -> {
                 if (isLogged)
                     return API.getBasicData();
                 else {

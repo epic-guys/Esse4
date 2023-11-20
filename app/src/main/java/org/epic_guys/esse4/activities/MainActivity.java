@@ -26,17 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         String matricola = "";
         String password = "";
-        super.onCreate(savedInstanceState);
-
-        /*
-         * 1. Check if the user is logged in
-         * 2. If not, launch the login activity
-         * 3. If yes, show the main activity
-         * 4. If the login fails, launch the login activity
-         * 5. If the login succeeds, continue with the main activity
-         *
-         * we know that on the first launch the user will login two times... but it's a feature!
-         */
 
         // checks if secure preferences are set, if not launch login activity
         try{
@@ -44,42 +33,40 @@ public class MainActivity extends AppCompatActivity {
             password = SecurePreferences.getStringValue( "password", this, "");
         }
         catch (Exception e) {
+            Log.i("MainActivity", "Secure preferences not accessible");
+            launchLoginActivity();
+            return;
+        }
+
+        if (matricola.equals("") || password.equals("")) {
             Log.i("MainActivity", "Secure preferences not set");
             launchLoginActivity();
             return;
         }
-        if (matricola.equals("") || password.equals("")) {
-            launchLoginActivity();
-            return;
+        if(API.getLoggedPersona() == null){
+            API.login(matricola, password)
+                    .exceptionally(e -> {
+                        Log.w("MainActivity",e.toString());
+                        return false;
+                    })
+                    .thenCompose(isLogged -> {
+                if (isLogged) {
+                    Log.i("MainActivity", "Login effettuato, richiedo dati");
+                    return API.getBasicData();
+                }
+                else {
+                    SecurePreferences.removeValue("matricola", this);
+                    SecurePreferences.removeValue("password", this);
+                    throw new RuntimeException("Failed to login");
+                }
+            });
+        } else {
+            Persona p = API.getLoggedPersona();
+            Log.w("MainActivity", "Persona esiste già: " + p.getNome());
         }
 
-        runOnUiThread(() -> {
-            Log.i("MainActivity", "Returned to main activity");
-        });
-
-        // try to login with saved credentials
-        API.login(matricola, password).thenCompose(isLogged -> {
-            if (isLogged) {
-                Log.i("MainActivity", "Login effettuato, richiedo dati");
-                return API.getBasicData();
-            }
-            else {
-                throw new RuntimeException("Failed to login");
-            }
-        }).thenAccept(persona -> {
-            runOnUiThread(() -> {
-                Log.i("MainActivity", "Login effettuato");
-                Toast.makeText(this, "Benvenuto " + persona.getNome(), Toast.LENGTH_SHORT).show();
-            });
-        }).exceptionally(e -> {
-            runOnUiThread(() -> {
-                Log.i("MainActivity", "Login fallito");
-                Toast.makeText(this, "Login fallito", Toast.LENGTH_SHORT).show();
-            });
-
-            launchLoginActivity();
-            return null;
-        });
+        Log.i("MainActivity", "Login effettuato");
+        // Toast.makeText(this, "Benvenuto " + API.getLoggedPersona().getNome(), Toast.LENGTH_SHORT).show();
 
         setContentView(R.layout.activity_main);
 

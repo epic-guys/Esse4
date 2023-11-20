@@ -133,7 +133,6 @@ public class API {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-
         basicRetrofit.create(JwtService.class)
                 .newJwt()
                 .enqueue(new retrofit2.Callback<Jwt>() {
@@ -149,6 +148,7 @@ public class API {
                 if (success) {
                     Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login successful");
                     API.getInstance().jwt = response.body();
+                    Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
                 } else {
                     Log.i("API_TAG", BuildConfig.DEBUG ? response.toString() : "Login failed");
                 }
@@ -156,9 +156,7 @@ public class API {
             }
         });
 
-        return future.thenCombine(API.getBasicData(),(isLogged, persona) -> {
-            return isLogged;
-        });
+        return future;
     }
 
     public static CompletableFuture<Persona> getBasicData(){

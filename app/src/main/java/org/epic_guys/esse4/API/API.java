@@ -1,13 +1,7 @@
 package org.epic_guys.esse4.API;
 
-import android.accounts.AccountManager;
-import android.credentials.Credential;
-import android.credentials.CredentialDescription;
-import android.credentials.CredentialManager;
-import android.credentials.RegisterCredentialDescriptionRequest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Picture;
 import android.util.Log;
 
 import okhttp3.OkHttpClient;
@@ -34,6 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.internal.EverythingIsNonNull;
 
 public class API {
     private static API instance;
@@ -137,7 +132,6 @@ public class API {
                     @Override
                     public void onResponse(@NotNull Call<List<Persona>> call, @NotNull Response<List<Persona>> response) {
                         if (response.code() == 200) {
-                            //log data to console
                             Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Anagrafiche Service Fetch successful");
 
                             //here I take the data I need, so:
@@ -154,6 +148,7 @@ public class API {
                             try {
                                 Persona persona = response.body().get(0);
                                 API.getInstance().loggedPersona = persona;
+                                Log.i("Api", BuildConfig.DEBUG ? persona.toString() : "Persona: " + persona.getNome() + " " + persona.getCognome());
                                 future.complete(persona);
                             } catch (NullPointerException e) {
                                 future.completeExceptionally(e);
@@ -161,7 +156,7 @@ public class API {
                         }
                     }
 
-                    @Override
+                    @Override @EverythingIsNonNull
                     public void onFailure(Call<List<Persona>> call, Throwable t) {
                         // throw new RuntimeException("Could not fetch data: " + (BuildConfig.DEBUG ? t.getMessage() : "Server error"));
                         future.completeExceptionally(t);
@@ -186,9 +181,6 @@ public class API {
             @Override
             public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
                 if (response.code() == 200) {
-                    //log data to console
-                    ;
-
                     try {
                         byte[] imgBytes = response.body().bytes();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);

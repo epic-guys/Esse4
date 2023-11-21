@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.epic_guys.esse4.API.API;
 
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.models.Persona;
+
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +32,24 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(() -> profilePicture.setImageBitmap(photo));
             return null;
         });
+    }
+
+    private void setBasicInfo(Persona p){
+
+        TextView matricola = findViewById(R.id.text_matricola);
+
+        TextView name = findViewById(R.id.text_name);
+        TextView surname = findViewById(R.id.text_surname);
+
+        //TextView corso = findViewById(R.id.corso);
+        //TextView anno = findViewById(R.id.anno);
+
+        //TextView part_time = findViewById(R.id.part_time);
+
+        matricola.setText("Matricola: " + p.getUserId());
+        name.setText(p.getNome());
+        surname.setText(p.getCognome());
+
     }
 
     private Pair<String,String> getCredsFromSecurePreferences() throws Exception{
@@ -90,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         ).thenAccept(persona -> {
                             runOnUiThread(() -> {
+                                setBasicInfo(persona);
                                 Toast.makeText(getApplicationContext(), "Bentornato " + API.getLoggedPersona().getNome(), Toast.LENGTH_SHORT).show();
                                 Log.i("MainActivity", "Login effettuato");
                             });

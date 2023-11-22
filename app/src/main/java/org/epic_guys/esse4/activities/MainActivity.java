@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setBasicInfo(Persona p){
 
+        setProfilePicture();
+
         TextView matricola = findViewById(R.id.text_matricola);
 
         TextView name = findViewById(R.id.text_name);
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         matricola.setText("Matricola: " + p.getUserId());
         name.setText(p.getNome());
         surname.setText(p.getCognome());
+
 
     }
 
@@ -111,11 +114,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                         ).thenAccept(persona -> {
                             runOnUiThread(() -> {
-                                setBasicInfo(persona);
                                 Toast.makeText(getApplicationContext(), "Bentornato " + API.getLoggedPersona().getNome(), Toast.LENGTH_SHORT).show();
                                 Log.i("MainActivity", "Login effettuato");
+                                setBasicInfo(persona);
                             });
-                            setProfilePicture();
                         }).exceptionally(e -> {
                             Log.e("MainActivity", e.toString());
                             runOnUiThread(() -> {
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         });
 
         } else {
-            setProfilePicture();
+            setBasicInfo(API.getLoggedPersona());
         }
 
         //logout button

@@ -142,13 +142,12 @@ public class API {
                             // Student's type
                             // Year of study = {user { trattiCarriera[ 0{ dettaglioTratto{ annoCorso } } ] } }
                             // Enrolment date
-                            // Degree's Programme = "[" + {user { trattiCarriera[ 0{ dettaglioTratto{ cdsCod } } ] } } + "] - " + {user { trattiCarriera[ 0{ cdsDes } ] } }
+                            // NOT IN THIS CALL: Degree's Programme = "[" + {user { trattiCarriera[ 0{ dettaglioTratto{ cdsCod } } ] } } + "] - " + {user { trattiCarriera[ 0{ cdsDes } ] } }
                             // Study System
-                            // Part-time = {user { trattiCarriera[ 0{ dettaglioTratto{ ptFlag } } ] } }
+                            // NOT IN THIS CALL: Part-time = {user { trattiCarriera[ 0{ dettaglioTratto{ ptFlag } } ] } }
                             try {
                                 Persona persona = response.body().get(0);
                                 API.getInstance().loggedPersona = persona;
-                                Log.i("Api", BuildConfig.DEBUG ? persona.toString() : "Persona: " + persona.getNome() + " " + persona.getCognome());
                                 future.complete(persona);
                             } catch (NullPointerException e) {
                                 future.completeExceptionally(e);

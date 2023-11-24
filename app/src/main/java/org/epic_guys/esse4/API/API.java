@@ -170,7 +170,7 @@ public class API {
         Persona persona = API.getInstance().loggedPersona;
 
         Request request = new Request.Builder()
-                .url(API.BASE_URL + "/anagrafica-service-v2/persone/" + /*persId*/ persona.getPersId() + "/foto").build();
+                .url(API.BASE_URL + "anagrafica-service-v2/persone/" + /*persId*/ persona.getPersId() + "/foto").build();
 
         API.getInstance().client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override

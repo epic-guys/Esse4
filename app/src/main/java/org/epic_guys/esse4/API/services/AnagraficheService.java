@@ -1,5 +1,6 @@
 package org.epic_guys.esse4.API.services;
 
+import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Persona;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,4 +12,7 @@ public interface AnagraficheService extends ApiService {
 
     @GET(BASE_URL + "/persone")
     Call<List<Persona>> getPersone();
+
+    @GET(BASE_URL + "/carriere")
+    Call<List<Carriera>> getCarriere();
 }

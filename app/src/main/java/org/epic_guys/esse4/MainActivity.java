@@ -1,4 +1,4 @@
-package org.epic_guys.esse4.activities;
+package org.epic_guys.esse4;
 
 import android.content.Intent;
 import android.os.Bundle;

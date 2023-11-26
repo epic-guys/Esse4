@@ -1,4 +1,4 @@
-package org.epic_guys.esse4.activities;
+package org.epic_guys.esse4.fragments;
 
 import android.view.LayoutInflater;
 import android.view.View;

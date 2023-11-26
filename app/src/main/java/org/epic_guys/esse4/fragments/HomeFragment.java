@@ -1,6 +1,5 @@
-package org.epic_guys.esse4.activities;
+package org.epic_guys.esse4.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -20,7 +19,6 @@ import de.adorsys.android.securestoragelibrary.SecurePreferences;
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.models.Persona;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 

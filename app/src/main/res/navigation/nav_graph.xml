@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="org.epic_guys.esse4.activities.LoginFragment"
+        android:name="org.epic_guys.esse4.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="org.epic_guys.esse4.activities.HomeFragment"
+        android:name="org.epic_guys.esse4.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action

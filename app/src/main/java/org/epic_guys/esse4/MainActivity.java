@@ -20,7 +20,7 @@ import org.epic_guys.esse4.models.Persona;
 
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
     public MainActivity() {
         super(R.layout.activity_main);
     }

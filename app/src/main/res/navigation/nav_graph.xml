@@ -3,18 +3,23 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-    app:startDestination="@id/mainActivity2">
-    <activity
-        android:id="@+id/mainActivity2"
-        android:name="org.epic_guys.esse4.activities.MainActivity"
-        android:label="activity_main"
-        tools:layout="@layout/activity_main" />
-    <action
-        android:id="@+id/action_global_mainActivity22"
-        app:destination="@id/mainActivity2" />
-    <activity
-        android:id="@+id/loginActivity4"
-        android:name="org.epic_guys.esse4.activities.LoginActivity"
-        android:label="activity_login"
-        tools:layout="@layout/activity_login" />
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="org.epic_guys.esse4.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="org.epic_guys.esse4.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

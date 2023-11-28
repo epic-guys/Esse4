@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="matricola_label">Matricola: </string>
+    <string name="profile_photo_label">Foto profilo</string>
+    <string name="settings_button_label">Impostazioni</string>
+    <string name="logout_button_label">Logout</string>
+    <string name="career_label">Carriera</string>
+    <string name="booklet_label">Libretto</string>
+    <string name="exams_label">Appelli</string>
+    <string name="calendar_label">Calendario</string>
+</resources>

@@ -98,10 +98,10 @@
 
             <TextView
                 android:id="@+id/data_matricola"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30dp" />
+                android:textSize="30sp" />
 
         </LinearLayout>
 
@@ -220,14 +220,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
-                            android:src="@drawable/round_app_registration_24" />
+                            android:src="@drawable/round_app_registration_24"
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -250,14 +252,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
-                            android:src="@drawable/baseline_book_24" />
+                            android:src="@drawable/baseline_book_24"
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -280,14 +284,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
-                            android:src="@drawable/baseline_edit_note_24" />
+                            android:src="@drawable/baseline_edit_note_24"
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -310,14 +316,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        tools:ignore="UseCompoundDrawables">
 
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
-                            android:src="@drawable/baseline_calendar_month_24" />
+                            android:src="@drawable/baseline_calendar_month_24"
+                            android:importantForAccessibility="no" />
 
                         <TextView
                             android:layout_width="match_parent"

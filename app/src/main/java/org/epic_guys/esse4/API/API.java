@@ -157,6 +157,7 @@ public class API {
             public void onResponse(@NotNull okhttp3.Call call, @NotNull okhttp3.Response response) {
                 if (response.code() == 200) {
                     try {
+                        assert response.body() != null;
                         byte[] imgBytes = response.body().bytes();
                         Bitmap bitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
                         future.complete(bitmap);

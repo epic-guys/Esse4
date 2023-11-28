@@ -20,7 +20,6 @@ import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Persona;
-
 import java.util.concurrent.CompletableFuture;
 
 public class HomeFragment extends Fragment {
@@ -37,10 +36,10 @@ public class HomeFragment extends Fragment {
     
 
     private void setProfilePicture() {
-        ImageView profilePicture = getView().findViewById(R.id.profile_picture);
+        ImageView profilePicture = requireView().findViewById(R.id.profile_picture);
 
         API.getPhoto().thenCompose(photo -> {
-            getActivity().runOnUiThread(() -> profilePicture.setImageBitmap(photo));
+            requireActivity().runOnUiThread(() -> profilePicture.setImageBitmap(photo));
             return null;
         });
     }
@@ -49,15 +48,15 @@ public class HomeFragment extends Fragment {
 
         setProfilePicture();
 
-        getView().<TextView>findViewById(R.id.data_matricola).setText(p.getUserId());
-        getView().<TextView>findViewById(R.id.text_name).setText(p.getNome());
-        getView().<TextView>findViewById(R.id.text_surname).setText(p.getCognome());
+        requireView().<TextView>findViewById(R.id.data_matricola).setText(p.getUserId());
+        requireView().<TextView>findViewById(R.id.text_name).setText(p.getNome());
+        requireView().<TextView>findViewById(R.id.text_surname).setText(p.getCognome());
 
-        getView().<TextView>findViewById(R.id.text_degree).setText(c.getDescrizioneCorsoDiLaurea());
-        getView().<TextView>findViewById(R.id.data_year).setText(String.valueOf(c.getAnnoCorso()));
+        requireView().<TextView>findViewById(R.id.text_degree).setText(c.getDescrizioneCorsoDiLaurea());
+        requireView().<TextView>findViewById(R.id.data_year).setText(String.valueOf(c.getAnnoCorso()));
 
         if(c.isPartTime()) {
-            getView().findViewById(R.id.text_part_time).setVisibility(View.VISIBLE);
+            requireView().findViewById(R.id.text_part_time).setVisibility(View.VISIBLE);
         }
 
 
@@ -67,8 +66,8 @@ public class HomeFragment extends Fragment {
         String matricola;
         String password;
 
-        matricola = SecurePreferences.getStringValue("matricola",getContext(),  "");
-        password = SecurePreferences.getStringValue( "password", getContext(), "");
+        matricola = SecurePreferences.getStringValue("matricola", requireContext(),  "");
+        password = SecurePreferences.getStringValue( "password", requireContext(), "");
 
         if (matricola.equals("") || password.equals("")) {
             Log.i("HomeFragment", "Secure preferences not set");
@@ -79,8 +78,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void clearPreferences(){
-        SecurePreferences.removeValue("matricola", getContext());
-        SecurePreferences.removeValue("password", getContext());
+        SecurePreferences.removeValue("matricola", requireContext());
+        SecurePreferences.removeValue("password", requireContext());
     }
 
 
@@ -139,15 +138,13 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        basicDataFuture.thenAccept(personaCarrieraPair -> {
-            getActivity().runOnUiThread(() -> {
-                Toast.makeText(getContext(), "Bentornat[ao] studente(?:ssa|)" /* + API.getLoggedPersona().getNome() */, Toast.LENGTH_SHORT).show();
-                Log.i("HomeFragment", "Login effettuato");
-                setBasicInfo(personaCarrieraPair.first, personaCarrieraPair.second);
-            });
-        }).exceptionally(e -> {
+        basicDataFuture.thenAccept(personaCarrieraPair -> requireActivity().runOnUiThread(() -> {
+            Toast.makeText(getContext(), "Bentornat[ao] studente(?:ssa|)" /* + API.getLoggedPersona().getNome() */, Toast.LENGTH_SHORT).show();
+            Log.i("HomeFragment", "Login effettuato");
+            setBasicInfo(personaCarrieraPair.first, personaCarrieraPair.second);
+        })).exceptionally(e -> {
             Log.e("HomeFragment", e.toString());
-            getActivity().runOnUiThread(() -> {
+            requireActivity().runOnUiThread(() -> {
                 Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
                 Log.i("HomeFragment", "Login fallito");
 
@@ -158,8 +155,8 @@ public class HomeFragment extends Fragment {
 
         //logout button
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
-            SecurePreferences.removeValue("matricola", getContext());
-            SecurePreferences.removeValue("password", getContext());
+            SecurePreferences.removeValue("matricola", requireContext());
+            SecurePreferences.removeValue("password", requireContext());
             launchLoginFragment();
         });
     }

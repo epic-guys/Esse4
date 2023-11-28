@@ -1,6 +1,6 @@
 package org.epic_guys.esse4.models;
 
-public class Carriera {
+public class Carriera implements ApiResource {
     public static final int FULL_TIME = 0;
     public static final int PART_TIME = 1;
 
@@ -267,6 +267,10 @@ public class Carriera {
 
     public int getPartTimeFlag() {
         return ptFlg;
+    }
+
+    public boolean isPartTime() {
+        return ptFlg == PART_TIME;
     }
 
     public int getSospFlg() {

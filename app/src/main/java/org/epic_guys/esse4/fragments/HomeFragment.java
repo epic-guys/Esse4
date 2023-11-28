@@ -2,7 +2,7 @@ package org.epic_guys.esse4.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
+import androidx.core.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Persona;
 
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 public class HomeFragment extends Fragment {
     
     private NavController navController;
-    private CompletableFuture<Persona> personaFuture;
+    private CompletableFuture<Pair<Persona, Carriera>> basicDataFuture;
 
     private void launchLoginFragment() {
         NavOptions navOptions = new NavOptions.Builder()
@@ -44,23 +45,20 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void setBasicInfo(Persona p){
+    private void setBasicInfo(Persona p, Carriera c){
 
         setProfilePicture();
 
-        TextView matricola = getView().findViewById(R.id.text_matricola);
+        getView().<TextView>findViewById(R.id.data_matricola).setText(p.getUserId());
+        getView().<TextView>findViewById(R.id.text_name).setText(p.getNome());
+        getView().<TextView>findViewById(R.id.text_surname).setText(p.getCognome());
 
-        TextView name = getView().findViewById(R.id.text_name);
-        TextView surname = getView().findViewById(R.id.text_surname);
+        getView().<TextView>findViewById(R.id.text_degree).setText(c.getDescrizioneCorsoDiLaurea());
+        getView().<TextView>findViewById(R.id.data_year).setText(String.valueOf(c.getAnnoCorso()));
 
-        //TextView corso = findViewById(R.id.corso);
-        //TextView anno = findViewById(R.id.anno);
-
-        //TextView part_time = findViewById(R.id.part_time);
-
-        matricola.setText("Matricola: " + p.getUserId());
-        name.setText(p.getNome());
-        surname.setText(p.getCognome());
+        if(c.isPartTime()) {
+            getView().findViewById(R.id.text_part_time).setVisibility(View.VISIBLE);
+        }
 
 
     }
@@ -109,12 +107,12 @@ public class HomeFragment extends Fragment {
 
 
         if(API.getLoggedPersona() != null) {
-            personaFuture = new CompletableFuture<>();
-            personaFuture.complete(API.getLoggedPersona());
+            basicDataFuture = new CompletableFuture<>();
+            basicDataFuture.complete(new Pair<>(API.getLoggedPersona(), API.getCarriera()));
             return;
         }
 
-        personaFuture = API.login(matricola, password)
+        basicDataFuture = API.login(matricola, password)
                 .exceptionally(e -> {
                     Log.w("HomeFragment", e.toString());
                     return false;
@@ -141,17 +139,18 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        personaFuture.thenAccept(persona -> {
+        basicDataFuture.thenAccept(personaCarrieraPair -> {
             getActivity().runOnUiThread(() -> {
-                Toast.makeText(getContext(), "Bentornato " + API.getLoggedPersona().getNome(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Bentornat[ao] studente(?:ssa|)" /* + API.getLoggedPersona().getNome() */, Toast.LENGTH_SHORT).show();
                 Log.i("HomeFragment", "Login effettuato");
-                setBasicInfo(persona);
+                setBasicInfo(personaCarrieraPair.first, personaCarrieraPair.second);
             });
         }).exceptionally(e -> {
             Log.e("HomeFragment", e.toString());
             getActivity().runOnUiThread(() -> {
                 Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
                 Log.i("HomeFragment", "Login fallito");
+
             });
             launchLoginFragment();
             return null;

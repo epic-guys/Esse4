@@ -159,5 +159,13 @@ public class HomeFragment extends Fragment {
             SecurePreferences.removeValue("password", requireContext());
             launchLoginFragment();
         });
+
+        //study plan button
+        view.findViewById(R.id.btn_study_plan).setOnClickListener(v -> {
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setPopUpTo(R.id.homeFragment, true)
+                    .build();
+            navController.navigate(R.id.studyPlanFragment, null, navOptions);
+        });
     }
 }

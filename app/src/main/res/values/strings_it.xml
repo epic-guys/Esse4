@@ -10,4 +10,6 @@
     <string name="calendar_label">Calendario</string>
     <string name="year_label">anno</string>
     <string name="part_time_label">Part Time</string>
+    <string name="university_logo_label">Logo università</string>
+    <string name="back_button_label">Torna indietro</string>
 </resources>

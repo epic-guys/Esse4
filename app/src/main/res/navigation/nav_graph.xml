@@ -26,6 +26,9 @@
             app:destination="@id/studyPlanFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_studentBookFragment"
+            app:destination="@id/studentBookFragment" />
     </fragment>
     <fragment
         android:id="@+id/studyPlanFragment"
@@ -40,5 +43,13 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/studentBookFragment"
+        android:name="org.epic_guys.esse4.fragments.StudentBookFragment"
+        android:label="StudentBookFragment" >
+        <action
+            android:id="@+id/action_studentBookFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

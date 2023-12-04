@@ -161,19 +161,9 @@ public class HomeFragment extends Fragment {
         });
 
         //study plan button
-        view.findViewById(R.id.btn_study_plan).setOnClickListener(v -> {
-            NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.homeFragment, true)
-                    .build();
-            navController.navigate(R.id.studyPlanFragment, null, navOptions);
-        });
+        view.findViewById(R.id.btn_study_plan).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studyPlanFragment));
 
         //study plan button
-        view.findViewById(R.id.btn_student_book).setOnClickListener(v -> {
-            NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.homeFragment, true)
-                    .build();
-            navController.navigate(R.id.studentBookFragment, null, navOptions);
-        });
+        view.findViewById(R.id.btn_student_book).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studentBookFragment));
     }
 }

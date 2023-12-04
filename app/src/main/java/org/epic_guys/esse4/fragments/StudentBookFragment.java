@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import org.epic_guys.esse4.R;
@@ -20,10 +19,7 @@ public class StudentBookFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         navController = NavHostFragment.findNavController(this);
-
-
     }
 
     @Nullable
@@ -37,11 +33,6 @@ public class StudentBookFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //when back button is pressed, go back to home fragment
-        view.findViewById(R.id.btn_back).setOnClickListener(v -> {
-            NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.homeFragment, true)
-                    .build();
-            navController.navigate(R.id.homeFragment, null, navOptions);
-        });
+        view.findViewById(R.id.btn_back).setOnClickListener(v -> navController.popBackStack());
     }
 }

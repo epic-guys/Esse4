@@ -243,6 +243,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_student_book"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     app:cardCornerRadius="30dp"
@@ -261,8 +262,8 @@
                             android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
-                            android:src="@drawable/baseline_book_24"
-                            android:importantForAccessibility="no" />
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/baseline_book_24" />
 
                         <TextView
                             android:layout_width="match_parent"

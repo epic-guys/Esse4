@@ -1,10 +1,14 @@
 package org.epic_guys.esse4;
 
 import org.epic_guys.esse4.API.services.AnagraficheService;
+import org.epic_guys.esse4.API.services.LibrettoService;
+import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
 import okhttp3.*;
+import org.epic_guys.esse4.models.RigaLibretto;
 import org.junit.Test;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -50,5 +54,23 @@ public class RetrofitTest {
     public void testJwt() {
         Jwt jwt = new Jwt("eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6ImVzc2UzIn0.eyJzdWIiOiI4ODg4NTEiLCJwcm9maWxlIjoiU1RVREVOVEUiLCJmaXNjYWxDb2RlIjoiRlZSTFZTMDJSMDZEMzI1QyIsImlzcyI6ImVzc2UzIiwiZXhwIjoxNjk5OTgxMzQ5LCJpYXQiOjE2OTk5ODA0NDksInRlbmFudCI6IlVOSVZFIn0.skW3sEJ1CnG3fLmp8saCKKP621DOXFXX3pUymXiD4s6LP7zpl4pzVlZpTA6REP8on5zvplt03bHIOzLHYxqaejtlE8hv8IuoJn1iYP6pmsBCzCxetghYSjal6GUHMJI9iiuoLtXY1hBFCNyuuZTA6-fK1nXaP9xgHcGAzL2MuC4dMEaBjYV9wHds2z6-GsbNOaCYLX50FPlmEPQtnLfCxOeYqNy_pSTIDlZIzuWuPw5mT0vqK_5kTPwsYhFOnlqUKPVik62idPxt3uCT1NO4M0UXZLfDbFHPx88-8QLCQo7OLrvc1AWsLogHhIkMb7FmU8MzPNI3L08_WZOlt8Tk6Q");
         System.out.println(jwt.getPayload().getExpirationTime());
+    }
+
+    @Test
+    public void testLibretto() throws Exception {
+        LibrettoService librettoService = retrofit.create(LibrettoService.class);
+        AnagraficheService anagraficheService = retrofit.create(AnagraficheService.class);
+
+        Carriera carriera = anagraficheService.getCarriere().execute().body().get(0);
+
+        System.out.println(carriera.getIdCarriera());
+
+        Call<List<RigaLibretto>> righeCall = librettoService.righeLibretto(carriera.getIdCarriera());
+        System.out.println(righeCall.request().url());
+        List<RigaLibretto> righe = righeCall.execute().body();
+
+        for (RigaLibretto riga : righe) {
+            System.out.println(riga.getDescrizioneAttivitaDidattica());
+        }
     }
 }

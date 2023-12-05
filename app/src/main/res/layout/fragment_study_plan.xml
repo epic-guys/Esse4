@@ -59,7 +59,7 @@
     <LinearLayout
         android:id="@+id/study_plan_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:background="#00FFFFFF"
         android:backgroundTint="#00FFFFFF"
         android:dividerPadding="5dp"

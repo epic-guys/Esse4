@@ -161,7 +161,7 @@ public class HomeFragment extends Fragment {
         });
 
         //study plan button
-        view.findViewById(R.id.btn_study_plan).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studyPlanFragment));
+        view.findViewById(R.id.card).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studyPlanFragment));
 
         //study plan button
         view.findViewById(R.id.btn_student_book).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studentBookFragment));

@@ -4,21 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subject_card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#00FFFFFF"
+    android:backgroundTint="#00FFFFFF"
+    android:elevation="30dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/btn_study_plan"
+        android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:clickable="true"
         app:cardCornerRadius="30dp"
         app:cardElevation="10dp"
-        app:layout_gravity="top|left"
+        app:layout_gravity="left"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:backgroundTint="#6F6F6F"
             android:orientation="vertical"
             android:padding="10dp">
 
@@ -27,7 +32,6 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CT0142 - TECNOLOGIE E APPLICAZIONI WEB"
                 android:textSize="24sp" />
 
             <LinearLayout
@@ -42,14 +46,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Anno:" />
+                    android:text="@string/year_label" />
 
                 <TextView
                     android:id="@+id/year_data"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="3" />
+                    android:layout_weight="1" />
 
                 <Space
                     android:layout_width="250dp"
@@ -61,33 +64,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Crediti:" />
+                    android:text="@string/CFU_label" />
 
                 <TextView
                     android:id="@+id/CFU_data"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="12" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
-            <LinearLayout
+            <Button
+                android:id="@+id/button"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Vedi appelli disponibili"
-                    app:cornerRadius="10dp" />
-
-            </LinearLayout>
+                android:text="@string/btn_label_available_exams"
+                app:cornerRadius="10dp" />
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintTop_toBottomOf="@+id/card" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,4 +12,6 @@
     <string name="part_time_label">Part Time</string>
     <string name="university_logo_label">Logo università</string>
     <string name="back_button_label">Torna indietro</string>
+    <string name="btn_label_available_exams">Vedi appelli disponibili</string>
+    <string name="CFU_label">Crediti</string>
 </resources>

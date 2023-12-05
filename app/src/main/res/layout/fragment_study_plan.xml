@@ -3,10 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00FFFFFF"
+    android:backgroundTint="#00FFFFFF"
+    android:backgroundTintMode="add"
     tools:context=".fragments.StudyPlanFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#673AB7"
@@ -51,5 +55,16 @@
             app:srcCompat="@drawable/outline_settings_24" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/study_plan_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00FFFFFF"
+        android:backgroundTint="#00FFFFFF"
+        android:dividerPadding="5dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:layout_editor_absoluteX="130dp"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -209,7 +209,7 @@
                 tools:visibility="visible">
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/btn_study_plan"
+                    android:id="@+id/card"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:clickable="true"

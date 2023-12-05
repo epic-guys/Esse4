@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 
 import java.util.List;
 
-public interface LibrettoService extends ApiResource {
+public interface LibrettoService extends ApiService {
     String BASE_URL = "libretto-service-v2";
 
     @GET(BASE_URL + "/libretti/{matId}/righe/")

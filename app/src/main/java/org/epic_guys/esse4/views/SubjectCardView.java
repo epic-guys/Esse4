@@ -8,7 +8,8 @@ import androidx.cardview.widget.CardView;
 import org.epic_guys.esse4.R;
 
 public class SubjectCardView extends CardView {
-    private int id;
+    //Someone at ess3 decided to use a long for the id of the subject, so, for them, a carrier should have 2^63 subjects.
+    private long id;
     private String name;
     private String year;
     private String CFU;
@@ -23,7 +24,7 @@ public class SubjectCardView extends CardView {
      * @param CFU The CFU of the subject
      * @param grade The grade of the subject (if null, the subject is not passed)
      */
-    public SubjectCardView(Context context, int id ,String name, String year, String CFU, String grade){
+    public SubjectCardView(Context context, long id ,String name, String year, String CFU, String grade){
         super(context);
 
         this.id = id;
@@ -32,7 +33,7 @@ public class SubjectCardView extends CardView {
         this.CFU = CFU;
         this.grade = grade;
 
-        if(grade == null)
+        //if(grade == null)
             inflate(context, R.layout.subject_card_view, this);
         //else
         //inflate(context, R.layout.subject_card_view_passed, null);

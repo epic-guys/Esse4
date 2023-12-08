@@ -7,11 +7,11 @@
     <string name="career_label">Piano di studi</string>
     <string name="booklet_label">Libretto</string>
     <string name="exams_label">Appelli</string>
+    <string name="CFU_label">Crediti:</string>
     <string name="calendar_label">Calendario</string>
-    <string name="year_label">anno</string>
+    <string name="year_label">Anno:</string>
     <string name="part_time_label">Part Time</string>
     <string name="university_logo_label">Logo università</string>
     <string name="back_button_label">Torna indietro</string>
     <string name="btn_label_available_exams">Vedi appelli disponibili</string>
-    <string name="CFU_label">Crediti</string>
 </resources>

@@ -36,6 +36,17 @@ public class StudentBookFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         navController = NavHostFragment.findNavController(this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_student_book, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         List<SubjectCardView> exams = new ArrayList<>();
 
@@ -66,17 +77,6 @@ public class StudentBookFragment extends Fragment {
                     recyclerView.setAdapter(adapter);
                     //System.out.println(exams);
                 });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_student_book, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         //when back button is pressed, go back to home fragment
         view.findViewById(R.id.btn_back).setOnClickListener(v -> {

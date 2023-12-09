@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
-import org.epic_guys.esse4.models.Esito;
 import org.epic_guys.esse4.models.RigaLibretto;
 import org.epic_guys.esse4.views.SubjectCardAdapter;
 import org.epic_guys.esse4.views.SubjectCardView;
+import org.epic_guys.esse4.common.Common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,16 +57,12 @@ public class StudentBookFragment extends Fragment {
                 .thenAccept(righe -> {
                     for (RigaLibretto riga : righe) {
                         try {
-                            Esito esito = riga.getEsito();
 
                             long id = riga.getItmId();
                             String nomeString = riga.getAdCod() + " - " + riga.getDescrizioneAttivitaDidattica();
                             String annoString = riga.getAnnoCorso().toString();
                             String cfuString = String.valueOf(riga.getPeso().intValue());
-                            String esitoString = (esito.getModValCod() == Esito.ModValCodEnum.V) ? (riga.getEsito().getVoto() == null) ? null : Integer.toString(riga.getEsito().getVoto().intValue()) : (riga.getEsito().getTipoGiudCod() == null) ? null : riga.getEsito().getTipoGiudCod();
-                            // SCOMMENTARE PER VEDERE OUTPUT IN CASO SIA UN GIUDIZIO E NON VOTO
-/*                            if(esito.getModValCod() == Esito.ModValCodEnum.G)
-                                System.out.println(riga.getEsito().getTipoGiudCod());*/
+                            String esitoString = Common.stringifyGrade(riga);
                             exams.add(new SubjectCardView(getContext(), id, nomeString, annoString, cfuString, esitoString));
                         }
                         catch(Exception e) {
@@ -77,7 +73,6 @@ public class StudentBookFragment extends Fragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams);
                     recyclerView.setAdapter(adapter);
-                    //System.out.println(exams);
                 });
 
         //when back button is pressed, go back to home fragment

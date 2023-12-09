@@ -34,8 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API {
     private static API instance;
-    private OkHttpClient client;
-    private Retrofit retrofit;
+    private final OkHttpClient client;
+    private final Retrofit retrofit;
     private Jwt jwt;
     private Persona loggedPersona;
     private Carriera carrieraStudente;
@@ -116,9 +116,9 @@ public class API {
                 boolean success = response.code() == 200;
                 if (success) {
                     API.getInstance().jwt = response.body();
-                    Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
+                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
                 } else {
-                    Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
+                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
                 }
                 future.complete(success);
             }
@@ -137,7 +137,7 @@ public class API {
                 (persone, carriere) -> {
             API.getInstance().loggedPersona = persone.get(0);
             API.getInstance().carrieraStudente = carriere.get(0);
-            return new Pair<Persona, Carriera>(persone.get(0), carriere.get(0));
+            return new Pair<>(persone.get(0), carriere.get(0));
         });
     }
 
@@ -166,7 +166,7 @@ public class API {
                     }
 
 
-                    Log.i("Api", BuildConfig.DEBUG ? response.toString() : "Photo Fetch successful");
+                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Photo Fetch successful");
                 }
             }
         });

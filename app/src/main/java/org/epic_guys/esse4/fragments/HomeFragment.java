@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
         password = SecurePreferences.getStringValue( "password", requireContext(), "");
 
         if (matricola.equals("") || password.equals("")) {
-            Log.i("HomeFragment", "Secure preferences not set");
+            Log.d("HomeFragment", "Secure preferences not set");
             throw new Exception("Secure preferences not set");
         }
 
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
             password = creds.second;
         }
         catch (Exception e) {
-            Log.i("HomeFragment", "Secure preferences not accessible");
+            Log.d("HomeFragment", "Secure preferences not accessible");
             launchLoginFragment();
             return;
         }
@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment {
 
         basicDataFuture = API.login(matricola, password)
                 .exceptionally(e -> {
-                    Log.w("HomeFragment", e.toString());
+                    Log.d("HomeFragment", e.toString());
                     return false;
                 })
                 .thenCompose(isLogged -> {
@@ -140,13 +140,12 @@ public class HomeFragment extends Fragment {
 
         basicDataFuture.thenAccept(personaCarrieraPair -> requireActivity().runOnUiThread(() -> {
             Toast.makeText(getContext(), "Bentornat[ao] studente(?:ssa|)" /* + API.getLoggedPersona().getNome() */, Toast.LENGTH_SHORT).show();
-            Log.i("HomeFragment", "Login effettuato");
             setBasicInfo(personaCarrieraPair.first, personaCarrieraPair.second);
         })).exceptionally(e -> {
             Log.e("HomeFragment", e.toString());
             requireActivity().runOnUiThread(() -> {
                 Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
-                Log.i("HomeFragment", "Login fallito");
+                Log.d("HomeFragment", "Login fallito");
 
             });
             launchLoginFragment();
@@ -163,7 +162,7 @@ public class HomeFragment extends Fragment {
         //study plan button
         view.findViewById(R.id.card).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studyPlanFragment));
 
-        //study plan button
+        //study book button
         view.findViewById(R.id.btn_student_book).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studentBookFragment));
     }
 }

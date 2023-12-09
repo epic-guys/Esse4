@@ -95,7 +95,7 @@ public class RigaLibretto {
     private Integer annoCorso = null;
 
     /**
-     * Stato dell\\&#39;attività didattica (codice)
+     * Stato dell'attività didattica (codice)
      */
     @JsonAdapter(StatoEnum.Adapter.class)
     public enum StatoEnum {

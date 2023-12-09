@@ -63,7 +63,7 @@ public class StudentBookFragment extends Fragment {
                             String nomeString = riga.getAdCod() + " - " + riga.getDescrizioneAttivitaDidattica();
                             String annoString = riga.getAnnoCorso().toString();
                             String cfuString = String.valueOf(riga.getPeso().intValue());
-                            String esitoString = (esito.getModValCod() == Esito.ModValCodEnum.V) ? (riga.getEsito().getVoto() == null) ? "N/D" : Integer.toString(riga.getEsito().getVoto().intValue()) : (riga.getEsito().getTipoGiudCod() == null) ? "N/D" : riga.getEsito().getTipoGiudCod();
+                            String esitoString = (esito.getModValCod() == Esito.ModValCodEnum.V) ? (riga.getEsito().getVoto() == null) ? null : Integer.toString(riga.getEsito().getVoto().intValue()) : (riga.getEsito().getTipoGiudCod() == null) ? null : riga.getEsito().getTipoGiudCod();
                             // SCOMMENTARE PER VEDERE OUTPUT IN CASO SIA UN GIUDIZIO E NON VOTO
 /*                            if(esito.getModValCod() == Esito.ModValCodEnum.G)
                                 System.out.println(riga.getEsito().getTipoGiudCod());*/
@@ -73,7 +73,7 @@ public class StudentBookFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
-                    RecyclerView recyclerView = getView().findViewById(R.id.exams);
+                    RecyclerView recyclerView = requireView().findViewById(R.id.exams);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams);
                     recyclerView.setAdapter(adapter);

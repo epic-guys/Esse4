@@ -64,7 +64,9 @@ public class StudentBookFragment extends Fragment {
                             String annoString = riga.getAnnoCorso().toString();
                             String cfuString = String.valueOf(riga.getPeso().intValue());
                             String esitoString = (esito.getModValCod() == Esito.ModValCodEnum.V) ? (riga.getEsito().getVoto() == null) ? "N/D" : Integer.toString(riga.getEsito().getVoto().intValue()) : (riga.getEsito().getTipoGiudCod() == null) ? "N/D" : riga.getEsito().getTipoGiudCod();
-
+                            // SCOMMENTARE PER VEDERE OUTPUT IN CASO SIA UN GIUDIZIO E NON VOTO
+/*                            if(esito.getModValCod() == Esito.ModValCodEnum.G)
+                                System.out.println(riga.getEsito().getTipoGiudCod());*/
                             exams.add(new SubjectCardView(getContext(), id, nomeString, annoString, cfuString, esitoString));
                         }
                         catch(Exception e) {

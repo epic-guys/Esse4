@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -32,6 +33,26 @@ public class HomeFragment extends Fragment {
                 .setPopUpTo(R.id.homeFragment, true)
                 .build();
         navController.navigate(R.id.loginFragment, null, navOptions);
+    }
+
+    private void hideFragment(){
+        LinearLayout l = requireView().findViewById(R.id.window);
+        l.setVisibility(View.INVISIBLE);
+    }
+
+    private void showFragment(){
+        LinearLayout l = requireView().findViewById(R.id.window);
+        l.setVisibility(View.VISIBLE);
+    }
+
+    private void startLoading(){
+        hideFragment();
+        requireView().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+    }
+
+    private void stopLoading(){
+        showFragment();
+        requireView().findViewById(R.id.loading).setVisibility(View.INVISIBLE);
     }
     
 
@@ -136,11 +157,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        startLoading();
 
         basicDataFuture.thenAccept(personaCarrieraPair -> requireActivity().runOnUiThread(() -> {
             Toast.makeText(getContext(), "Bentornat[ao] studente(?:ssa|)" /* + API.getLoggedPersona().getNome() */, Toast.LENGTH_SHORT).show();
             setBasicInfo(personaCarrieraPair.first, personaCarrieraPair.second);
+            stopLoading();
         })).exceptionally(e -> {
             Log.e("HomeFragment", e.toString());
             requireActivity().runOnUiThread(() -> {

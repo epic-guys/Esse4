@@ -3,9 +3,9 @@ package org.epic_guys.esse4.models;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Chiave Attività Didattica Contestualizzata
+ * Attività Didattica Contestualizzata
  */
-public class ChiaveADContestualizzata {
+public class AttivitaDidatticaContestualizzata {
     @SerializedName("cdsId")
     private Long cdsId = null;
 
@@ -48,17 +48,12 @@ public class ChiaveADContestualizzata {
     @SerializedName("afId")
     private Long afId = null;
 
-    public ChiaveADContestualizzata cdsId(Long cdsId) {
-        this.cdsId = cdsId;
-        return this;
-    }
-
     /**
      * chiave del corso di studio di erogazione dell&#39;attività didattica
      *
      * @return cdsId
      **/
-    public Long getCdsId() {
+    public Long getIdCorsoDiStudio() {
         return cdsId;
     }
 
@@ -67,7 +62,7 @@ public class ChiaveADContestualizzata {
      *
      * @return cdsCod
      **/
-    public String getCdsCod() {
+    public String getCodiceCorsoDiStudio() {
         return cdsCod;
     }
 
@@ -76,7 +71,7 @@ public class ChiaveADContestualizzata {
      *
      * @return cdsDes
      **/
-    public String getCdsDes() {
+    public String getDescrizioneCorsoDiStudio() {
         return cdsDes;
     }
 
@@ -151,7 +146,7 @@ public class ChiaveADContestualizzata {
      *
      * @return adId
      **/
-    public Long getAdId() {
+    public Long getIdAttivitaDidattica() {
         return adId;
     }
 
@@ -161,7 +156,7 @@ public class ChiaveADContestualizzata {
      *
      * @return adCod
      **/
-    public String getAdCod() {
+    public String getCodiceAttivitaDidattica() {
         return adCod;
     }
 
@@ -170,7 +165,7 @@ public class ChiaveADContestualizzata {
      *
      * @return adDes
      **/
-    public String getAdDes() {
+    public String getDescrizioneAttivitaDidattica() {
         return adDes;
     }
 

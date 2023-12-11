@@ -58,7 +58,7 @@ public class StudentBookFragment extends Fragment {
                     for (RigaLibretto riga : righe) {
                         try {
                             long id = riga.getItmId();
-                            String nomeString = riga.getAdCod() + " - " + riga.getDescrizioneAttivitaDidattica();
+                            String nomeString = riga.getCodiceAttivitaDidattica() + " - " + riga.getDescrizioneAttivitaDidattica();
                             String annoString = riga.getAnnoCorso().toString();
                             String cfuString = String.valueOf(riga.getPeso().intValue());
                             String esitoString = Common.stringifyGrade(riga);

@@ -153,7 +153,7 @@ public class RigaLibretto {
     private String statoDes = null;
 
     @SerializedName("chiaveADContestualizzata")
-    private ChiaveADContestualizzata chiaveADContestualizzata = null;
+    private AttivitaDidatticaContestualizzata chiaveADContestualizzata = null;
 
     @SerializedName("tipoEsaCod")
     private String tipoEsaCod = null;
@@ -290,7 +290,7 @@ public class RigaLibretto {
         return raggEsaTipo;
     }
 
-    public String getAdCod() {
+    public String getCodiceAttivitaDidattica() {
         return adCod;
     }
 
@@ -310,7 +310,7 @@ public class RigaLibretto {
         return statoDes;
     }
 
-    public ChiaveADContestualizzata getChiaveADContestualizzata() {
+    public AttivitaDidatticaContestualizzata getAttivitaDidattica() {
         return chiaveADContestualizzata;
     }
 

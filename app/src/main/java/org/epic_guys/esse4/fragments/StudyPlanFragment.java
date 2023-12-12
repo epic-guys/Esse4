@@ -12,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.models.RigaLibretto;
 import org.epic_guys.esse4.views.SubjectCardView;
 
 public class StudyPlanFragment extends Fragment {
@@ -34,6 +35,7 @@ public class StudyPlanFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_study_plan, container, false);
     }
 
+    /*
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -61,8 +63,6 @@ public class StudyPlanFragment extends Fragment {
         cardView = new SubjectCardView(getContext(), 6, "Analisi 6", "6", "12", null);
         ((ViewGroup)view.findViewById(R.id.study_plan_container)).addView(cardView);
     }
-
-
-
+*/
 
 }

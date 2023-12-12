@@ -2,83 +2,70 @@ package org.epic_guys.esse4.views;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+
+import org.epic_guys.esse4.common.Common;
+import org.epic_guys.esse4.models.RigaLibretto;
 
 
 public class SubjectCardView extends CardView {
-    //Someone at ess3 decided to use a long for the id of the subject, so, for them, a carrier should have 2^63 subjects.
-    private long id;
-    private String name;
-    private String year;
-    private String CFU;
-    private String grade;
 
-    /**
-     * Constructor
-     * @param context The context of the application
-     * @param id The id of the subject
-     * @param name The name of the subject
-     * @param year The year of the subject
-     * @param CFU The CFU of the subject
-     * @param grade The grade of the subject (if null, the subject is not passed)
-     */
-    public SubjectCardView(Context context, long id ,String name, String year, String CFU, String grade) {
-        super(context);
-        this.id = id;
-        this.name = name;
-        this.year = year;
-        this.CFU = CFU;
-        this.grade = grade;
-    }
+    @NonNull
+    private RigaLibretto rigaLibretto;
+
+    @Nullable
+    private OnClickListener appelliClickListener;
+
+
+/**
+ * Constructor for the SubjectCardView class.
+ *
+ * @param context The context in which the SubjectCardView is being used.
+ * @param rigaLibretto The RigaLibretto object associated with this SubjectCardView.
+ * @param appelliClickListener The OnClickListener for the appelli button in this SubjectCardView.
+ */
+public SubjectCardView(Context context, @NonNull RigaLibretto rigaLibretto, @Nullable OnClickListener appelliClickListener) {
+    super(context); // Call the superclass constructor with the provided context
+    this.rigaLibretto = rigaLibretto; // Set the RigaLibretto object for this SubjectCardView
+    this.appelliClickListener = appelliClickListener; // Set the OnClickListener for the appelli button in this SubjectCardView
+}
 
     @Override
     public String toString() {
         return "SubjectCardView{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", year='" + year + '\'' +
-                ", CFU='" + CFU + '\'' +
-                ", grade='" + grade + '\'' +
+                "id=" + rigaLibretto.getIdRigaLibretto() +
+                ", name='" + rigaLibretto.getCodiceAttivitaDidattica() + '\'' +
+                ", year='" + rigaLibretto.getAnnoCorso() + '\'' +
+                ", CFU='" + rigaLibretto.getPeso() + '\'' +
+                ", grade='" + rigaLibretto.getEsito().getVoto() + '\'' +
                 '}';
     }
 
-    public long getCardId() {
-        return id;
+    @NonNull
+    public RigaLibretto getRigaLibretto() {
+        return rigaLibretto;
+    }
+
+    @Nullable
+    public OnClickListener getAppelliClickListener() {
+        return appelliClickListener;
     }
 
     public String getName() {
-        return name;
+        return rigaLibretto.getCodiceAttivitaDidattica() + " - " + rigaLibretto.getDescrizioneAttivitaDidattica();
     }
 
     public String getYear() {
-        return year;
+        return rigaLibretto.getAnnoCorso().toString();
     }
 
     public String getCFU() {
-        return CFU;
+        return String.valueOf(rigaLibretto.getPeso().intValue());
     }
 
     public String getGrade() {
-        return grade;
-    }
-
-    public void setCardId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public void setCFU(String CFU) {
-        this.CFU = CFU;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
+        return Common.stringifyGrade(rigaLibretto);
     }
 }

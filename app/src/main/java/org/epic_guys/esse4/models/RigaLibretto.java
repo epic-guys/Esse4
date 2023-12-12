@@ -262,26 +262,45 @@ public class RigaLibretto {
         return matId;
     }
 
-    public Integer getOrd() {
+    /**
+     * Retrieves the sorting index of the RigaLibretto.
+     *
+     * @return Integer representing the sorting index.
+     */
+    public Integer getOrdinamento() {
         return ord;
     }
 
-    public Long getAdsceId() {
+    /**
+     * Retrieves the ID of the RigaLibretto.
+     *
+     * @return Long representing the ID of the RigaLibretto.
+     */
+    public Long getIdRigaLibretto() {
         return adsceId;
     }
 
-    public Long getStuId() {
+    public Long getIdStudente() {
         return stuId;
     }
 
-    public Long getPianoId() {
+    public Long getIdPiano() {
         return pianoId;
     }
 
-    public Long getItmId() {
+    /**
+     * Retrieves the ID of the AttivitaDidattica associated with the RigaLibretto in a student's Libretto.
+     *
+     * @return Long representing the ID of the AttivitaDidattica.
+     */
+    public Long getIdAttivitaDidatticaPiano() {
         return itmId;
     }
 
+    /**
+     * Non ne ho proprio idea onestamente, citando la documentazione:
+     * <p>se l''attività appartiene ad un raggruppamento contiene l''adsceID del padre del raggruppamento</p>
+     */
     public Long getRagId() {
         return ragId;
     }
@@ -334,6 +353,11 @@ public class RigaLibretto {
         return ricId;
     }
 
+    /**
+     * Retrieves the CFU of the RigaLibretto.
+     *
+     * @return Float representing the CFU of the RigaLibretto.
+     */
     public Float getPeso() {
         return peso;
     }
@@ -352,6 +376,14 @@ public class RigaLibretto {
 
     public Integer getFreqObbligFlg() {
         return freqObbligFlg;
+    }
+
+    public boolean isFrequenzaObbligatoria() {
+        return freqObbligFlg == 1;
+    }
+
+    public boolean isFrequenzaUfficiale() {
+        return freqUffFlg == 1;
     }
 
     public String getDataScadIscr() {

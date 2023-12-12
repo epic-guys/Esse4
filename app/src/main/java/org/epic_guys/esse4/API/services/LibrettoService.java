@@ -1,6 +1,7 @@
 package org.epic_guys.esse4.API.services;
 
 import org.epic_guys.esse4.models.ApiResource;
+import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.models.RigaLibretto;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,4 +14,7 @@ public interface LibrettoService extends ApiService {
 
     @GET(BASE_URL + "/libretti/{matId}/righe/")
     Call<List<RigaLibretto>> righeLibretto(@Path("matId") long idCarriera);
+
+    @GET(BASE_URL + "/libretti/{matId}/righe/{adsceId}/appelli")
+    Call<List<Appello>> getAppelliPerRigaLibretto(@Path("matId") long idCarriera, @Path("adsceId") long idRigaLibretto);
 }

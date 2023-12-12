@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -53,6 +54,8 @@ public class SubjectCardAdapter extends RecyclerView.Adapter<SubjectCardAdapter.
             holder.examNameView.setText(exams.get(position).getName());
             holder.yearView.setText(exams.get(position).getYear());
             holder.CFUView.setText(exams.get(position).getCFU());
+
+            holder.appelliButton.setOnClickListener(exams.get(position).getAppelliClickListener());
         }
 
     }
@@ -66,6 +69,7 @@ public class SubjectCardAdapter extends RecyclerView.Adapter<SubjectCardAdapter.
         LinearLayout passedLayout, notPassedLayout;
         TextView examNameView, yearView, CFUView;
         TextView examNameView_passed, yearView_passed, CFUView_passed, gradeView_passed;
+        Button appelliButton;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +85,8 @@ public class SubjectCardAdapter extends RecyclerView.Adapter<SubjectCardAdapter.
             yearView_passed = itemView.findViewById(R.id.year_data_passed) ;
             CFUView_passed = itemView.findViewById(R.id.CFU_data_passed);
             gradeView_passed = itemView.findViewById(R.id.grade_data_passed);
+
+            appelliButton = itemView.findViewById(R.id.button_appelli_round);
         }
     }
 }

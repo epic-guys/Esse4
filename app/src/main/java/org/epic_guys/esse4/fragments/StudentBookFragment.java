@@ -1,6 +1,7 @@
 package org.epic_guys.esse4.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,12 +58,10 @@ public class StudentBookFragment extends Fragment {
                 .thenAccept(righe -> {
                     for (RigaLibretto riga : righe) {
                         try {
-                            long id = riga.getItmId();
-                            String nomeString = riga.getCodiceAttivitaDidattica() + " - " + riga.getDescrizioneAttivitaDidattica();
-                            String annoString = riga.getAnnoCorso().toString();
-                            String cfuString = String.valueOf(riga.getPeso().intValue());
-                            String esitoString = Common.stringifyGrade(riga);
-                            exams.add(new SubjectCardView(getContext(), id, nomeString, annoString, cfuString, esitoString));
+                            View.OnClickListener onClickListener = v -> {
+                                Log.d("StudentBookFragment", "onClick: " + riga.getDescrizioneAttivitaDidattica());
+                            };
+                            exams.add(new SubjectCardView(getContext(), riga, onClickListener));
                         }
                         catch(Exception e) {
                             e.printStackTrace();

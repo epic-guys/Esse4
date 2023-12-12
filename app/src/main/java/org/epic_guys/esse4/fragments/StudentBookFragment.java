@@ -60,6 +60,14 @@ public class StudentBookFragment extends Fragment {
                         try {
                             View.OnClickListener onClickListener = v -> {
                                 Log.d("StudentBookFragment", "onClick: " + riga.getDescrizioneAttivitaDidattica());
+
+                                StudentBookFragmentDirections.ActionStudentBookFragmentToAppelloFragment action =
+                                        StudentBookFragmentDirections.actionStudentBookFragmentToAppelloFragment(
+                                                riga.getAttivitaDidattica().getIdCorsoDiStudio(),
+                                                riga.getAttivitaDidattica().getIdAttivitaDidattica()
+                                        );
+
+                                navController.navigate(action);
                             };
                             exams.add(new SubjectCardView(getContext(), riga, onClickListener));
                         }

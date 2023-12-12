@@ -41,5 +41,26 @@
         android:id="@+id/studentBookFragment"
         android:name="org.epic_guys.esse4.fragments.StudentBookFragment"
         android:label="StudentBookFragment"
-        tools:layout="@layout/fragment_student_book" />
+        tools:layout="@layout/fragment_student_book" >
+
+        <action
+            android:id="@+id/action_studentBookFragment_to_appelloFragment"
+            app:destination="@id/appelliFragment"
+            app:popUpTo="@id/studentBookFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/appelliFragment"
+        android:name="org.epic_guys.esse4.fragments.AppelliFragment"
+        android:label="AppelliFragment"
+        tools:layout="@layout/fragment_appelli">
+
+        <argument
+            android:name="idCorsoDiStudio"
+            app:argType="long" />
+        <argument
+            android:name="idAttivitaDidattica"
+            app:argType="long" />
+    </fragment>
 </navigation>

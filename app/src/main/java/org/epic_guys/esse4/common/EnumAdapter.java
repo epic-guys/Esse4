@@ -1,4 +1,4 @@
-package org.epic_guys.esse4.models;
+package org.epic_guys.esse4.common;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

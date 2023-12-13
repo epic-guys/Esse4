@@ -3,6 +3,8 @@ package org.epic_guys.esse4.models;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
+import org.epic_guys.esse4.common.EnumAdapter;
+
 /**
  * Appello
  */

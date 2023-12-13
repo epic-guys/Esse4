@@ -45,22 +45,22 @@
 
         <action
             android:id="@+id/action_studentBookFragment_to_appelloFragment"
-            app:destination="@id/appelloFragment"
+            app:destination="@id/appelliFragment"
             app:popUpTo="@id/studentBookFragment"
             app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
-        android:id="@+id/appelloFragment"
-        android:name="org.epic_guys.esse4.fragments.AppelloFragment"
-        android:label="AppelloFragment"
-        tools:layout="@layout/fragment_appello" >
+        android:id="@+id/appelliFragment"
+        android:name="org.epic_guys.esse4.fragments.AppelliFragment"
+        android:label="AppelliFragment"
+        tools:layout="@layout/fragment_appelli">
 
         <argument
-            android:name="idCorsoDiStudio"
+            android:name="idCarriera"
             app:argType="long" />
         <argument
-            android:name="idAttivitaDidattica"
+            android:name="idRigaLibretto"
             app:argType="long" />
     </fragment>
 </navigation>

@@ -1,12 +1,7 @@
 package org.epic_guys.esse4.models;
 
-import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
 
 /**
  * Appello
@@ -46,161 +41,65 @@ public class Appello {
     @SerializedName("statoAperturaApp")
     private String statoAperturaApp = null;
 
-    /**
-     * stato del processo di verbalizzazione degli esiti.  I relaviti Valori sono (C&#x3D;da iniziare, A&#x3D;in fase di svolgimento, F&#x3D; concluso)
-     */
-    @JsonAdapter(StatoVerbEnum.Adapter.class)
-    public enum StatoVerbEnum {
-        C("C"),
+    @JsonAdapter(StatoEnum.Adapter.class)
+    public enum StatoEnum {
+        /**
+         * Da iniziare
+         */
+        C("C", "Da iniziare"),
 
-        A("A"),
+        /**
+         * In fase di svolgimento
+         */
+        A("A", "In fase di svolgimento"),
 
-        F("F");
+        /**
+         * Concluso
+         */
+        F("F", "Concluso");
 
-        private String value;
+        private final String value;
+        private final String description;
 
-        StatoVerbEnum(String value) {
+        StatoEnum(String value, String description) {
             this.value = value;
+            this.description = description;
         }
 
         public String getValue() {
             return value;
         }
 
-        @Override
-        public String toString() {
-            return String.valueOf(value);
+        public String getDescription() {
+            return description;
         }
 
-        public static StatoVerbEnum fromValue(String text) {
-            for (StatoVerbEnum b : StatoVerbEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-
-        public static class Adapter extends TypeAdapter<StatoVerbEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final StatoVerbEnum enumeration) throws IOException {
-                jsonWriter.value(enumeration.getValue());
-            }
+        public static class Adapter extends EnumAdapter<StatoEnum> {
 
             @Override
-            public StatoVerbEnum read(final JsonReader jsonReader) throws IOException {
-                String value = jsonReader.nextString();
-                return StatoVerbEnum.fromValue(String.valueOf(value));
+            public Class<StatoEnum> getTClass() {
+                return StatoEnum.class;
             }
         }
     }
 
+    /**
+     * stato del processo di verbalizzazione degli esiti.  I relaviti Valori sono (C&#x3D;da iniziare, A&#x3D;in fase di svolgimento, F&#x3D; concluso)
+     */
     @SerializedName("statoVerb")
-    private StatoVerbEnum statoVerb = null;
+    private StatoEnum statoVerb = null;
 
     /**
      * stato del processo di pubblicazione esiti.  I relaviti Valori sono (C&#x3D;da iniziare, A&#x3D;in fase di svolgimento, F&#x3D; concluso)
      */
-    @JsonAdapter(StatoPubblEsitiEnum.Adapter.class)
-    public enum StatoPubblEsitiEnum {
-        C("C"),
-
-        A("A"),
-
-        F("F");
-
-        private String value;
-
-        StatoPubblEsitiEnum(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        public static StatoPubblEsitiEnum fromValue(String text) {
-            for (StatoPubblEsitiEnum b : StatoPubblEsitiEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-
-        public static class Adapter extends TypeAdapter<StatoPubblEsitiEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final StatoPubblEsitiEnum enumeration) throws IOException {
-                jsonWriter.value(enumeration.getValue());
-            }
-
-            @Override
-            public StatoPubblEsitiEnum read(final JsonReader jsonReader) throws IOException {
-                String value = jsonReader.nextString();
-                return StatoPubblEsitiEnum.fromValue(String.valueOf(value));
-            }
-        }
-    }
-
     @SerializedName("statoPubblEsiti")
-    private StatoPubblEsitiEnum statoPubblEsiti = null;
+    private StatoEnum statoPubblEsiti = null;
 
     /**
      * stato del processo di inserimento esiti.  I relaviti Valori sono (C&#x3D;da iniziare, A&#x3D;in fase di svolgimento, F&#x3D; concluso)
      */
-    @JsonAdapter(StatoInsEsitiEnum.Adapter.class)
-    public enum StatoInsEsitiEnum {
-        C("C"),
-
-        A("A"),
-
-        F("F");
-
-        private String value;
-
-        StatoInsEsitiEnum(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        public static StatoInsEsitiEnum fromValue(String text) {
-            for (StatoInsEsitiEnum b : StatoInsEsitiEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-
-        public static class Adapter extends TypeAdapter<StatoInsEsitiEnum> {
-            @Override
-            public void write(final JsonWriter jsonWriter, final StatoInsEsitiEnum enumeration) throws IOException {
-                jsonWriter.value(enumeration.getValue());
-            }
-
-            @Override
-            public StatoInsEsitiEnum read(final JsonReader jsonReader) throws IOException {
-                String value = jsonReader.nextString();
-                return StatoInsEsitiEnum.fromValue(String.valueOf(value));
-            }
-        }
-    }
-
     @SerializedName("statoInsEsiti")
-    private StatoInsEsitiEnum statoInsEsiti = null;
+    private StatoEnum statoInsEsiti = null;
 
     @SerializedName("statoDes")
     private String statoDes = null;
@@ -291,48 +190,34 @@ public class Appello {
      */
     @JsonAdapter(TipoEsaCodEnum.Adapter.class)
     public enum TipoEsaCodEnum {
-        S("S"),
+        S("S", "Scritto"),
 
-        O("O"),
+        O("O", "Orale"),
 
-        SOC("SOC"),
+        SOC("SOC", "Scritto e Orale Congiunto"),
 
-        SOS("SOS");
+        SOS("SOS", "Scritto e Orale Separato");
 
         private String value;
+        private String description;
 
-        TipoEsaCodEnum(String value) {
+        TipoEsaCodEnum(String value, String description) {
             this.value = value;
+            this.description = description;
         }
 
         public String getValue() {
             return value;
         }
 
-        @Override
-        public String toString() {
-            return String.valueOf(value);
+        public String getDescription() {
+            return description;
         }
 
-        public static TipoEsaCodEnum fromValue(String text) {
-            for (TipoEsaCodEnum b : TipoEsaCodEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-
-        public static class Adapter extends TypeAdapter<TipoEsaCodEnum> {
+        public static class Adapter extends EnumAdapter<TipoEsaCodEnum> {
             @Override
-            public void write(final JsonWriter jsonWriter, final TipoEsaCodEnum enumeration) throws IOException {
-                jsonWriter.value(enumeration.getValue());
-            }
-
-            @Override
-            public TipoEsaCodEnum read(final JsonReader jsonReader) throws IOException {
-                String value = jsonReader.nextString();
-                return TipoEsaCodEnum.fromValue(String.valueOf(value));
+            public Class<TipoEsaCodEnum> getTClass() {
+                return TipoEsaCodEnum.class;
             }
         }
     }
@@ -345,46 +230,29 @@ public class Appello {
      */
     @JsonAdapter(TipoIscrCodEnum.Adapter.class)
     public enum TipoIscrCodEnum {
-        S("S"),
+        S("S", "Scritto"),
 
-        O("O"),
+        O("O", "Orale"),
 
-        SO("SO");
+        SO("SO", "Scritto e Orale");
 
         private String value;
+        private String description;
 
-        TipoIscrCodEnum(String value) {
+        TipoIscrCodEnum(String value, String description) {
             this.value = value;
+            this.description = description;
         }
 
         public String getValue() {
             return value;
         }
 
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
 
-        public static TipoIscrCodEnum fromValue(String text) {
-            for (TipoIscrCodEnum b : TipoIscrCodEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-
-        public static class Adapter extends TypeAdapter<TipoIscrCodEnum> {
+        public static class Adapter extends EnumAdapter<TipoIscrCodEnum> {
             @Override
-            public void write(final JsonWriter jsonWriter, final TipoIscrCodEnum enumeration) throws IOException {
-                jsonWriter.value(enumeration.getValue());
-            }
-
-            @Override
-            public TipoIscrCodEnum read(final JsonReader jsonReader) throws IOException {
-                String value = jsonReader.nextString();
-                return TipoIscrCodEnum.fromValue(String.valueOf(value));
+            public Class<TipoIscrCodEnum> getTClass() {
+                return TipoIscrCodEnum.class;
             }
         }
     }
@@ -413,5 +281,205 @@ public class Appello {
 
     public String getDescrizioneAppello() {
         return desApp;
+    }
+
+    public Long getDatacalId() {
+        return datacalId;
+    }
+
+    public Long getCapostipiteId() {
+        return capostipiteId;
+    }
+
+    public Long getCommPianId() {
+        return commPianId;
+    }
+
+    public Long getIndexId() {
+        return indexId;
+    }
+
+    public Long getPeriodoId() {
+        return periodoId;
+    }
+
+    public Integer getNumVerbaliGen() {
+        return numVerbaliGen;
+    }
+
+    public Integer getNumVerbaliCar() {
+        return numVerbaliCar;
+    }
+
+    public Integer getNumPubblicazioni() {
+        return numPubblicazioni;
+    }
+
+    public Integer getNumIscritti() {
+        return numIscritti;
+    }
+
+    public String getStatoLog() {
+        return statoLog;
+    }
+
+    public String getStatoAperturaApp() {
+        return statoAperturaApp;
+    }
+
+    public StatoEnum getStatoVerb() {
+        return statoVerb;
+    }
+
+    public StatoEnum getStatoPubblEsiti() {
+        return statoPubblEsiti;
+    }
+
+    public StatoEnum getStatoInsEsiti() {
+        return statoInsEsiti;
+    }
+
+    public String getStatoDes() {
+        return statoDes;
+    }
+
+    public String getStato() {
+        return stato;
+    }
+
+    public String getPresidenteNome() {
+        return presidenteNome;
+    }
+
+    public String getPresidenteCognome() {
+        return presidenteCognome;
+    }
+
+    public Long getPresidenteId() {
+        return presidenteId;
+    }
+
+    public String getTipoGestPrenDes() {
+        return tipoGestPrenDes;
+    }
+
+    public String getTipoGestAppDes() {
+        return tipoGestAppDes;
+    }
+
+    public String getTipoDefAppDes() {
+        return tipoDefAppDes;
+    }
+
+    public String getAdDes() {
+        return adDes;
+    }
+
+    public String getAdCod() {
+        return adCod;
+    }
+
+    public String getCdsDes() {
+        return cdsDes;
+    }
+
+    public String getCdsCod() {
+        return cdsCod;
+    }
+
+    public String getTipoAppCod() {
+        return tipoAppCod;
+    }
+
+    public Integer getAppId() {
+        return appId;
+    }
+
+    public Long getAppelloId() {
+        return appelloId;
+    }
+
+    public Integer getAaCalId() {
+        return aaCalId;
+    }
+
+    public String getNoteSistLog() {
+        return noteSistLog;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public Long getTagTemplId() {
+        return tagTemplId;
+    }
+
+    public Long getSedeId() {
+        return sedeId;
+    }
+
+    public Long getGruppoVotoId() {
+        return gruppoVotoId;
+    }
+
+    public Long getCondId() {
+        return condId;
+    }
+
+    public Integer getTipoSceltaTurno() {
+        return tipoSceltaTurno;
+    }
+
+    public Integer getRiservatoFlg() {
+        return riservatoFlg;
+    }
+
+    public String getOraEsa() {
+        return oraEsa;
+    }
+
+    public String getDataInizioApp() {
+        return dataInizioApp;
+    }
+
+    public String getDataFineIscr() {
+        return dataFineIscr;
+    }
+
+    public String getDataInizioIscr() {
+        return dataInizioIscr;
+    }
+
+    public TipoEsaCodEnum getTipoEsaCod() {
+        return tipoEsaCod;
+    }
+
+    public TipoIscrCodEnum getTipoIscrCod() {
+        return tipoIscrCod;
+    }
+
+    public String getTipoGestPrenCod() {
+        return tipoGestPrenCod;
+    }
+
+    public String getTipoGestAppCod() {
+        return tipoGestAppCod;
+    }
+
+    public String getTipoDefAppCod() {
+        return tipoDefAppCod;
+    }
+
+    public String getDesApp() {
+        return desApp;
+    }
+
+    public Long getAdId() {
+        return adId;
+    }
+
+    public Long getCdsId() {
+        return cdsId;
     }
 }

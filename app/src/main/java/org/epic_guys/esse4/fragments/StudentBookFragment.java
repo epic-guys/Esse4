@@ -63,8 +63,8 @@ public class StudentBookFragment extends Fragment {
 
                                 StudentBookFragmentDirections.ActionStudentBookFragmentToAppelloFragment action =
                                         StudentBookFragmentDirections.actionStudentBookFragmentToAppelloFragment(
-                                                riga.getAttivitaDidattica().getIdCorsoDiStudio(),
-                                                riga.getAttivitaDidattica().getIdAttivitaDidattica()
+                                                riga.getIdCarriera(),
+                                                riga.getIdRigaLibretto()
                                         );
 
                                 navController.navigate(action);

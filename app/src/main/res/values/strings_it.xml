@@ -14,4 +14,8 @@
     <string name="university_logo_label">Logo università</string>
     <string name="back_button_label">Torna indietro</string>
     <string name="btn_label_available_exams">Vedi appelli disponibili</string>
+    <string name="date_label">Data:</string>
+    <string name="host_label">Presidente:</string>
+    <string name="sub_label">Iscritto</string>
+    <string name="sub_period_label">Iscrizione:</string>
 </resources>

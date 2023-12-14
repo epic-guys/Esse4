@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,10 +31,16 @@ import retrofit2.Call;
 public class AppelliFragment extends Fragment {
 
     private RecyclerView appelliRecyclerView;
+    private NavController navController;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        navController = NavHostFragment.findNavController(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_appelli, container, false);
     }
 
@@ -71,5 +80,12 @@ public class AppelliFragment extends Fragment {
                     Log.w("AppelliFragment", throwable.getMessage());
                     return null;
                 });
+        //when back button is pressed, go back to home fragment
+        view.findViewById(R.id.btn_back).setOnClickListener(v -> {
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setPopUpTo(R.id.homeFragment, true)
+                    .build();
+            navController.navigate(R.id.homeFragment, null, navOptions);
+        });
     }
 }

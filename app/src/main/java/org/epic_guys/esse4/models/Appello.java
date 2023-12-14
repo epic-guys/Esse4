@@ -5,11 +5,20 @@ import com.google.gson.annotations.SerializedName;
 
 import org.epic_guys.esse4.common.EnumAdapter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.regex.Pattern;
+
 /**
  * Appello
  */
 
 public class Appello {
+
+
     @SerializedName("datacalId")
     private Long datacalId = null;
 
@@ -281,6 +290,13 @@ public class Appello {
     private Long cdsId = null;
 
 
+
+
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    }
+
+
     public String getDescrizioneAppello() {
         return desApp;
     }
@@ -355,6 +371,10 @@ public class Appello {
 
     public String getPresidenteCognome() {
         return presidenteCognome;
+    }
+
+    public String getPresidenteNomeCognome() {
+        return presidenteNome + ' ' + presidenteCognome;
     }
 
     public Long getPresidenteId() {
@@ -441,9 +461,28 @@ public class Appello {
         return oraEsa;
     }
 
+    /**
+     * La data è sempre 01/01/1990 quindi viene scartata.
+     * Restituire solo l'ora dell'esame.
+     * @return l'ora dell'esame.
+     */
+    public LocalTime getOraEsame() {
+        return Appello.getDateTimeFormatter().parse(oraEsa, LocalTime::from);
+    }
+
     public String getDataInizioApp() {
         return dataInizioApp;
     }
+
+    public LocalDate getDataInizioAppello() {
+        return Appello.getDateTimeFormatter().parse(dataInizioApp, LocalDate::from);
+    }
+
+    public LocalDateTime getDataOraEsame() {
+        return getDataInizioAppello().atTime(getOraEsame());
+    }
+
+
 
     public String getDataFineIscr() {
         return dataFineIscr;

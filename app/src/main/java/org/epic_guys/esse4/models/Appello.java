@@ -485,11 +485,11 @@ public class Appello {
 
 
     public String getDataFineIscr() {
-        return dataFineIscr;
+        return dataFineIscr.substring(0, dataFineIscr.length() - 9);
     }
 
     public String getDataInizioIscr() {
-        return dataInizioIscr;
+        return dataInizioIscr.substring(0, dataFineIscr.length() - 9);
     }
 
     public TipoEsaCodEnum getTipoEsaCod() {

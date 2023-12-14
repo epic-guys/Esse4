@@ -18,4 +18,5 @@
     <string name="host_label">Presidente:</string>
     <string name="sub_label">Iscritto</string>
     <string name="sub_period_label">Iscrizione:</string>
+    <string name="study_plan_label">Piano di Studi</string>
 </resources>

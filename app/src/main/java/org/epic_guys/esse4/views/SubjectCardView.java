@@ -1,71 +1,97 @@
 package org.epic_guys.esse4.views;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 
+import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.RigaLibretto;
 
+public class SubjectCardView extends View {
 
-public class SubjectCardView extends CardView {
-
+    private long id;
     @NonNull
-    private RigaLibretto rigaLibretto;
+    private String name;
+    @NonNull
+    private String year;
+    @NonNull
+    private String CFU;
+    @Nullable
+    private String grade;
 
     @Nullable
     private OnClickListener appelliClickListener;
 
+    /**
+     * Constructor
+     * @param context The context of the application
+     * @param id The id of the subject
+     * @param name The name of the subject
+     * @param year The year of the subject
+     * @param CFU The CFU of the subject
+     * @param grade The grade of the subject (if null, the subject is not passed)
+     */
+    public SubjectCardView(Context context, long id ,String name, String year, String CFU, String grade, @Nullable OnClickListener appelliClickListener){
+        super(context);
+        this.id = id;
+        this.name = name;
+        this.year = year;
+        this.CFU = CFU;
+        this.grade = grade;
+        this.appelliClickListener = appelliClickListener;
+    }
 
-/**
- * Constructor for the SubjectCardView class.
- *
- * @param context The context in which the SubjectCardView is being used.
- * @param rigaLibretto The RigaLibretto object associated with this SubjectCardView.
- * @param appelliClickListener The OnClickListener for the appelli button in this SubjectCardView.
- */
-public SubjectCardView(Context context, @NonNull RigaLibretto rigaLibretto, @Nullable OnClickListener appelliClickListener) {
-    super(context); // Call the superclass constructor with the provided context
-    this.rigaLibretto = rigaLibretto; // Set the RigaLibretto object for this SubjectCardView
-    this.appelliClickListener = appelliClickListener; // Set the OnClickListener for the appelli button in this SubjectCardView
-}
+    public SubjectCardView(Context context, @NonNull RigaLibretto rigaLibretto, @Nullable OnClickListener appelliClickListener) {
+        super(context); // Call the superclass constructor with the provided context
+
+        this.id = rigaLibretto.getIdRigaLibretto();
+        this.name = rigaLibretto.getCodiceAttivitaDidattica() + " - " + rigaLibretto.getDescrizioneAttivitaDidattica();
+        this.year = rigaLibretto.getAnnoCorso().toString();
+        this.CFU = String.valueOf(rigaLibretto.getPeso().intValue());
+        this.grade = Common.stringifyGrade(rigaLibretto);
+        this.appelliClickListener = appelliClickListener; // Set the OnClickListener for the appelli button in this SubjectCardView
+    }
 
     @Override
     public String toString() {
         return "SubjectCardView{" +
-                "id=" + rigaLibretto.getIdRigaLibretto() +
-                ", name='" + rigaLibretto.getCodiceAttivitaDidattica() + '\'' +
-                ", year='" + rigaLibretto.getAnnoCorso() + '\'' +
-                ", CFU='" + rigaLibretto.getPeso() + '\'' +
-                ", grade='" + rigaLibretto.getEsito().getVoto() + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", year='" + year + '\'' +
+                ", CFU='" + CFU + '\'' +
+                ", grade='" + grade + '\'' +
                 '}';
     }
 
+    public long getCardId() {
+        return id;
+    }
+
     @NonNull
-    public RigaLibretto getRigaLibretto() {
-        return rigaLibretto;
+    public String getName() {
+        return name;
+    }
+
+    @NonNull
+    public String getYear() {
+        return year;
+    }
+
+    @NonNull
+    public String getCFU() {
+        return CFU;
+    }
+
+    @Nullable
+    public String getGrade() {
+        return grade;
     }
 
     @Nullable
     public OnClickListener getAppelliClickListener() {
         return appelliClickListener;
-    }
-
-    public String getName() {
-        return rigaLibretto.getCodiceAttivitaDidattica() + " - " + rigaLibretto.getDescrizioneAttivitaDidattica();
-    }
-
-    public String getYear() {
-        return rigaLibretto.getAnnoCorso().toString();
-    }
-
-    public String getCFU() {
-        return String.valueOf(rigaLibretto.getPeso().intValue());
-    }
-
-    public String getGrade() {
-        return Common.stringifyGrade(rigaLibretto);
     }
 }

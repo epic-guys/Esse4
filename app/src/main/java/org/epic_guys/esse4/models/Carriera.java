@@ -305,7 +305,7 @@ public class Carriera implements ApiResource {
         return cdsId;
     }
 
-    public long getStuId() {
+    public long getIdStudente() {
         return stuId;
     }
 }

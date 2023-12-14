@@ -166,7 +166,7 @@ public class HomeFragment extends Fragment {
         })).exceptionally(e -> {
             Log.e("HomeFragment", e.toString());
             requireActivity().runOnUiThread(() -> {
-                Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Login fallito", Toast.LENGTH_SHORT).show();
                 Log.d("HomeFragment", "Login fallito");
 
             });

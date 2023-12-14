@@ -19,4 +19,7 @@
     <string name="sub_label">Iscritto</string>
     <string name="sub_period_label">Iscrizione:</string>
     <string name="study_plan_label">Piano di Studi</string>
+    <string name="exam_subscribe">Iscriviti</string>
+    <string name="cancel">Annulla</string>
+    <string name="room_label">Aula:</string>
 </resources>

@@ -119,6 +119,12 @@
 
             </LinearLayout>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/exam_subscribe"
+                android:id="@+id/btn_subscribe" />
+
         </LinearLayout>
 
         <LinearLayout

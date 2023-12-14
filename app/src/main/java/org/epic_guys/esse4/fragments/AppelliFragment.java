@@ -45,7 +45,21 @@ public class AppelliFragment extends Fragment {
         long idCarriera = args.getIdCarriera();
         long idRigaLibretto = args.getIdRigaLibretto();
         LibrettoService librettoService = API.getService(LibrettoService.class);
-        Call<List<Appello>> appelli = librettoService.getAppelliPerRigaLibretto(idCarriera, idRigaLibretto);
+
+        Call<List<Appello>> appelli;
+
+        if (idRigaLibretto == -1) {
+            appelli = librettoService.getAppelli(
+                    idCarriera,
+                    LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
+            );
+        } else {
+            appelli = librettoService.getAppelliPerRigaLibretto(
+                    idCarriera,
+                    idRigaLibretto,
+                    LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
+            );
+        }
 
         API.enqueueResource(appelli)
                 .thenAccept(appelliList -> {

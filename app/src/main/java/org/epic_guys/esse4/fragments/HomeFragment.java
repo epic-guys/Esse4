@@ -186,5 +186,12 @@ public class HomeFragment extends Fragment {
 
         //study book button
         view.findViewById(R.id.btn_student_book).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studentBookFragment));
+
+        view.findViewById(R.id.btn_exams).setOnClickListener(v -> navController.navigate(
+                HomeFragmentDirections.actionHomeFragmentToAppelliFragment(
+                        API.getCarriera().getIdCarriera(),
+                        -1
+                )
+        ));
     }
 }

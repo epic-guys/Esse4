@@ -3,18 +3,69 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/nav_graph"
-    app:startDestination="@id/mainActivity2">
-    <activity
-        android:id="@+id/mainActivity2"
-        android:name="org.epic_guys.esse4.activities.MainActivity"
-        android:label="activity_main"
-        tools:layout="@layout/activity_main" />
-    <action
-        android:id="@+id/action_global_mainActivity22"
-        app:destination="@id/mainActivity2" />
-    <activity
-        android:id="@+id/loginActivity4"
-        android:name="org.epic_guys.esse4.activities.LoginActivity"
-        android:label="activity_login"
-        tools:layout="@layout/activity_login" />
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="org.epic_guys.esse4.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="org.epic_guys.esse4.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_studyPlanFragment"
+            app:destination="@id/studyPlanFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_homeFragment_to_studentBookFragment"
+            app:destination="@id/studentBookFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_homeFragment_to_appelliFragment"
+            app:destination="@id/appelliFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/studyPlanFragment"
+        android:name="org.epic_guys.esse4.fragments.StudyPlanFragment"
+        android:label="StudyPlanFragment"
+        tools:layout="@layout/fragment_study_plan" />
+    <fragment
+        android:id="@+id/studentBookFragment"
+        android:name="org.epic_guys.esse4.fragments.StudentBookFragment"
+        android:label="StudentBookFragment"
+        tools:layout="@layout/fragment_student_book" >
+
+        <action
+            android:id="@+id/action_studentBookFragment_to_appelloFragment"
+            app:destination="@id/appelliFragment"
+            app:popUpTo="@id/studentBookFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/appelliFragment"
+        android:name="org.epic_guys.esse4.fragments.AppelliFragment"
+        android:label="AppelliFragment"
+        tools:layout="@layout/fragment_appelli">
+
+        <argument
+            android:name="idCarriera"
+            app:argType="long" />
+        <argument
+            android:name="idRigaLibretto"
+            app:argType="long" />
+    </fragment>
 </navigation>

@@ -6,14 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.epic_guys.esse4.R;
@@ -76,6 +71,7 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
             date_data.setText(appello.getDataOraEsame().format(Appello.getDateTimeFormatter()));
             host_data.setText(appello.getPresidenteNomeCognome());
             sub_period_data.setText(appello.getDataInizioIscr() + " - " + appello.getDataFineIscr());
+
 
             subscribe_button.setOnClickListener(v -> {
                 new ExamSubscribeDialogFragment(appello).show(

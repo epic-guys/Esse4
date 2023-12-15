@@ -9,8 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.regex.Pattern;
 
 /**
  * Appello
@@ -393,11 +391,11 @@ public class Appello {
         return tipoDefAppDes;
     }
 
-    public String getAdDes() {
+    public String getDescrizioneAttivitaDidattica() {
         return adDes;
     }
 
-    public String getAdCod() {
+    public String getCodiceAttivitaDidattica() {
         return adCod;
     }
 
@@ -492,11 +490,11 @@ public class Appello {
         return dataInizioIscr.substring(0, dataFineIscr.length() - 9);
     }
 
-    public TipoEsaCodEnum getTipoEsaCod() {
+    public TipoEsaCodEnum getTipoEsame() {
         return tipoEsaCod;
     }
 
-    public TipoIscrCodEnum getTipoIscrCod() {
+    public TipoIscrCodEnum getTipoIscrizione() {
         return tipoIscrCod;
     }
 

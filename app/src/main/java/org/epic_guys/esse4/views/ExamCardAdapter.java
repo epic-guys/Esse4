@@ -14,15 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.fragments.ExamSubscribeDialogFragment;
 import org.epic_guys.esse4.models.Appello;
+import org.epic_guys.esse4.models.AppelloLibretto;
 
 import java.util.List;
 
 public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyViewHolder> {
 
     @NonNull
-    private List<Appello> appelli;
+    private List<AppelloLibretto> appelli;
 
-    public ExamCardAdapter(@NonNull List<Appello> appelli) {
+    public ExamCardAdapter(@NonNull List<AppelloLibretto> appelli) {
         this.appelli = appelli;
     }
 
@@ -36,7 +37,7 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Appello appello = appelli.get(position);
+        AppelloLibretto appello = appelli.get(position);
         holder.setContentView(appello);
     }
 
@@ -66,7 +67,7 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
             subscribe_button = itemView.findViewById(R.id.btn_subscribe);
         }
 
-        public void setContentView(Appello appello) {
+        public void setContentView(AppelloLibretto appello) {
             exam_name.setText(appello.getDescrizioneAttivitaDidattica());
             try{
                 date_data.setText(appello.getDataOraEsame().format(Appello.getDateTimeFormatter()));
@@ -75,7 +76,8 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
                 Log.e("ExamCardAdapter", "setContentView: ", e);
             }
 
-            type_data.setText(appello.getTipoEsame().getDescription());
+            // FIXME - appello.getTipoEsame() può essere null
+            // type_data.setText(appello.getTipoEsame().getDescription());
 
             host_data.setText(appello.getPresidenteNomeCognome());
             sub_period_data.setText(appello.getDataInizioIscr() + " - " + appello.getDataFineIscr());

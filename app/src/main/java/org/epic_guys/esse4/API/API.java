@@ -39,7 +39,9 @@ public class API {
     private Jwt jwt;
     private Persona loggedPersona;
     private Carriera carrieraStudente;
-    public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
+    // public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
+    public static final String BASE_URL = "https://unive.esse3.pp.cineca.it/e3rest/api/";
+
 
     private Jwt getJwt() {
         return jwt;

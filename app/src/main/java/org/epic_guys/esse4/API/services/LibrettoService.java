@@ -2,6 +2,7 @@ package org.epic_guys.esse4.API.services;
 
 import org.epic_guys.esse4.models.ApiResource;
 import org.epic_guys.esse4.models.Appello;
+import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.RigaLibretto;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -24,23 +25,23 @@ public interface LibrettoService extends ApiService {
 
 
     @GET(BASE_URL + "/libretti/{matId}/appelli")
-    Call<List<Appello>> getAppelli(@Path("matId") long idCarriera);
+    Call<List<AppelloLibretto>> getAppelli(@Path("matId") long idCarriera);
 
     @GET(BASE_URL + "/libretti/{matId}/appelli")
-    Call<List<Appello>> getAppelli(
+    Call<List<AppelloLibretto>> getAppelli(
             @Path("matId") long idCarriera,
             @Query("q") Condizioni condizioni
     );
 
     @GET(BASE_URL + "/libretti/{matId}/righe/{adsceId}/appelli")
-    Call<List<Appello>> getAppelliPerRigaLibretto(
+    Call<List<AppelloLibretto>> getAppelliPerRigaLibretto(
             @Path("matId") long idCarriera,
             @Path("adsceId") long idRigaLibretto,
             @Query("q") Condizioni condizioni
     );
 
     @GET(BASE_URL + "/libretti/{matId}/righe/{adsceId}/appelli")
-    Call<List<Appello>> getAppelliPerRigaLibretto(
+    Call<List<AppelloLibretto>> getAppelliPerRigaLibretto(
             @Path("matId") long idCarriera,
             @Path("adsceId") long idRigaLibretto
     );

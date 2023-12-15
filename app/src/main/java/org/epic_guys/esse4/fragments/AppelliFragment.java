@@ -23,6 +23,7 @@ import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.Appello;
+import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.views.ExamCardAdapter;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class AppelliFragment extends Fragment {
         long idRigaLibretto = args.getIdRigaLibretto();
         LibrettoService librettoService = API.getService(LibrettoService.class);
 
-        Call<List<Appello>> appelli;
+        Call<List<AppelloLibretto>> appelli;
 
         Common.startLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
 

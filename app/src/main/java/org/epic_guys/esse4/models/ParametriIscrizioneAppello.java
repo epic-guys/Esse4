@@ -10,7 +10,7 @@ public class ParametriIscrizioneAppello {
     private long adsceId;
 
     @SerializedName("tipoIscrStu")
-    private String tipoIscrStu = null;
+    private Appello.TipoIscrCodEnum tipoIscrStu = null;
 
     @SerializedName("notaStu")
     private String notaStu = null;
@@ -51,7 +51,7 @@ public class ParametriIscrizioneAppello {
         this.adsceId = adsceId;
     }
 
-    public ParametriIscrizioneAppello tipoIscrStu(String tipoIscrStu) {
+    public ParametriIscrizioneAppello tipoIscrStu(Appello.TipoIscrCodEnum tipoIscrStu) {
         this.tipoIscrStu = tipoIscrStu;
         return this;
     }
@@ -60,11 +60,11 @@ public class ParametriIscrizioneAppello {
      * tipo di iscrizione dello studente
      * @return tipoIscrStu
      **/
-    public String getTipoIscrStu() {
+    public Appello.TipoIscrCodEnum getTipoIscrStu() {
         return tipoIscrStu;
     }
 
-    public void setTipoIscrStu(String tipoIscrStu) {
+    public void setTipoIscrStu(Appello.TipoIscrCodEnum tipoIscrStu) {
         this.tipoIscrStu = tipoIscrStu;
     }
 

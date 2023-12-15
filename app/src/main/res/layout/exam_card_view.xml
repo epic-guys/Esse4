@@ -15,7 +15,7 @@
         android:clipToPadding="true"
         app:cardCornerRadius="30dp"
         app:cardElevation="10dp"
-        app:cardUseCompatPadding="true"
+        app:cardUseCompatPadding="false"
         app:layout_gravity="left"
         tools:ignore="MissingConstraints">
 
@@ -34,6 +34,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/exam_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,14 +90,14 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/cfu_label"
+                    android:id="@+id/type_label"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/CFU_label"
+                    android:text="@string/type_label"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/cfu_data"
+                    android:id="@+id/type_data"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textSize="20sp" />
@@ -120,10 +126,10 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btn_subscribe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/exam_subscribe"
-                android:id="@+id/btn_subscribe" />
+                android:text="@string/exam_subscribe" />
 
         </LinearLayout>
 
@@ -139,7 +145,7 @@
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/sub_label" />

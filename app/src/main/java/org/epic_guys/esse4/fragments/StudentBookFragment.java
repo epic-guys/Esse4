@@ -49,12 +49,14 @@ public class StudentBookFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         List<SubjectCardView> exams = new ArrayList<>();
+        Common.startLoading(requireView().findViewById(R.id.exams),requireView(),R.id.loading);
 
         long idCarriera = API.getCarriera().getIdCarriera();
         LibrettoService librettoService = API.getService(LibrettoService.class);
         Call<List<RigaLibretto>> righeLibretto = librettoService.righeLibretto(idCarriera);
         API.enqueueResource(righeLibretto)
                 .thenAccept(righe -> {
+
                     for (RigaLibretto riga : righe) {
                         try {
                             View.OnClickListener onClickListener = v -> {
@@ -78,6 +80,7 @@ public class StudentBookFragment extends Fragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                     SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams);
                     recyclerView.setAdapter(adapter);
+                    Common.stopLoading(requireView().findViewById(R.id.exams),requireView(),R.id.loading);
                 });
 
         //when back button is pressed, go back to home fragment

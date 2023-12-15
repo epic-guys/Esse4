@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Persona;
 import java.util.concurrent.CompletableFuture;
@@ -35,26 +36,7 @@ public class HomeFragment extends Fragment {
         navController.navigate(R.id.loginFragment, null, navOptions);
     }
 
-    private void hideFragment(){
-        LinearLayout l = requireView().findViewById(R.id.window);
-        l.setVisibility(View.INVISIBLE);
-    }
 
-    private void showFragment(){
-        LinearLayout l = requireView().findViewById(R.id.window);
-        l.setVisibility(View.VISIBLE);
-    }
-
-    private void startLoading(){
-        hideFragment();
-        requireView().findViewById(R.id.loading).setVisibility(View.VISIBLE);
-    }
-
-    private void stopLoading(){
-        showFragment();
-        requireView().findViewById(R.id.loading).setVisibility(View.INVISIBLE);
-    }
-    
 
     private void setProfilePicture() {
         ImageView profilePicture = requireView().findViewById(R.id.profile_picture);
@@ -157,12 +139,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        startLoading();
+        Common.startLoading(requireView().findViewById(R.id.window), requireView(), R.id.loading);
 
         basicDataFuture.thenAccept(personaCarrieraPair -> requireActivity().runOnUiThread(() -> {
             Toast.makeText(getContext(), "Bentornat[ao] studente(?:ssa|)" /* + API.getLoggedPersona().getNome() */, Toast.LENGTH_SHORT).show();
             setBasicInfo(personaCarrieraPair.first, personaCarrieraPair.second);
-            stopLoading();
+            Common.stopLoading(requireView().findViewById(R.id.window), requireView(), R.id.loading);
         })).exceptionally(e -> {
             Log.e("HomeFragment", e.toString());
             requireActivity().runOnUiThread(() -> {

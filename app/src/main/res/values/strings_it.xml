@@ -22,4 +22,5 @@
     <string name="exam_subscribe">Iscriviti</string>
     <string name="cancel">Annulla</string>
     <string name="room_label">Aula:</string>
+    <string name="type_label">Tipo:</string>
 </resources>

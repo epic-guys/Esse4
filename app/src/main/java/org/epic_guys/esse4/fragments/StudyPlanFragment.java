@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.PianiService;
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.ADPianoDiStudio;
 import org.epic_guys.esse4.models.PianoDiStudio;
-import org.epic_guys.esse4.models.RigaLibretto;
 import org.epic_guys.esse4.models.TestataPianoDiStudio;
 import org.epic_guys.esse4.views.SubjectCardAdapter;
 import org.epic_guys.esse4.views.SubjectCardView;
@@ -58,6 +58,8 @@ public class StudyPlanFragment extends Fragment {
 
         long idStudente = API.getCarriera().getIdStudente();
 
+        Common.startLoading(requireView().findViewById(R.id.exams),requireView(),R.id.loading);
+
         PianiService pianiService = API.getService(PianiService.class);
         Call<List<TestataPianoDiStudio>> testataPianoDiStudio = pianiService.testataPianoDiStudio(idStudente);
         API.enqueueResource(testataPianoDiStudio).thenCompose(testate -> {
@@ -65,7 +67,6 @@ public class StudyPlanFragment extends Fragment {
             Call<PianoDiStudio> righePianoDiStudio = pianiService.righePianoDiStudio(idStudente, testata.getPianoId());
             return API.enqueueResource(righePianoDiStudio);
         }).thenAccept(righe -> {
-
             for (ADPianoDiStudio riga : righe.getAttivita()) {
                 try {
                     Integer scePianoId = riga.getScePianoId();
@@ -80,6 +81,7 @@ public class StudyPlanFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams);
             recyclerView.setAdapter(adapter);
+            Common.stopLoading(requireView().findViewById(R.id.exams),requireView(),R.id.loading);
         }).exceptionally(throwable -> {
             throwable.printStackTrace();
             return null;

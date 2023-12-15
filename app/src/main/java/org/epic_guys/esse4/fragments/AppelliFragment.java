@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.views.ExamCardAdapter;
 
@@ -57,6 +58,8 @@ public class AppelliFragment extends Fragment {
 
         Call<List<Appello>> appelli;
 
+        Common.startLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
+
         if (idRigaLibretto == -1) {
             appelli = librettoService.getAppelli(
                     idCarriera,
@@ -74,7 +77,7 @@ public class AppelliFragment extends Fragment {
                 .thenAccept(appelliList -> {
                     Log.d("AppelliFragment", "Ricevuti appelli: " + appelliList.size());
                     appelliRecyclerView.setAdapter(new ExamCardAdapter(appelliList));
-
+                    Common.stopLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
                 })
                 .exceptionally(throwable -> {
                     Log.w("AppelliFragment", throwable.getMessage());

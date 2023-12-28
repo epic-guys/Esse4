@@ -2,7 +2,6 @@
 <resources>
     <string name="matricola_label">Matricola: </string>
     <string name="profile_photo_label">Foto profilo</string>
-    <string name="settings_button_label">Impostazioni</string>
     <string name="logout_button_label">Logout</string>
     <string name="career_label">Piano di studi</string>
     <string name="booklet_label">Libretto</string>
@@ -25,4 +24,12 @@
     <string name="type_label">Tipo:</string>
     <string name="exam_type_label">Tipo esame</string>
     <string name="exam_notes_for_professor_label">Note per il docente</string>
+    <string name="string_status_label">Stato questionario</string>
+    <string name="compile">Compila</string>
+    <string-array name="stato_questionario">
+        <item>Questionari non presenti</item>
+        <item>Questionari compilati</item>
+        <item>Alcuni questionari da compilare</item>
+        <item>Errore nella configurazione</item>
+    </string-array>
 </resources>

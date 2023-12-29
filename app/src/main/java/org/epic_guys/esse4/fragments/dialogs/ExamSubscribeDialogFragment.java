@@ -1,4 +1,4 @@
-package org.epic_guys.esse4.fragments;
+package org.epic_guys.esse4.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

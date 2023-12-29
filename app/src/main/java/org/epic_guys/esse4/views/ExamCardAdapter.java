@@ -1,5 +1,6 @@
 package org.epic_guys.esse4.views;
 
+import android.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.epic_guys.esse4.API.API;
+import org.epic_guys.esse4.API.services.QuestionariService;
 import org.epic_guys.esse4.R;
-import org.epic_guys.esse4.fragments.ExamSubscribeDialogFragment;
+import org.epic_guys.esse4.fragments.dialogs.ExamSubscribeDialogFragment;
 import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.models.AppelloLibretto;
+import org.epic_guys.esse4.models.RigaLibrettoConStatoQuestionario;
 
 import java.util.List;
+
+import retrofit2.Call;
 
 public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyViewHolder> {
 
@@ -67,7 +73,7 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
             subscribe_button = itemView.findViewById(R.id.btn_subscribe);
         }
 
-        public void setContentView(AppelloLibretto appello) {
+        public void setContentView(final AppelloLibretto appello) {
             exam_name.setText(appello.getDescrizioneAttivitaDidattica());
             try{
                 date_data.setText(appello.getDataOraEsame().format(Appello.getDateTimeFormatter()));
@@ -83,11 +89,42 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
             sub_period_data.setText(appello.getDataInizioIscr() + " - " + appello.getDataFineIscr());
 
 
-            subscribe_button.setOnClickListener(v -> new ExamSubscribeDialogFragment(appello).show(
+            subscribe_button.setOnClickListener(v -> {
+                QuestionariService questionariService = API.getService(QuestionariService.class);
+                Call<RigaLibrettoConStatoQuestionario> statoQuestionarioCall = questionariService.getQuestionario(
+                        appello.getIdCarriera(),
+                        appello.getIdRigaLibretto()
+                );
+
+                API.enqueueResource(statoQuestionarioCall)
+                        .thenAccept(rigaLibrettoConStatoQuestionario -> {
+                            switch (rigaLibrettoConStatoQuestionario.getStatoQuestionario()) {
+                                case COMPILATI:
+                                    Log.d("ExamCardAdapter", "Tutti i questionari compilati");
+                                    createExamSubscribeDialog(appello);
+                                    break;
+
+                                case DA_COMPILARE:
+                                case ALCUNI_DA_COMPILARE:
+                                    Log.d("ExamCardAdapter", "Questionario non compilabile");
+                                    break;
+                            }
+
+                            Log.d("ExamCardAdapter", "Questionario non compilato");
+                        })
+                        .exceptionally(throwable -> {
+                            Log.w("ExamCardAdapter", throwable.getMessage());
+                            return null;
+                        });
+            });
+        }
+
+        public void createExamSubscribeDialog(AppelloLibretto appello) {
+            new ExamSubscribeDialogFragment(appello).show(
                     // findFragment restituisce AppelliFragment, creiamo il dialog in questo fragment
                     FragmentManager.findFragment(itemView).getChildFragmentManager(),
                     ExamSubscribeDialogFragment.TAG
-            ));
+            );
         }
     }
 }

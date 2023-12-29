@@ -29,10 +29,17 @@ public class RigaLibrettoConStatoQuestionario extends RigaLibretto {
     private StatoQuestionario statoLink = null;
 
     /**
-     * __Stato dei questionari di valutazione, può assumere i seguenti valori__  0. Questionari non presenti  1. Questionari compilati  2. Alcuni questionari da compilare  3. Questionari da compilare  4. Errore nella configurazione, sono presenti più questionari con stato A
-     * @return statoLink
-     **/
-    public StatoQuestionario getStatoLink() {
+    * Stato dei questionari di valutazione, può assumere i seguenti valori:
+    * <ul>
+    *     <li>NON_PRESENTI: Questionari non presenti</li>
+    *     <li>COMPILATI: Questionari compilati</li>
+    *     <li>ALCUNI_DA_COMPILARE: Alcuni questionari da compilare</li>
+    *     <li>DA_COMPILARE: Questionari da compilare</li>
+    *     <li>ERRORE: Errore nella configurazione, sono presenti più questionari con stato A</li>
+    * </ul>
+    * @return statoLink
+    **/
+    public StatoQuestionario getStatoQuestionario() {
         return statoLink;
     }
 }

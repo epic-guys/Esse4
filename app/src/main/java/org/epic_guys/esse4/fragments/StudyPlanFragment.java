@@ -71,7 +71,15 @@ public class StudyPlanFragment extends Fragment {
                 try {
                     Integer scePianoId = riga.getScePianoId();
                     if(scePianoId == 6 || scePianoId == 7 || scePianoId == 8) {
-                        exams.add(new SubjectCardView(this.getContext(), 0L, riga.getAdLibCod() + " - " + riga.getAdLibDes(), Integer.toString(riga.getAnnoCorso()), String.valueOf(riga.getPeso().intValue()), null, null));
+                        exams.add(new SubjectCardView(
+                                this.getContext(),
+                                0L,
+                                riga.getAdLibCod() + " - " + riga.getAdLibDes(),
+                                Integer.toString(riga.getAnnoCorso()),
+                                String.valueOf(riga.getPeso().intValue()),
+                                null,
+                                null)
+                        );
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

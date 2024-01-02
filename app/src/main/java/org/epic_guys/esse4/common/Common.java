@@ -8,6 +8,10 @@ import org.epic_guys.esse4.models.Esito;
 import org.epic_guys.esse4.models.RigaLibretto;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class Common {
     // SOME EXAMS HAVE AN EMPTY GRADE (literally ""), LIKE "Tirocinio" and "B2 Inglese"... What should we do?
     public static String stringifyGrade(RigaLibretto riga){
@@ -32,5 +36,14 @@ public class Common {
     static public void stopLoading(@NotNull View toShow,View generalView, int loadingId){
         toShow.setVisibility(View.VISIBLE);
         generalView.findViewById(loadingId).setVisibility(View.INVISIBLE);
+    }
+
+    public static String setCalendar(Calendar calendar, int year, int month, int dayOfMonth) {
+        calendar.set(year, month, dayOfMonth);
+        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.getTime());
+        dayOfWeek = dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+        String selectedDateFormatted = dayOfWeek + " " + formatter.format(calendar.getTime());
+        return selectedDateFormatted;
     }
 }

@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragments.LoginFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="666669"
-            android:id="@+id/textinput_matricola"
-            android:inputType="text" />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:id="@+id/textinput_password"
-            android:inputType="textPassword" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Accedi"
-            android:id="@+id/login_button" />
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="226dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginBottom="300dp"
+        android:text="Accedi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_fullname" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/textinput_password"
+        android:layout_width="311dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="80dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/textinput_matricola"
+        android:layout_width="311dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="20dp"
+        android:hint="999999"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/textinput_password"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

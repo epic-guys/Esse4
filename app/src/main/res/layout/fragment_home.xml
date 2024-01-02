@@ -40,7 +40,6 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="#00E8E8E8"
-                android:contentDescription="@string/settings_button_label"
                 android:padding="10dp"
                 android:scaleType="fitStart"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
@@ -105,14 +104,14 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/matricola_label"
-                android:textSize="30sp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/data_matricola"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30sp" />
+                android:textSize="24sp" />
 
         </LinearLayout>
 
@@ -125,9 +124,12 @@
             android:paddingEnd="32dp">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="353dp"
+                android:layout_height="224dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="15dp"
                 android:layout_marginBottom="30dp"
+                android:baselineAligned="false"
                 app:cardCornerRadius="50dp"
                 app:cardElevation="10dp"
                 app:contentPadding="30dp">
@@ -208,8 +210,11 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.gridlayout.widget.GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="338dp"
+                android:layout_height="258dp"
+                android:layout_margin="15dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="15dp"
                 android:overScrollMode="never"
                 android:visibility="visible"
                 app:alignmentMode="alignMargins"
@@ -242,7 +247,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/round_app_registration_24" />
+                            android:src="@drawable/round_app_registration_24_dark"
+                            app:srcCompat="@drawable/round_app_registration_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -275,7 +281,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/baseline_book_24" />
+                            android:src="@drawable/baseline_book_24_dark"
+                            app:srcCompat="@drawable/baseline_book_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -308,7 +315,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/baseline_edit_note_24" />
+                            android:src="@drawable/baseline_edit_note_24_dark"
+                            app:srcCompat="@drawable/baseline_edit_note_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -340,7 +348,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/baseline_calendar_month_24" />
+                            android:src="@drawable/baseline_calendar_month_24_dark"
+                            app:srcCompat="@drawable/baseline_calendar_month_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"

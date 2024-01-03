@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,10 +20,13 @@ import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
+import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.RigaLibretto;
-import org.w3c.dom.Text;
+import org.epic_guys.esse4.views.ExamCardAdapter;
+import org.epic_guys.esse4.views.ListAdapter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -55,20 +59,41 @@ public class CalendarFragment extends Fragment {
         calendarView = view.findViewById(R.id.calendar);
         calendar = Calendar.getInstance();
 
+        ArrayList<Common.ExamSession> exams = new ArrayList<>();
+
+        ListView listView = view.findViewById(R.id.list_view);
+
         TextView selectedDate = view.findViewById(R.id.selected_date);
         selectedDate.setText(Common.setCalendar(calendar, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
 
         long idCarriera = API.getCarriera().getIdCarriera();
         LibrettoService librettoService = API.getService(LibrettoService.class);
         Call<List<RigaLibretto>> righeLibretto = librettoService.righeLibretto(idCarriera);
-        API.enqueueResource(righeLibretto)
+
+        Call<List<AppelloLibretto>> appelli = librettoService.getAppelli(
+                idCarriera,
+                LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
+        );
+
+        //TODO: guardare come Alvise ha fatto per gli appelli e fare una classe apposta per le sessioni d'esame
+
+        API.enqueueResource(appelli)
+                .thenAccept(System.out::println)
+                .exceptionally(throwable -> {
+                    Log.w("AppelliFragment", throwable.getMessage());
+                    return null;
+                });
+
+/*        API.enqueueResource(righeLibretto)
                 .thenAccept(righe -> {
                     for (RigaLibretto riga : righe) {
                         String nome = riga.getDescrizioneAttivitaDidattica();
-                        if(!Objects.equals(nome, "PROVA FINALE") && Common.stringifyGrade(riga) == null)
-                            System.out.println(nome);
+                        if(!Objects.equals(nome, "PROVA FINALE") && Common.stringifyGrade(riga) == null) {
+                            //exams.add(Common.ExamSession(nome, riga.getDataAppello(), riga.getOraAppello(), riga.getCrediti(), riga.getAula(), riga.getDocente()));
+                        }
                     }
-                });
+                    listView.setAdapter(new ListAdapter(getContext(), exams));
+                });*/
 
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             selectedDate.setText(Common.setCalendar(calendar, year, month, dayOfMonth));

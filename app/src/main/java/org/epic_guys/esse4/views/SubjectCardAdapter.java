@@ -81,7 +81,7 @@ public class SubjectCardAdapter extends RecyclerView.Adapter<SubjectCardAdapter.
             yearView = itemView.findViewById(R.id.year_data) ;
             CFUView = itemView.findViewById(R.id.CFU_data);
 
-            examNameView_passed = itemView.findViewById(R.id.exam_name_passed);
+            examNameView_passed = itemView.findViewById(R.id.name_exam);
             yearView_passed = itemView.findViewById(R.id.year_data_passed) ;
             CFUView_passed = itemView.findViewById(R.id.CFU_data_passed);
             gradeView_passed = itemView.findViewById(R.id.grade_data_passed);

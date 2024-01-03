@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class Common {
@@ -45,5 +46,47 @@ public class Common {
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         String selectedDateFormatted = dayOfWeek + " " + formatter.format(calendar.getTime());
         return selectedDateFormatted;
+    }
+
+    public class ExamSession {
+        private String name;
+        private String date;
+        private String hour;
+        private String cfu;
+        private String place;
+        private String teacher;
+
+        public ExamSession(String name, String date, String hour, String cfu, String place, String teacher) {
+            this.name = name;
+            this.date = date;
+            this.hour = hour;
+            this.cfu = cfu;
+            this.place = place;
+            this.teacher = teacher;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public String getHour() {
+            return hour;
+        }
+
+        public String getCfu() {
+            return cfu;
+        }
+
+        public String getPlace() {
+            return place;
+        }
+
+        public String getTeacher() {
+            return teacher;
+        }
     }
 }

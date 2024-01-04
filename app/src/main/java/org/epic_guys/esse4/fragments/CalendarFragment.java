@@ -23,11 +23,16 @@ import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.RigaLibretto;
 import org.epic_guys.esse4.views.ExamCardAdapter;
+import org.epic_guys.esse4.views.ExamCardView;
 import org.epic_guys.esse4.views.ListAdapter;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -56,48 +61,44 @@ public class CalendarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
         calendarView = view.findViewById(R.id.calendar);
         calendar = Calendar.getInstance();
 
-        ArrayList<Common.ExamSession> exams = new ArrayList<>();
+        ArrayList<AppelloLibretto> appelliTotali = new ArrayList<>();
 
         ListView listView = view.findViewById(R.id.list_view);
-
         TextView selectedDate = view.findViewById(R.id.selected_date);
         selectedDate.setText(Common.setCalendar(calendar, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)));
 
         long idCarriera = API.getCarriera().getIdCarriera();
         LibrettoService librettoService = API.getService(LibrettoService.class);
-        Call<List<RigaLibretto>> righeLibretto = librettoService.righeLibretto(idCarriera);
-
-        Call<List<AppelloLibretto>> appelli = librettoService.getAppelli(
-                idCarriera,
-                LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
-        );
-
-        //TODO: guardare come Alvise ha fatto per gli appelli e fare una classe apposta per le sessioni d'esame
+        Call<List<AppelloLibretto>> appelli = librettoService.getAppelli(idCarriera, LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI);
 
         API.enqueueResource(appelli)
-                .thenAccept(System.out::println)
-                .exceptionally(throwable -> {
-                    Log.w("AppelliFragment", throwable.getMessage());
-                    return null;
+                .thenAccept(appelliList -> {
+
+                    initCalendar(calendarView, appelliList);
+
+                    appelliTotali.addAll(appelliList);
+
+                    HashMap<String, ArrayList<AppelloLibretto>> appelliPerData = new HashMap<>();
+
+                    for (AppelloLibretto appello : appelliTotali) {
+                        String dataChiave = appello.getDataOraEsame().format(formatter);
+                        appelliPerData.computeIfAbsent(dataChiave, k -> new ArrayList<>()).add(appello);
+                    }
+
+                    calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+                        selectedDate.setText(Common.setCalendar(calendar, year, month, dayOfMonth));
+
+                        String dataSelezionata = LocalDate.of(year, month + 1, dayOfMonth).format(formatter);
+                        ArrayList<AppelloLibretto> appelliGiorno = appelliPerData.getOrDefault(dataSelezionata, new ArrayList<>());
+                        listView.setAdapter(new ListAdapter(getContext(), appelliGiorno));
+                    });
                 });
 
-/*        API.enqueueResource(righeLibretto)
-                .thenAccept(righe -> {
-                    for (RigaLibretto riga : righe) {
-                        String nome = riga.getDescrizioneAttivitaDidattica();
-                        if(!Objects.equals(nome, "PROVA FINALE") && Common.stringifyGrade(riga) == null) {
-                            //exams.add(Common.ExamSession(nome, riga.getDataAppello(), riga.getOraAppello(), riga.getCrediti(), riga.getAula(), riga.getDocente()));
-                        }
-                    }
-                    listView.setAdapter(new ListAdapter(getContext(), exams));
-                });*/
-
-        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
-            selectedDate.setText(Common.setCalendar(calendar, year, month, dayOfMonth));
-        });
 
         //when back button is pressed, go back to home fragment
         view.findViewById(R.id.btn_back).setOnClickListener(v -> {
@@ -106,5 +107,9 @@ public class CalendarFragment extends Fragment {
                     .build();
             navController.navigate(R.id.homeFragment, null, navOptions);
         });
+    }
+
+    private void initCalendar(CalendarView calendarView, List<AppelloLibretto> appelliList) {
+        //metti un pallino sotto i giorni che hanno appelli
     }
 }

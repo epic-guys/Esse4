@@ -21,22 +21,14 @@ import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
 import org.epic_guys.esse4.models.AppelloLibretto;
-import org.epic_guys.esse4.models.RigaLibretto;
-import org.epic_guys.esse4.views.ExamCardAdapter;
-import org.epic_guys.esse4.views.ExamCardView;
 import org.epic_guys.esse4.views.ListAdapter;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
 import retrofit2.Call;
 
 public class CalendarFragment extends Fragment {
@@ -61,6 +53,8 @@ public class CalendarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Common.startLoading( requireView().findViewById(R.id.page),requireView(), R.id.loading);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         calendarView = view.findViewById(R.id.calendar);
@@ -82,13 +76,16 @@ public class CalendarFragment extends Fragment {
                     initCalendar(calendarView, appelliList);
 
                     appelliTotali.addAll(appelliList);
-
                     HashMap<String, ArrayList<AppelloLibretto>> appelliPerData = new HashMap<>();
 
                     for (AppelloLibretto appello : appelliTotali) {
+                        if(appello.getDataOraEsame() == null) {
+                            continue;
+                        }
                         String dataChiave = appello.getDataOraEsame().format(formatter);
                         appelliPerData.computeIfAbsent(dataChiave, k -> new ArrayList<>()).add(appello);
                     }
+                    Common.stopLoading(requireView().findViewById(R.id.page), requireView(), R.id.loading);
 
                     calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
                         selectedDate.setText(Common.setCalendar(calendar, year, month, dayOfMonth));

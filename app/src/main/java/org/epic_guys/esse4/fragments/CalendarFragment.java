@@ -1,7 +1,6 @@
 package org.epic_guys.esse4.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +91,7 @@ public class CalendarFragment extends Fragment {
 
                         String dataSelezionata = LocalDate.of(year, month + 1, dayOfMonth).format(formatter);
                         ArrayList<AppelloLibretto> appelliGiorno = appelliPerData.getOrDefault(dataSelezionata, new ArrayList<>());
-                        listView.setAdapter(new ListAdapter(getContext(), appelliGiorno));
+                        listView.setAdapter(new ListAdapter(requireContext(), appelliGiorno));
                     });
                 });
 

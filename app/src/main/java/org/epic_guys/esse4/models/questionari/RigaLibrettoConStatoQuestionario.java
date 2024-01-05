@@ -1,6 +1,8 @@
-package org.epic_guys.esse4.models;
+package org.epic_guys.esse4.models.questionari;
 
 import com.google.gson.annotations.SerializedName;
+
+import org.epic_guys.esse4.models.RigaLibretto;
 
 /**
  * RigaLibrettoConStatoQuestionario

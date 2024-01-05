@@ -465,6 +465,10 @@ public class Appello {
      * @return l'ora dell'esame.
      */
     public LocalTime getOraEsame() {
+        if (oraEsa == null || oraEsa.equals("")) {
+            return null;
+        }
+
         return Appello.getDateTimeFormatter().parse(oraEsa, LocalTime::from);
     }
 
@@ -473,10 +477,20 @@ public class Appello {
     }
 
     public LocalDate getDataInizioAppello() {
+        if(dataInizioApp == null || dataInizioApp.equals("")){
+            return null;
+        }
         return Appello.getDateTimeFormatter().parse(dataInizioApp, LocalDate::from);
     }
 
     public LocalDateTime getDataOraEsame() {
+        if(getDataInizioAppello() == null){
+            return null;
+        }
+        if(getOraEsame() == null){
+            return getDataInizioAppello().atStartOfDay();
+        }
+
         return getDataInizioAppello().atTime(getOraEsame());
     }
 

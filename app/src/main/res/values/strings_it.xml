@@ -34,4 +34,5 @@
         <item>Alcuni questionari da compilare</item>
         <item>Errore nella configurazione</item>
     </string-array>
+    <string name="settings_button_label">Impostazioni</string>
 </resources>

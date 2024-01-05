@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toTopOf="@+id/linearLayout2"
+        tools:visibility="invisible" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -86,23 +87,56 @@
                 android:firstDayOfWeek="2" />
 
             <LinearLayout
+                android:id="@+id/day_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clickable="true"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/selected_date"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipToPadding="true"
                     android:gravity="center"
-                    android:textSize="20sp" />
+                    android:isScrollContainer="false"
+                    android:orientation="horizontal"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_prev_day"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#00FFFFFF"
+                        android:src="@drawable/baseline_chevron_left_24"
+                        app:tint="#9C27B0" />
+
+                    <TextView
+                        android:id="@+id/selected_date"
+                        android:layout_width="272dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="20sp" />
+
+                    <ImageButton
+                        android:id="@+id/btn_next_day"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#00FFFFFF"
+                        android:src="@drawable/baseline_chevron_right_24"
+                        app:tint="#9C27B0" />
+                </LinearLayout>
 
                 <ListView
                     android:id="@+id/list_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@android:color/transparent">
-
+                    android:clickable="false"
+                    android:contextClickable="false"
+                    android:divider="@android:color/transparent"
+                    android:focusable="false">
                 </ListView>
             </LinearLayout>
         </LinearLayout>

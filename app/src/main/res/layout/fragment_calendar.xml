@@ -42,6 +42,7 @@
                 android:contentDescription="@string/back_button_label"
                 android:padding="10dp"
                 android:scaleType="fitStart"
+                app:tint="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
@@ -55,21 +56,22 @@
                 android:gravity="center"
                 android:text="@string/calendar_label"
                 android:textAlignment="center"
+                android:textColor="#FFFFFF"
                 android:textSize="40sp" />
 
             <ImageButton
                 android:id="@+id/university_logo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#00000000"
                 android:contentDescription="@string/university_logo_label"
-                android:padding="10dp"
-                android:scaleType="fitStart"
+                android:scaleType="fitCenter"
+                app:tint="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
-                app:srcCompat="@drawable/outline_settings_24" />
+                app:srcCompat="@drawable/cf" />
 
         </LinearLayout>
 
@@ -109,6 +111,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="#00FFFFFF"
+                        android:contentDescription="@string/chevron_day_back"
                         android:src="@drawable/baseline_chevron_left_24"
                         app:tint="#9C27B0" />
 
@@ -125,6 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="#00FFFFFF"
+                        android:contentDescription="@string/chevron_day_forward"
                         android:src="@drawable/baseline_chevron_right_24"
                         app:tint="#9C27B0" />
                 </LinearLayout>

@@ -35,5 +35,11 @@
         <item>Alcuni questionari da compilare</item>
         <item>Errore nella configurazione</item>
     </string-array>
+    <string name="logo_description">Logo universitá</string>
+    <string name="login_button_label">Accedi</string>
+    <string name="password_label">Password</string>
+    <string name="matricola_hint_label">Numero Matricola es: 999999</string>
     <string name="settings_button_label">Impostazioni</string>
+    <string name="chevron_day_back">Giorno precedente</string>
+    <string name="chevron_day_forward">Giorno successivo</string>
 </resources>

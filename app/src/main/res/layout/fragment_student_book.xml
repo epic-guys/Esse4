@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#673AB7"
+            android:gravity="center"
             android:isScrollContainer="false"
             android:orientation="horizontal"
             android:paddingStart="10dp"
@@ -45,7 +46,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
-                app:srcCompat="@drawable/baseline_arrow_back_24" />
+                app:srcCompat="@drawable/baseline_arrow_back_24"
+                app:tint="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textView"
@@ -55,21 +57,22 @@
                 android:gravity="center"
                 android:text="@string/booklet_label"
                 android:textAlignment="center"
+                android:textColor="#FFFFFF"
                 android:textSize="40sp" />
 
             <ImageButton
                 android:id="@+id/university_logo"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#00000000"
                 android:contentDescription="@string/university_logo_label"
-                android:padding="10dp"
-                android:scaleType="fitStart"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
-                app:srcCompat="@drawable/outline_settings_24" />
+                app:srcCompat="@drawable/cf"
+                app:tint="#FFFFFF" />
 
         </LinearLayout>
 

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -42,7 +41,10 @@ public class HomeFragment extends Fragment {
         ImageView profilePicture = requireView().findViewById(R.id.profile_picture);
 
         API.getPhoto().thenCompose(photo -> {
-            requireActivity().runOnUiThread(() -> profilePicture.setImageBitmap(photo));
+            requireActivity().runOnUiThread(() -> {
+                profilePicture.setColorFilter(0x00000000);
+                profilePicture.setImageBitmap(photo);
+            });
             return null;
         });
     }
@@ -59,6 +61,7 @@ public class HomeFragment extends Fragment {
         requireView().<TextView>findViewById(R.id.data_year).setText(String.valueOf(c.getAnnoCorso()));
 
         if(c.isPartTime()) {
+            requireView().findViewById(R.id.last_space).setVisibility(View.VISIBLE); //the space between the two textviews
             requireView().findViewById(R.id.text_part_time).setVisibility(View.VISIBLE);
         }
 

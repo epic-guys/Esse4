@@ -36,6 +36,9 @@
             app:destination="@id/appelliFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_homeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
     </fragment>
     <fragment
         android:id="@+id/studyPlanFragment"
@@ -67,5 +70,13 @@
         <argument
             android:name="idRigaLibretto"
             app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="org.epic_guys.esse4.fragments.CalendarFragment"
+        android:label="CalendarFragment" >
+        <action
+            android:id="@+id/action_calendarFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

@@ -172,6 +172,9 @@ public class HomeFragment extends Fragment {
         //study book button
         view.findViewById(R.id.btn_student_book).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studentBookFragment));
 
+        //calendar button
+        view.findViewById(R.id.btn_calendar).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_calendarFragment));
+
         view.findViewById(R.id.btn_exams).setOnClickListener(v -> navController.navigate(
                 HomeFragmentDirections.actionHomeFragmentToAppelliFragment(
                         API.getCarriera().getIdCarriera(),

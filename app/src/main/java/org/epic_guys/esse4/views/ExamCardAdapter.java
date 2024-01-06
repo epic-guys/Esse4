@@ -1,6 +1,5 @@
 package org.epic_guys.esse4.views;
 
-import android.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.fragments.dialogs.ExamSubscribeDialogFragment;
 import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.models.AppelloLibretto;
-import org.epic_guys.esse4.models.RigaLibrettoConStatoQuestionario;
+import org.epic_guys.esse4.models.questionari.RigaLibrettoConStatoQuestionario;
 
 import java.util.List;
 

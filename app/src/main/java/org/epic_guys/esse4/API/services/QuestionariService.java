@@ -1,6 +1,7 @@
 package org.epic_guys.esse4.API.services;
 
-import org.epic_guys.esse4.models.RigaLibrettoConStatoQuestionario;
+import org.epic_guys.esse4.models.questionari.RigaLibrettoConStatoQuestionario;
+import org.epic_guys.esse4.models.questionari.UnitaDidatticaConQuestionario;
 
 import java.util.List;
 
@@ -25,6 +26,10 @@ public interface QuestionariService extends ApiService {
         C
     }
 
+    enum EventoCompilazione {
+        EV_VAL_DID
+    }
+
     @GET(BASE_URL + "/questionari/libretto/{matId}")
     Call<List<RigaLibrettoConStatoQuestionario>> getQuestionari(
             @Path("matId") long idCarriera
@@ -47,5 +52,17 @@ public interface QuestionariService extends ApiService {
             @Path("matId") long idCarriera,
             @Path("adsceId") long idRigaLibretto,
             @Query("questFilter") StatoQuestionario statoQuestionario
+    );
+
+    /**
+     * Recupera l'unità didattica con il questionario associato.
+     *
+     * @param idRigaLibretto L'ID della riga del libretto.
+     * @param eventoCompilazione L'evento di compilazione del questionario. Deve essere sempre impostato a EV_VAL_DID.
+     * @return Un oggetto Call che rappresenta la richiesta HTTP per ottenere l'unità didattica con il questionario associato.
+     */
+    Call<UnitaDidatticaConQuestionario> getUnitaDidatticaConQuestionario(
+            @Path("adsceId") long idRigaLibretto,
+            @Query("eventCompId") EventoCompilazione eventoCompilazione
     );
 }

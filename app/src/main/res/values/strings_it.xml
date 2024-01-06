@@ -38,4 +38,5 @@
     <string name="login_button_label">Accedi</string>
     <string name="password_label">Password</string>
     <string name="matricola_hint_label">Numero Matricola es: 999999</string>
+    <string name="settings_button_label">Impostazioni</string>
 </resources>

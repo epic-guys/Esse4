@@ -87,7 +87,7 @@ public class StudyPlanFragment extends Fragment {
             }
             RecyclerView recyclerView = requireView().findViewById(R.id.exams);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams);
+            SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams, true);
             recyclerView.setAdapter(adapter);
             Common.stopLoading(requireView().findViewById(R.id.exams),requireView(),R.id.loading);
         }).exceptionally(throwable -> {

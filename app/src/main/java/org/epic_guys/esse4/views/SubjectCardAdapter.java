@@ -19,9 +19,17 @@ public class SubjectCardAdapter extends RecyclerView.Adapter<SubjectCardAdapter.
 
     Context context;
     List<SubjectCardView> exams;
+    private final boolean hideButton;
+    public SubjectCardAdapter(Context context, List<SubjectCardView> exams, boolean hideButton) {
+        this.context = context;
+        this.exams = exams;
+        this.hideButton = hideButton;
+    }
+
     public SubjectCardAdapter(Context context, List<SubjectCardView> exams) {
         this.context = context;
         this.exams = exams;
+        this.hideButton = false;
     }
 
     @NonNull
@@ -38,6 +46,10 @@ public class SubjectCardAdapter extends RecyclerView.Adapter<SubjectCardAdapter.
         holder.examNameView.setText(exams.get(position).getName());
         holder.yearView.setText(exams.get(position).getYear());
         holder.CFUView.setText(exams.get(position).getCFU());
+
+        if(hideButton) {
+            holder.appelliButton.setVisibility(View.GONE);
+        }
 
         if(exams.get(position).getGrade() != null) {
             holder.passedLayout.setVisibility(View.VISIBLE);

@@ -85,7 +85,7 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
             // type_data.setText(appello.getTipoEsame().getDescription());
 
             host_data.setText(appello.getPresidenteNomeCognome());
-            sub_period_data.setText(appello.getDataInizioIscr() + " - " + appello.getDataFineIscr());
+            sub_period_data.setText(String.format(" %s - %s", appello.getDataInizioIscr(), appello.getDataFineIscr()));
 
 
             subscribe_button.setOnClickListener(v -> {

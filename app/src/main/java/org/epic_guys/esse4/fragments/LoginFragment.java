@@ -5,22 +5,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import org.epic_guys.esse4.R;
-
 import org.epic_guys.esse4.API.API;
-
+import org.epic_guys.esse4.common.Common;
 import android.util.Log;
-
 import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
 public class LoginFragment extends Fragment {
@@ -45,6 +41,11 @@ public class LoginFragment extends Fragment {
         Button loginButton = view.findViewById(R.id.login_button);
         loginButton.setOnClickListener(v -> {
 
+            //disable button to prevent multiple requests
+            loginButton.setEnabled(false);
+            //start loading animation
+            Common.startLoading(loginButton, requireView(), R.id.loading);
+
             Log.i("LoginActivity", "Login Requested from button");
 
             EditText matricolaInput = view.findViewById(R.id.textinput_matricola);
@@ -57,30 +58,24 @@ public class LoginFragment extends Fragment {
                 if (isLogged)
                     return API.getBasicData();
                 else {
-                    getActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show()
-                    );
+                    Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
+
+                    Common.stopLoading(loginButton, requireView(), R.id.loading);
+                    loginButton.setEnabled(true);
                     throw new RuntimeException("Failed to login");
                 }
             }).thenAccept(persona -> {
-                getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Login effettuato", Toast.LENGTH_SHORT).show();
                     Log.i("LoginActivity", "Login effettuato");
-                });
-
                 try {
-                    SecurePreferences.setValue("matricola", matricola, getContext());
-                    SecurePreferences.setValue("password", password, getContext());
+                    SecurePreferences.setValue("matricola", matricola, requireContext());
+                    SecurePreferences.setValue("password", password, requireContext());
 
                     Log.i("LoginActivity", "Account added");
                 }
                 catch (Exception e) {
                     Log.e("LoginActivity", "Failed to save credentials");
                 }
-
-
-                // Intent mainActivity = new Intent(this, MainActivity.class);
-                // startActivity(mainActivity);
 
                 NavOptions navOptions = new NavOptions.Builder()
                         .setPopUpTo(R.id.loginFragment, true)

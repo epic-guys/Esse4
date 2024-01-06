@@ -28,6 +28,7 @@
     <string name="compile">Compila</string>
     <string name="survey_to_compile">Questionario da compilare</string>
     <string name="survey_to_compile_message">Non hai ancora compilato il questionario per questo esame. Vuoi compilarlo ora?</string>
+    <string name="survey">Questionario</string>
     <string-array name="stato_questionario">
         <item>Questionari non presenti</item>
         <item>Questionari compilati</item>

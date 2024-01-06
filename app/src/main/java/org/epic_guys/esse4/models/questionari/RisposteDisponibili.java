@@ -40,11 +40,40 @@ public class RisposteDisponibili {
   @SerializedName("note")
   private String note = null;
 
+  /**
+ * Enum che rappresenta il tipo di elemento di risposta.
+ */
+public enum FormatoRisposta {
+    /**
+     * Risposta a testo fisso.
+     * Questo tipo di risposta è il più semplice: un testo fisso da leggere e eventualmente da selezionare.
+     * Evidentemente NON deve essere “figlia” di una domanda TL_DOM_LIB.
+     */
+    TL_RSP_TFB,
+
+    /**
+     * Risposta libera di tipo ALFANUMERICO.
+     */
+    TL_RSP_ALF,
+
+    /**
+     * Risposta libera di tipo DATA.
+     */
+    TL_RSP_DTA,
+
+    /**
+     * Risposta libera di tipo NUMERICO.
+     * A questi tipi di risposte è affiancata, su WEB, un’area di testo nella quale si richiede al compilatore di scrivere materialmente la risposta.
+     * Negli ultimi due formati, il sistema effettuerà un controllo sintattico dei testo immesso, in modo da circoscrivere il tipo di dato immesso a quelli specificati dal formato (una data e un numero rispettivamente).
+     */
+    TL_RSP_NUM
+}
+
   @SerializedName("rispostaFormatoCod")
-  private String rispostaFormatoCod = null;
+  private FormatoRisposta rispostaFormatoCod = null;
 
   @SerializedName("domandaFormatoCod")
-  private String domandaFormatoCod = null;
+  private Domande.FormatoDomanda domandaFormatoCod = null;
 
   @SerializedName("punteggio")
   private Integer punteggio = null;
@@ -175,7 +204,7 @@ public class RisposteDisponibili {
     this.note = note;
   }
 
-  public RisposteDisponibili rispostaFormatoCod(String rispostaFormatoCod) {
+  public RisposteDisponibili rispostaFormatoCod(RisposteDisponibili risposteDisponibili) {
     this.rispostaFormatoCod = rispostaFormatoCod;
     return this;
   }
@@ -185,15 +214,15 @@ public class RisposteDisponibili {
    * @return rispostaFormatoCod
   **/
   
-  public String getRispostaFormatoCod() {
+  public FormatoRisposta getRispostaFormatoCod() {
     return rispostaFormatoCod;
   }
 
-  public void setRispostaFormatoCod(String rispostaFormatoCod) {
+  public void setRispostaFormatoCod(FormatoRisposta rispostaFormatoCod) {
     this.rispostaFormatoCod = rispostaFormatoCod;
   }
 
-  public RisposteDisponibili domandaFormatoCod(String domandaFormatoCod) {
+  public RisposteDisponibili domandaFormatoCod(Domande.FormatoDomanda domandaFormatoCod) {
     this.domandaFormatoCod = domandaFormatoCod;
     return this;
   }
@@ -203,11 +232,11 @@ public class RisposteDisponibili {
    * @return domandaFormatoCod
   **/
   
-  public String getDomandaFormatoCod() {
+  public Domande.FormatoDomanda getDomandaFormatoCod() {
     return domandaFormatoCod;
   }
 
-  public void setDomandaFormatoCod(String domandaFormatoCod) {
+  public void setDomandaFormatoCod(Domande.FormatoDomanda domandaFormatoCod) {
     this.domandaFormatoCod = domandaFormatoCod;
   }
 

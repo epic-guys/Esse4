@@ -37,7 +37,7 @@ public class UnitaDidatticaConQuestionario {
      * id dell&#39;attivita&#39; didattica di libretto
      * @return adsceId
      **/
-    public Long getAdsceId() {
+    public Long getIdRigaLibretto() {
         return adsceId;
     }
 

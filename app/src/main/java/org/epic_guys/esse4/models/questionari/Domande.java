@@ -46,8 +46,56 @@ public class Domande {
   @SerializedName("numMaxSce")
   private Integer numMaxSce = null;
 
+
+/**
+ * Enum che rappresenta il tipo di formato della domanda.
+ */
+public enum FormatoDomanda {
+    /**
+     * Domanda con risposte a dominio finito e scelta singola.
+     * Questo formato permette la comparsa di un Radiobutton accanto a ciascuna risposta "figlia",
+     * permettendo la scelta di una e una sola risposta alla domanda.
+     */
+    TL_DOM_DFS,
+
+    /**
+     * Domanda con risposte a dominio finito e scelta multipla.
+     * Questo formato permette la comparsa di una Checkbox accanto a ciascuna risposta "figlia",
+     * permettendo la scelta di una o più risposte alla domanda.
+     */
+    TL_DOM_DFM,
+
+    /**
+     * Domanda con risposte a dominio finito e scelta singola con layout orizzontale.
+     */
+    TL_DOM_OFS,
+
+    /**
+     * Domanda con risposte a dominio finito e scelta multipla con layout orizzontale.
+     * Questi ultimi due formati sono simili ai rispettivi precedenti,
+     * con la differenza che dispongono le risposte possibili in riga e le domande in colonna,
+     * creando visivamente una tabella a matrice.
+     */
+    TL_DOM_OFM,
+
+    /**
+     * Domanda con risposte libere.
+     * Questo formato non fa apparire nulla, su WEB, accanto alle risposte "figlie"
+     * e si usa generalmente con risposte singole a testo libero.
+     */
+    TL_DOM_LIB,
+
+    /**
+     * Domande con risposte a dominio dinamico di valori a scelta singola.
+     * Se viene inserita una domanda con questo tipo, sulle risposte libere di tipo alfanumerico
+     * (tipo TL_RSP_ALF) è possibile associare un tag o operando SQL per popolare dinamicamente
+     * la combo-box che farà scegliere al compilatore il valore della risposta.
+     */
+    TL_DOM_VAR
+}
+
   @SerializedName("tipoFormatoCod")
-  private String tipoFormatoCod = null;
+  private FormatoDomanda tipoFormatoCod = null;
 
   @SerializedName("rispDisponibili")
   private List<RisposteDisponibili> rispDisponibili = null;
@@ -199,8 +247,8 @@ public class Domande {
     this.numMaxSce = numMaxSce;
   }
 
-  public Domande tipoFormatoCod(String tipoFormatoCod) {
-    this.tipoFormatoCod = tipoFormatoCod;
+  public Domande tipoFormatoCod(FormatoDomanda formatoDomanda) {
+    this.tipoFormatoCod = formatoDomanda;
     return this;
   }
 
@@ -209,12 +257,12 @@ public class Domande {
    * @return tipoFormatoCod
   **/
 
-  public String getTipoFormatoCod() {
+  public FormatoDomanda getTipoFormatoCod() {
     return tipoFormatoCod;
   }
 
-  public void setTipoFormatoCod(String tipoFormatoCod) {
-    this.tipoFormatoCod = tipoFormatoCod;
+  public void setTipoFormatoCod(FormatoDomanda formatoDomanda) {
+    this.tipoFormatoCod = formatoDomanda;
   }
 
   public Domande rispDisponibili(List<RisposteDisponibili> rispDisponibili) {

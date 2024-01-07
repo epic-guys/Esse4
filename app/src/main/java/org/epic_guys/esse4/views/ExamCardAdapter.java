@@ -19,7 +19,6 @@ import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.questionari.RigaLibrettoConStatoQuestionario;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import retrofit2.Call;
@@ -103,7 +102,9 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
                         appello.getIdRigaLibretto()
                 );
 
-                API.enqueueResource(statoQuestionarioCall)
+                createExamSubscribeDialog(appello);
+
+                /*  API.enqueueResource(statoQuestionarioCall)
                         .thenAccept(rigaLibrettoConStatoQuestionario -> {
                             switch (rigaLibrettoConStatoQuestionario.getStatoQuestionario()) {
                                 case COMPILATI:
@@ -122,7 +123,7 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
                         .exceptionally(throwable -> {
                             Log.w("ExamCardAdapter", throwable.getMessage());
                             return null;
-                        });
+                        }); */
             });
         }
 

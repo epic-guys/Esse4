@@ -54,38 +54,40 @@ public class ExamSubscribeDialogFragment extends DialogFragment {
                 )
         );
 
-        return new AlertDialog.Builder(requireContext())
-                .setTitle(appello.getDescrizioneAttivitaDidattica())
-                .setMessage(appello.getDescrizioneAppello())
-                .setView(view)
-                .setPositiveButton(R.string.subscribe, (dialog, which) -> {
-                    Log.d(TAG, appello.getIdRigaLibretto().toString());
-                    ParametriIscrizioneAppello parametri = new ParametriIscrizioneAppello(
-                        appello.getIdRigaLibretto()
-                    );
-                    // Tipo esame DA IMPLEMENTARE
-                    // parametri.setTipoIscrStu((Appello.TipoIscrCodEnum) examType.getSelectedItem());
-                    // Note per docente
-                    // if (!examNotes.getText().toString().isEmpty()) {
-                    //     parametri.setNotaStu(examNotes.getText().toString());
-                    // }
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle(appello.getDescrizioneAttivitaDidattica());
+        builder.setMessage(appello.getDescrizioneAppello());
+        builder.setView(view);
+        builder.setPositiveButton(R.string.subscribe, (dialog, which) -> {
+            Log.d(TAG, appello.getIdRigaLibretto().toString());
+            ParametriIscrizioneAppello parametri = new ParametriIscrizioneAppello(
+                    appello.getIdRigaLibretto()
+            );
+            // Tipo esame DA IMPLEMENTARE
+            // parametri.setTipoIscrStu((Appello.TipoIscrCodEnum) examType.getSelectedItem());
+            // Note per docente
+            // if (!examNotes.getText().toString().isEmpty()) {
+            //     parametri.setNotaStu(examNotes.getText().toString());
+            // }
 
-                    subscribe(parametri)
-                            .thenAccept(aVoid -> {
-                                Log.d(TAG, "Iscrizione effettuata");
-                                requireActivity().runOnUiThread(() -> {
-                                    Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show();
-                                });
-                            })
-                            .exceptionally(throwable -> {
-                                Log.w(TAG, Log.getStackTraceString(throwable));
-                                requireActivity().runOnUiThread(() -> {
-                                    Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show();
-                                });
-                                return null;
-                            });
-                })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
+            subscribe(parametri)
+                    .thenAccept(aVoid -> {
+                        Log.d(TAG, "Iscrizione effettuata");
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show();
+                        });
+                    })
+                    .exceptionally(throwable -> {
+                        Log.w(TAG, Log.getStackTraceString(throwable));
+                        requireActivity().runOnUiThread(() -> {
+                            Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show();
+                        });
+                        return null;
+                    });
+        });
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+        });
+        return builder
                 .create();
     }
 
@@ -95,11 +97,10 @@ public class ExamSubscribeDialogFragment extends DialogFragment {
         Call<Void> call = service.postIscrizioneAppello(
                 appello.getCdsId(),
                 appello.getAdId(),
-                appello.getAppelloId(),
+                appello.getAppId(), //getAppId is different from getAppelloId (don't know why)
                 parametriIscrizioneAppello
         );
 
-        Log.d(TAG, "Iscrizione appello: " + appello.getCodiceAttivitaDidattica());
         return API.enqueueResource(call);
     }
 

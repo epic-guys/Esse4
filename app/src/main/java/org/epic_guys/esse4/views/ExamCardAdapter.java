@@ -19,6 +19,7 @@ import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.questionari.RigaLibrettoConStatoQuestionario;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import retrofit2.Call;
@@ -86,6 +87,13 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
 
             host_data.setText(appello.getPresidenteNomeCognome());
             sub_period_data.setText(String.format(" %s - %s", appello.getDataInizioIscr(), appello.getDataFineIscr()));
+/*
+            LocalDate parseStartDate = Appello.getDateTimeFormatter().parse(appello.getDataInizioIscr(), LocalDate::from);
+            LocalDate parseEndDate = Appello.getDateTimeFormatter().parse(appello.getDataFineIscr(), LocalDate::from);
+
+            if (LocalDate.now().isBefore(parseStartDate) || LocalDate.now().isAfter(parseEndDate)) {
+                subscribe_button.setEnabled(false);
+            } */
 
 
             subscribe_button.setOnClickListener(v -> {

@@ -1,22 +1,33 @@
 package org.epic_guys.esse4.exceptions;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.epic_guys.esse4.models.ApiError;
+
 public class ApiException extends RuntimeException {
-    public ApiException() {
+    
+    private final ApiError apiError;
+    
+    public ApiException(@NonNull ApiError apiError) {
+        this.apiError = apiError;
     }
 
-    public ApiException(String message) {
-        super(message);
-    }
-
-    public ApiException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ApiException(Throwable cause) {
+    public ApiException(@NonNull ApiError apiError, @NonNull Throwable cause) {
         super(cause);
+        this.apiError = apiError;
     }
 
-    public ApiException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    @NonNull
+    public ApiError getApiError() {
+        return apiError;
+    }
+
+
+    @Nullable
+    @Override
+    public String getMessage() {
+        return apiError.getErrorMessage();
     }
 }
+

@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.core.util.Pair;
 
+import com.google.gson.Gson;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Credentials;
 import okhttp3.Request;
@@ -15,6 +17,7 @@ import org.epic_guys.esse4.API.services.AnagraficheService;
 import org.epic_guys.esse4.API.services.ApiService;
 import org.epic_guys.esse4.API.services.JwtService;
 import org.epic_guys.esse4.exceptions.ApiException;
+import org.epic_guys.esse4.models.ApiError;
 import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
@@ -186,30 +189,13 @@ public class API {
      * Refreshes the current JWT and stores it.
      */
     public static CompletableFuture<Void> refreshJwt() {
-        final CompletableFuture<Void> future = new CompletableFuture<>();
         JwtService jwtService = API.getService(JwtService.class);
         Jwt jwt = API.getInstance().jwt;
-        jwtService.refreshJwt(jwt.toString())
-                .enqueue(new Callback<Jwt>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
-                        if (response.isSuccessful()) {
-                            API.getInstance().jwt = response.body();
-                            future.complete(null);
-                        }
-                        else {
-                            future.completeExceptionally(
-                                    new ApiException("Response " + response.code() + " when refreshing JWT."));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
-                        future.completeExceptionally(t);
-                    }
+        Call<Jwt> jwtCall = jwtService.refreshJwt(jwt.toString());
+        return API.enqueueResource(jwtCall)
+                .thenAccept(newJwt -> {
+                    API.getInstance().jwt = newJwt;
                 });
-        
-        return future;
     }
 
     /**
@@ -240,7 +226,16 @@ public class API {
                 if (response.isSuccessful()) {
                     future.complete(response.body());
                 } else {
-                    ApiException exception = new ApiException("Error on response: " + response.code());
+                    Exception exception;
+
+                    try {
+                        Gson gson = new Gson();
+                        ApiError error = gson.fromJson(response.errorBody().string(), ApiError.class);
+                        exception = new ApiException(error);
+                    } catch (IOException | NullPointerException e) {
+                        exception = e;
+                    }
+
                     future.completeExceptionally(exception);
                 }
             }

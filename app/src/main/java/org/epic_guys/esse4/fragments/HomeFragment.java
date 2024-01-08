@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-
+        // why is this here? will always be null (needs clarification)
         if(API.getLoggedPersona() != null) {
             basicDataFuture = new CompletableFuture<>();
             basicDataFuture.complete(new Pair<>(API.getLoggedPersona(), API.getCarriera()));
@@ -120,6 +120,7 @@ public class HomeFragment extends Fragment {
         basicDataFuture = API.login(matricola, password)
                 .exceptionally(e -> {
                     Log.d("HomeFragment", e.toString());
+                    clearPreferences(); //clears secure preferences since they are not valid
                     return false;
                 })
                 .thenCompose(isLogged -> {
@@ -163,6 +164,7 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
             SecurePreferences.removeValue("matricola", requireContext());
             SecurePreferences.removeValue("password", requireContext());
+            API.logout();
             launchLoginFragment();
         });
 

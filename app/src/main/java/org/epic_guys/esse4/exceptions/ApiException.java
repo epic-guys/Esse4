@@ -6,9 +6,7 @@ import androidx.annotation.Nullable;
 import org.epic_guys.esse4.models.ApiError;
 
 public class ApiException extends RuntimeException {
-    
     private final ApiError apiError;
-    
     public ApiException(@NonNull ApiError apiError) {
         this.apiError = apiError;
     }
@@ -30,4 +28,3 @@ public class ApiException extends RuntimeException {
         return apiError.getErrorMessage();
     }
 }
-

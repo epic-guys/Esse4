@@ -83,6 +83,10 @@ public class API {
         return instance == null ? instance = new API() : instance;
     }
 
+    public static void logout(){
+        API.instance = null;
+    }
+
     @NotNull
     public static CompletableFuture<Boolean> login (String username, String password) {
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
@@ -110,24 +114,24 @@ public class API {
         basicRetrofit.create(JwtService.class)
                 .newJwt()
                 .enqueue(new retrofit2.Callback<Jwt>() {
-            @Override
-            public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
-                // throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? t.getMessage() : "Unknown error"));
-                future.completeExceptionally(t);
-            }
+                    @Override
+                    public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
+                        // throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? t.getMessage() : "Unknown error"));
+                        future.completeExceptionally(t);
+                    }
 
-            @Override
-            public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
-                boolean success = response.code() == 200;
-                if (success) {
-                    API.getInstance().jwt = response.body();
-                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
-                } else {
-                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
-                }
-                future.complete(success);
-            }
-        });
+                    @Override
+                    public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
+                        boolean success = response.code() == 200;
+                        if (success) {
+                            API.getInstance().jwt = response.body();
+                            Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
+                        } else {
+                            Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
+                        }
+                        future.complete(success);
+                    }
+                });
 
 
         return future;
@@ -140,10 +144,10 @@ public class API {
         return API.enqueueResource(callPersone).thenCombine(
                 API.enqueueResource(callCarriere),
                 (persone, carriere) -> {
-            API.getInstance().loggedPersona = persone.get(0);
-            API.getInstance().carrieraStudente = carriere.get(0);
-            return new Pair<>(persone.get(0), carriere.get(0));
-        });
+                    API.getInstance().loggedPersona = persone.get(0);
+                    API.getInstance().carrieraStudente = carriere.get(0);
+                    return new Pair<>(persone.get(0), carriere.get(0));
+                });
     }
 
     public static CompletableFuture<Bitmap> getPhoto() {
@@ -188,10 +192,13 @@ public class API {
     /**
      * Refreshes the current JWT and stores it.
      */
-    public static CompletableFuture<Void> refreshJwt() {
+    public static CompletableFuture<Void> refreshJwt() throws RuntimeException {
         JwtService jwtService = API.getService(JwtService.class);
-        Jwt jwt = API.getInstance().jwt;
-        Call<Jwt> jwtCall = jwtService.refreshJwt(jwt.toString());
+        if(API.getInstance().jwt == null){
+            throw new RuntimeException("JWT is null");
+        };
+        String jwt = API.getInstance().jwt.toString();
+        Call<Jwt> jwtCall = jwtService.refreshJwt(jwt);
         return API.enqueueResource(jwtCall)
                 .thenAccept(newJwt -> {
                     API.getInstance().jwt = newJwt;
@@ -207,7 +214,6 @@ public class API {
      */
     public static <T extends ApiService> T getService(Class<T> serviceClass) {
         return API.getInstance().retrofit.create(serviceClass);
-
     }
 
     /**

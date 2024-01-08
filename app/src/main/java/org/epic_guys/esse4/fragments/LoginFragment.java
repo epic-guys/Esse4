@@ -58,7 +58,7 @@ public class LoginFragment extends Fragment {
                 if (isLogged)
                     return API.getBasicData();
                 else {
-                    Toast.makeText(getContext(), "Login fallito, proprio come te", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Login fallito", Toast.LENGTH_SHORT).show();
 
                     Common.stopLoading(loginButton, requireView(), R.id.loading);
                     loginButton.setEnabled(true);

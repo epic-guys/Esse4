@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 
 public class Appello {
 
-
     @SerializedName("datacalId")
     private Long datacalId = null;
 
@@ -286,9 +285,6 @@ public class Appello {
 
     @SerializedName("cdsId")
     private Long cdsId = null;
-
-
-
 
     public static DateTimeFormatter getDateTimeFormatter() {
         return DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");

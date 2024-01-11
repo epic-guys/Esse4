@@ -42,4 +42,7 @@
     <string name="settings_button_label">Impostazioni</string>
     <string name="chevron_day_back">Giorno precedente</string>
     <string name="chevron_day_forward">Giorno successivo</string>
+    <string name="see_booked">Vedi appelli prenotati</string>
+    <string name="see_available">Vedi appelli disponibili</string>
+
 </resources>

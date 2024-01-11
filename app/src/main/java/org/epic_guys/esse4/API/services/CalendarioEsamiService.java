@@ -19,13 +19,6 @@ public interface CalendarioEsamiService extends ApiService {
     @GET(BASE_URL + "/appelli/{cdsId}/{adId}")
     Call<List<Appello>> getAppelli(@Path("cdsId") Long idCorsoDiStudio, @Path("adId") Long idAttivitaDidattica);
 
-    @GET(BASE_URL + "/appelli/{cdsId}/{adId}/{appId}/iscritti")
-    Call<List<IscrizioneAppello>> getIscrittiAppello(
-            @Path("cdsId") long idCorsoDiStudio,
-            @Path("adId") long idAttivitaDidattica,
-            @Path("appId") long idAppello
-    );
-
     @POST(BASE_URL + "/appelli/{cdsId}/{adId}/{appId}/iscritti")
     Call<Void> postIscrizioneAppello(
             @Path("cdsId") long idCorsoDiStudio,
@@ -50,7 +43,7 @@ public interface CalendarioEsamiService extends ApiService {
     @GET(BASE_URL + "/prenotazioni/{matId}/")
     Call<List<IscrizioneAppello>> getPrenotazioni(@Path("matId") Long carrieraId);
 
-    @GET(BASE_URL + "/prenotazioni/{matId}/")
+    @GET(BASE_URL + "/prenotazioni/{matId}/") //Questo sarebbe quello da usare se capissi come far funzionare il filtro quindi per ora useremo quello sopra
     Call<List<IscrizioneAppello>> getPrenotazioni(
             @Path("matId") Long carrieraId,
             @Path("q") FiltroPrenotazioni filtro

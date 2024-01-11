@@ -290,6 +290,10 @@ public class Appello {
         return DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     }
 
+    public static DateTimeFormatter getDateFormatter() {
+        return DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    }
+
 
     public String getDescrizioneAppello() {
         return desApp;

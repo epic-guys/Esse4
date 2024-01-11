@@ -88,7 +88,12 @@ public class AppelliFragment extends Fragment {
                 .exceptionally(throwable -> {
                     Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
                     return null;
-                });
+                }).thenApply(
+                        unused -> {
+                            Common.stopLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
+                            return null;
+                        }
+                );
 
 
         CalendarioEsamiService calEsaService = API.getService(CalendarioEsamiService.class);
@@ -96,18 +101,16 @@ public class AppelliFragment extends Fragment {
                 idCarriera
         );
 
-API.enqueueResource(esami)
+        API.enqueueResource(esami)
                 .thenAccept(esamiList -> {
                     Log.d("AppelliFragment", "Ricevuti esami prenotati: " + esamiList.size());
                     appelliPrenotatiRecyclerView.setAdapter(new BookedCardAdapter(esamiList));
-                    Common.stopLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
                 })
                 .exceptionally(throwable -> {
                     Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
                     return null;
                 });
 
-        Common.stopLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
 
         //when back button is pressed, go back to home fragment
         view.findViewById(R.id.btn_back).setOnClickListener(v -> {

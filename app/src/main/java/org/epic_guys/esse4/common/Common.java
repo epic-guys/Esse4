@@ -1,16 +1,12 @@
 package org.epic_guys.esse4.common;
 
 import android.view.View;
-import android.widget.LinearLayout;
-
-import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.models.Esito;
 import org.epic_guys.esse4.models.RigaLibretto;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class Common {
@@ -44,8 +40,7 @@ public class Common {
         String dayOfWeek = new SimpleDateFormat("EEEE", Locale.getDefault()).format(calendar.getTime());
         dayOfWeek = dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1);
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
-        String selectedDateFormatted = dayOfWeek + " " + formatter.format(calendar.getTime());
-        return selectedDateFormatted;
+        return dayOfWeek + " " + formatter.format(calendar.getTime());
     }
 
     public class ExamSession {

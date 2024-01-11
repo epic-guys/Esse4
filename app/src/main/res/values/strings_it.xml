@@ -44,5 +44,6 @@
     <string name="chevron_day_forward">Giorno successivo</string>
     <string name="see_booked">Vedi appelli prenotati</string>
     <string name="see_available">Vedi appelli disponibili</string>
+    <string name="subscribe_not_available">Iscrizioni chiuse</string>
 
 </resources>

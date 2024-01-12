@@ -2,7 +2,6 @@ package org.epic_guys.esse4.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -115,7 +114,6 @@ public class CalendarFragment extends Fragment {
         GestureDetector gestureDetector = new GestureDetector(requireContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1,@NonNull MotionEvent e2, float velocityX, float velocityY) {
-                Log.i("TAG", "onFling: " + e1.toString() + e2);
                 float diffX = e2.getX() - e1.getX();
                 float diffY = e2.getY() - e1.getY();
                 if (Math.abs(diffX) > Math.abs(diffY)) {

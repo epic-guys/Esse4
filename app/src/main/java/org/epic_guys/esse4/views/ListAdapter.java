@@ -36,7 +36,7 @@ public class ListAdapter extends ArrayAdapter<AppelloLibretto> {
         }
 
         ((TextView)view.findViewById(R.id.name_exam)).setText(item.getDescrizioneAttivitaDidattica());
-        ((TextView)view.findViewById(R.id.exam_date)).setText(item.getDataOraEsame().format(Appello.getDateTimeFormatter()));
+        ((TextView)view.findViewById(R.id.exam_date)).setText(item.getDataOraEsame().format(Appello.getDateTimeFormatter()).substring(0,16));
         ((TextView)view.findViewById(R.id.exam_host)).setText(item.getPresidenteNomeCognome());
 
         return view;

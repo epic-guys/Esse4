@@ -16,14 +16,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.CalendarioEsamiService;
 import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
+import org.epic_guys.esse4.fragments.dialogs.ExamSubscribeDialogFragment;
 import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.IscrizioneAppello;
+import org.epic_guys.esse4.models.ParametriIscrizioneAppello;
 import org.epic_guys.esse4.views.BookedCardAdapter;
 import org.epic_guys.esse4.views.ExamCardAdapter;
 
@@ -149,5 +152,37 @@ public class AppelliFragment extends Fragment {
             requireView().findViewById(left).animate().translationX(0).setDuration(500);
             requireView().findViewById(right).animate().translationX(requireView().findViewById(right).getWidth()).setDuration(500);
         }
+    }
+
+    public void subscribe(
+            AppelloLibretto appelloLibretto,
+            ParametriIscrizioneAppello parametriIscrizioneAppello
+    ) {
+        Log.d(getClass().getName(), "onSubscribe: " + appelloLibretto.getDescrizioneAttivitaDidattica());
+
+        Log.d(getClass().getName(), appelloLibretto.getIdRigaLibretto().toString());
+
+
+        CalendarioEsamiService service = API.getService(CalendarioEsamiService.class);
+        Call<Void> call = service.postIscrizioneAppello(
+                appelloLibretto.getCdsId(),
+                appelloLibretto.getAdId(),
+                appelloLibretto.getAppId(), //getAppId is different from getAppelloId (don't know why)
+                parametriIscrizioneAppello
+        );
+
+        API.enqueueResource(call).thenAccept(aVoid -> {
+                    Log.d(getClass().getName(), "Iscrizione effettuata");
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show();
+                    });
+                })
+                .exceptionally(throwable -> {
+                    Log.w(getClass().getName(), Log.getStackTraceString(throwable));
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show();
+                    });
+                    return null;
+                });
     }
 }

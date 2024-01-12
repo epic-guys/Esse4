@@ -2,38 +2,54 @@ package org.epic_guys.esse4.fragments.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
-import org.epic_guys.esse4.API.API;
-import org.epic_guys.esse4.API.services.CalendarioEsamiService;
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.fragments.AppelliFragment;
 import org.epic_guys.esse4.models.Appello;
 import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.ParametriIscrizioneAppello;
 
-import java.util.concurrent.CompletableFuture;
-
-import retrofit2.Call;
-
 public class ExamSubscribeDialogFragment extends DialogFragment {
 
     private final AppelloLibretto appello;
+
+    public interface ExamSubscribeDialogListener {
+        void onSubscribe(
+                AppelloLibretto appelloLibretto,
+                ParametriIscrizioneAppello parametri
+        );
+    }
+
+    private ExamSubscribeDialogListener listener;
 
     public ExamSubscribeDialogFragment(AppelloLibretto appello) {
         super();
         this.appello = appello;
 
         this.setCancelable(false);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        try {
+            listener = (ExamSubscribeDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(
+                    context.toString() + " must implement ExamSubscribeDialogListener"
+            );
+        }
     }
 
     @NonNull
@@ -59,7 +75,7 @@ public class ExamSubscribeDialogFragment extends DialogFragment {
         builder.setMessage(appello.getDescrizioneAppello());
         builder.setView(view);
         builder.setPositiveButton(R.string.subscribe, (dialog, which) -> {
-            Log.d(TAG, appello.getIdRigaLibretto().toString());
+
             ParametriIscrizioneAppello parametri = new ParametriIscrizioneAppello(
                     appello.getIdRigaLibretto()
             );
@@ -70,40 +86,15 @@ public class ExamSubscribeDialogFragment extends DialogFragment {
             //     parametri.setNotaStu(examNotes.getText().toString());
             // }
 
-            subscribe(parametri)
-                    .thenAccept(aVoid -> {
-                        Log.d(TAG, "Iscrizione effettuata");
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show();
-                        });
-                    })
-                    .exceptionally(throwable -> {
-                        Log.w(TAG, Log.getStackTraceString(throwable));
-                        requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show();
-                        });
-                        return null;
-                    });
+            listener.onSubscribe(appello, parametri);
         });
+
+
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
         });
         return builder
                 .create();
     }
-
-
-    public CompletableFuture<Void> subscribe(ParametriIscrizioneAppello parametriIscrizioneAppello) {
-        CalendarioEsamiService service = API.getService(CalendarioEsamiService.class);
-        Call<Void> call = service.postIscrizioneAppello(
-                appello.getCdsId(),
-                appello.getAdId(),
-                appello.getAppId(), //getAppId is different from getAppelloId (don't know why)
-                parametriIscrizioneAppello
-        );
-
-        return API.enqueueResource(call);
-    }
-
 
     public static String TAG = "ExamSubscribeDialogFragment";
 }

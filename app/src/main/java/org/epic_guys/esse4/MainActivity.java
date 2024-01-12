@@ -1,8 +1,21 @@
 package org.epic_guys.esse4;
-import androidx.appcompat.app.AppCompatActivity;
-import org.epic_guys.esse4.API.JWTRefresher;
+import android.util.Log;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
+import org.epic_guys.esse4.API.JWTRefresher;
+import org.epic_guys.esse4.fragments.AppelliFragment;
+import org.epic_guys.esse4.fragments.dialogs.ExamSubscribeDialogFragment;
+import org.epic_guys.esse4.models.AppelloLibretto;
+import org.epic_guys.esse4.models.ParametriIscrizioneAppello;
+
+import java.util.Objects;
+
+public class MainActivity
+        extends AppCompatActivity
+        implements ExamSubscribeDialogFragment.ExamSubscribeDialogListener {
 
     private JWTRefresher jwtRefresher;
 
@@ -15,5 +28,19 @@ public class MainActivity extends AppCompatActivity {
 
         jwtRefresher = new JWTRefresher(this);
         jwtRefresher.start();
+    }
+
+
+    @Override
+    public void onSubscribe(
+            AppelloLibretto appelloLibretto,
+            ParametriIscrizioneAppello parametri
+    ) {
+        Log.d("MainActivity", "onSubscribe: " + appelloLibretto.getDescrizioneAttivitaDidattica());
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        AppelliFragment fragment = (AppelliFragment) navHostFragment.getChildFragmentManager().getFragments().get(0);
+        // AppelliFragment fragment = (AppelliFragment) getSupportFragmentManager().findFragmentById(R.id.appelliFragment);
+        assert fragment != null;
+        fragment.subscribe(appelloLibretto, parametri);
     }
 }

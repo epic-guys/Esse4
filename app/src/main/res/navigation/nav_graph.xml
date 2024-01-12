@@ -120,8 +120,5 @@
         <argument
             android:name="idQuestionarioCompilato"
             app:argType="long" />
-        <argument
-            android:name="idPaginaQuestionario"
-            app:argType="long" />
     </fragment>
 </navigation>

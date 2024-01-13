@@ -28,7 +28,7 @@ import retrofit2.Call;
 public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyViewHolder> {
 
     @NonNull
-    private List<AppelloLibretto> appelli;
+    private final List<AppelloLibretto> appelli;
 
     public ExamCardAdapter(@NonNull List<AppelloLibretto> appelli) {
         this.appelli = appelli;
@@ -40,6 +40,11 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.exam_card_view, parent, false);
         return new ExamCardAdapter.MyViewHolder(view);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position % getItemCount();
     }
 
     @Override

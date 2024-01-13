@@ -12,7 +12,7 @@ import de.adorsys.android.securestoragelibrary.SecurePreferences;
 
 public class JWTRefresher {
 
-    private Context context;
+    private final Context context;
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public JWTRefresher(Context context){
@@ -21,8 +21,8 @@ public class JWTRefresher {
 
         public void start() {
             final Runnable refresher = () -> {
-                Boolean res = renewJWT();
-                Log.i("JWTRefresher", "JWTRefresher renewed: " + res.toString());
+                boolean res = renewJWT();
+                Log.i("JWTRefresher", "JWTRefresher renewed: " + res);
                 /*
                 TODO: go back to login
                 if(!res){
@@ -39,13 +39,10 @@ public class JWTRefresher {
         CompletableFuture<Boolean> res = new CompletableFuture<>();
 
         try{
-            API.refreshJwt().thenAccept(jwt -> {
-                        res.complete(true);
-                    })
+            API.refreshJwt().thenAccept(jwt -> res.complete(true))
                     .exceptionally(
                             throwable -> {
                                 res.complete(login());
-
                                 return null;
                             }
                     ).isCompletedExceptionally();
@@ -63,9 +60,7 @@ public class JWTRefresher {
         String password = SecurePreferences.getStringValue( "password", context, "");
 
         try{
-            API.login(matricola,password).thenAccept(jwt -> {
-                        res.complete(true);
-                    })
+            API.login(matricola,password).thenAccept(jwt -> res.complete(true))
                     .exceptionally(
                             throwable -> {
                                 res.complete(false);

@@ -18,10 +18,8 @@ import java.util.Arrays;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
 
+import org.epic_guys.esse4.common.EnumAdapter;
 /**
  * IscrizioneAppelloEsito
  */
@@ -59,16 +57,10 @@ public class IscrizioneAppelloEsito {
       return null;
     }
 
-    public static class Adapter extends TypeAdapter<ModValCodEnum> {
+    public static class Adapter extends EnumAdapter<ModValCodEnum> {
       @Override
-      public void write(final JsonWriter jsonWriter, final ModValCodEnum enumeration) throws IOException {
-        jsonWriter.value(enumeration.getValue());
-      }
-
-      @Override
-      public ModValCodEnum read(final JsonReader jsonReader) throws IOException {
-        String value = jsonReader.nextString();
-        return ModValCodEnum.fromValue(String.valueOf(value));
+      public Class<ModValCodEnum> getTClass() {
+        return ModValCodEnum.class;
       }
     }
   }

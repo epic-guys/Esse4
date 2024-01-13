@@ -66,12 +66,13 @@
                 android:background="#00E8E8E8"
                 android:padding="10dp"
                 android:scaleType="fitStart"
-                app:tint="@color/white"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
-                app:srcCompat="@drawable/outline_settings_24" />
+                app:srcCompat="@drawable/outline_settings_24"
+                app:tint="@color/white" />
 
         </LinearLayout>
 

@@ -144,7 +144,6 @@ public class ExamCardAdapter extends RecyclerView.Adapter<ExamCardAdapter.MyView
         }
 
         public void createExamSubscribeDialog(AppelloLibretto appello) {
-
             new ExamSubscribeDialogFragment(appello).show(
                     // findFragment restituisce AppelliFragment, creiamo il dialog in questo fragment
                     FragmentManager.findFragment(itemView).getParentFragmentManager(),

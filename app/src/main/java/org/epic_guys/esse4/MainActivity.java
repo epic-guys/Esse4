@@ -11,7 +11,7 @@ import org.epic_guys.esse4.models.ParametriIscrizioneAppello;
 
 public class MainActivity
         extends AppCompatActivity
-        implements ExamSubscribeDialogFragment.ExamSubscribeDialogListener {
+        implements ExamSubscribeDialogFragment.ExamSubscribeDialogListener{
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -23,7 +23,6 @@ public class MainActivity
         JWTRefresher jwtRefresher = new JWTRefresher(this);
         jwtRefresher.start();
     }
-
 
     @Override
     public void onSubscribe(

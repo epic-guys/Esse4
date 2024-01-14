@@ -1,5 +1,6 @@
 package org.epic_guys.esse4.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ import org.epic_guys.esse4.API.services.CalendarioEsamiService;
 import org.epic_guys.esse4.API.services.LibrettoService;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
+import org.epic_guys.esse4.exceptions.ApiException;
 import org.epic_guys.esse4.models.AppelloLibretto;
 import org.epic_guys.esse4.models.BookedAppello;
 import org.epic_guys.esse4.models.IscrizioneAppello;
@@ -147,7 +149,7 @@ public class AppelliFragment extends Fragment {
 
 
         //when back button is pressed, go back to home fragment
-        view.findViewById(R.id.btn_back).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_cancel_survey).setOnClickListener(v -> {
             NavOptions navOptions = new NavOptions.Builder()
                     .setPopUpTo(R.id.homeFragment, true)
                     .build();
@@ -176,6 +178,17 @@ public class AppelliFragment extends Fragment {
         }
     }
 
+    public void onStartCompileSurvey(AppelloLibretto appello) {
+        NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        assert navHostFragment != null;
+        AppelliFragmentDirections.ActionAppelliFragmentToSurveyPageFragment direction =
+                AppelliFragmentDirections.actionAppelliFragmentToSurveyPageFragment(
+                        appello.getIdRigaLibretto(),
+                        API.getCarriera().getIdStudente()
+                );
+        NavHostFragment.findNavController(navHostFragment).navigate(direction);
+    }
+
     public void subscribe(
             AppelloLibretto appelloLibretto,
             ParametriIscrizioneAppello parametriIscrizioneAppello
@@ -188,20 +201,41 @@ public class AppelliFragment extends Fragment {
                 parametriIscrizioneAppello
         );
 
-        API.enqueueResource(call).thenAccept(aVoid -> {
-                    Snackbar snackbar = Snackbar.make(requireView(), R.string.subscribe_success, Snackbar.LENGTH_LONG);
-                    snackbar.setAction(R.string.cancel, v -> cancelSubscription(appelloLibretto));
-                    snackbar.show();
-                    updateAppelli();
-                    Log.d(getClass().getName(), "Iscrizione effettuata");
-                    // requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show());
-                })
-                .exceptionally(throwable -> {
-                    //TODO: check that the error is because of a missing questionario
-                    requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show());
-                    Log.w(getClass().getName(), throwable);
-                    return null;
-                });
+        CompletableFuture<Void> voidCompletableFuture = API.enqueueResource(call);
+        voidCompletableFuture.thenAccept(aVoid -> {
+            Snackbar snackbar = Snackbar.make(requireView(), R.string.subscribe_success, Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.cancel, v -> cancelSubscription(appelloLibretto));
+            snackbar.show();
+            updateAppelli();
+            Log.d(getClass().getName(), "Iscrizione effettuata");
+        });
+        voidCompletableFuture.exceptionally(throwable -> {
+            if (throwable instanceof ApiException) {
+                    ApiException apiException = (ApiException) throwable;
+                    assert apiException.getApiError().getStatusCode() != null;
+                    if (apiException.getApiError().getStatusCode() == 422) {
+                        Log.i("AppelliFragment", "CompletionException: SESSO");
+
+                        Log.i("AppelliFragment",
+                                getParentFragment() == null ? "null" : getParentFragment().getClass().getName()
+                                );
+
+                        requireActivity().runOnUiThread(() -> {
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle("NON HAI COMPILATO IL QUESTIONARIO")
+                                    .setMessage("Vuoi compilarlo adesso?")
+                                    .setPositiveButton(android.R.string.yes, (dialog, which) -> onStartCompileSurvey(appelloLibretto))
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        });
+
+                        return null;
+                    }
+            }
+            requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show());
+            return null;
+        });
     }
 
     public CompletableFuture<Void> cancelSubscription(AppelloLibretto appelloLibretto) {

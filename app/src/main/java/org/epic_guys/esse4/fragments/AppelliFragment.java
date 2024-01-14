@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.CalendarioEsamiService;
 import org.epic_guys.esse4.API.services.LibrettoService;
@@ -42,11 +44,16 @@ public class AppelliFragment extends Fragment {
     private RecyclerView appelliRecyclerView;
     private RecyclerView appelliPrenotatiRecyclerView;
     private NavController navController;
+    private CalendarioEsamiService calendarioEsamiService;
+    private LibrettoService librettoService;
+    private long idRigaLibretto;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         navController = NavHostFragment.findNavController(this);
+        calendarioEsamiService = API.getService(CalendarioEsamiService.class);
+        librettoService = API.getService(LibrettoService.class);
     }
 
     @Override
@@ -54,11 +61,53 @@ public class AppelliFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_appelli, container, false);
     }
 
-    private CompletableFuture<List<BookedAppello>> generateAppelli(List<IscrizioneAppello> appelli){
-        CompletableFuture<List<BookedAppello>> bookedAppelli = new CompletableFuture<>();
-        LibrettoService librettoService = API.getService(LibrettoService.class);
+
+    private CompletableFuture<Void> updateAppelli() {
+        Call<List<AppelloLibretto>> appelli;
+        long idCarriera = API.getCarriera().getIdCarriera();
+        if (idRigaLibretto == -1) {
+            appelli = librettoService.getAppelli(
+                    idCarriera,
+                    LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
+            );
+        } else {
+            appelli = librettoService.getAppelliPerRigaLibretto(
+                    idCarriera,
+                    idRigaLibretto,
+                    LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
+            );
+        }
+
+        CompletableFuture<Void> appelliFuture = API.enqueueResource(appelli)
+                .thenAccept(appelliList -> appelliRecyclerView.setAdapter(new ExamCardAdapter(appelliList)))
+                .exceptionally(throwable -> {
+                    Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
+                    return null;
+                }).whenComplete((aVoid, throwable) -> Common.stopLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading)
+                );
+
+
+        Call<List<IscrizioneAppello>> prenotati = calendarioEsamiService.getPrenotazioni(
+                idCarriera
+        );
+
+         CompletableFuture<Void> prenotazioniFuture = API.enqueueResource(prenotati)
+                .thenCompose(this::generatePrenotazioni)
+                .thenAccept(bookedAppelli -> appelliPrenotatiRecyclerView.setAdapter(new BookedCardAdapter(bookedAppelli)))
+                .exceptionally(throwable -> {
+                    Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
+                    return null;
+                });
+
+        return appelliFuture.thenAcceptBoth(prenotazioniFuture, (aVoid, aVoid2) -> {
+            Log.d(getClass().getName(), "Appelli aggiornati");
+        });
+    }
+
+
+    private CompletableFuture<List<BookedAppello>> generatePrenotazioni(List<IscrizioneAppello> appelli){
         Call<List<RigaLibretto>> righeLibretto = librettoService.righeLibretto(API.getCarriera().getIdCarriera());
-        API.enqueueResource(righeLibretto).thenAccept(righe -> {
+        return API.enqueueResource(righeLibretto).thenApply(righe -> {
                     List<BookedAppello> tmp = new ArrayList<>();
                     for(RigaLibretto riga : righe){
                         for(int i=0; i<appelli.size(); i++){
@@ -75,14 +124,8 @@ public class AppelliFragment extends Fragment {
                     for(IscrizioneAppello appello : appelli){
                         Log.i("AppelliFragment", "Appello non trovato: " + appello.getAdsceId());
                     }
-                    bookedAppelli.complete(tmp);
-                })
-                .exceptionally(throwable -> {
-                    Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
-                    return null;
+                    return tmp;
                 });
-        //return bookedAppelli when it's completed
-        return bookedAppelli;
     }
 
     @Override
@@ -95,51 +138,15 @@ public class AppelliFragment extends Fragment {
 
         AppelliFragmentArgs args = AppelliFragmentArgs.fromBundle(getArguments());
 
-        long idCarriera = args.getIdCarriera();
         long idRigaLibretto = args.getIdRigaLibretto();
+        this.idRigaLibretto = idRigaLibretto;
         LibrettoService librettoService = API.getService(LibrettoService.class);
 
         Call<List<AppelloLibretto>> appelli;
 
         Common.startLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
 
-        if (idRigaLibretto == -1) {
-            appelli = librettoService.getAppelli(
-                    idCarriera,
-                    LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
-            );
-        } else {
-            appelli = librettoService.getAppelliPerRigaLibretto(
-                    idCarriera,
-                    idRigaLibretto,
-                    LibrettoService.Condizioni.APPELLI_PRENOTABILI_E_FUTURI
-            );
-        }
-
-        API.enqueueResource(appelli)
-                .thenAccept(appelliList -> appelliRecyclerView.setAdapter(new ExamCardAdapter(appelliList)))
-                .exceptionally(throwable -> {
-                    Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
-                    return null;
-                }).thenApply(
-                        unused -> {
-                            Common.stopLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
-                            return null;
-                        }
-                );
-
-
-        CalendarioEsamiService calEsaService = API.getService(CalendarioEsamiService.class);
-        Call<List<IscrizioneAppello>> prenotati = calEsaService.getPrenotazioni(
-                idCarriera
-        );
-
-        API.enqueueResource(prenotati)
-                .thenAccept(prenotazioni -> generateAppelli(prenotazioni).thenAccept(bookedAppelli -> appelliPrenotatiRecyclerView.setAdapter(new BookedCardAdapter(bookedAppelli))))
-                .exceptionally(throwable -> {
-                    Log.w("AppelliFragment", Objects.requireNonNull(throwable.getMessage()));
-                    return null;
-                });
+        updateAppelli();
 
 
         //when back button is pressed, go back to home fragment
@@ -176,7 +183,6 @@ public class AppelliFragment extends Fragment {
             AppelloLibretto appelloLibretto,
             ParametriIscrizioneAppello parametriIscrizioneAppello
     ) {
-        CompletableFuture<Boolean> res = new CompletableFuture<>();
         CalendarioEsamiService service = API.getService(CalendarioEsamiService.class);
         Call<Void> call = service.postIscrizioneAppello(
                 appelloLibretto.getCdsId(),
@@ -186,30 +192,33 @@ public class AppelliFragment extends Fragment {
         );
 
         API.enqueueResource(call).thenAccept(aVoid -> {
-                    res.complete(true);
-                    requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show());
+                    Snackbar snackbar = Snackbar.make(requireView(), R.string.subscribe_success, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.cancel, v -> cancelSubscription(appelloLibretto));
+                    snackbar.show();
+                    updateAppelli();
+                    Log.d(getClass().getName(), "Iscrizione effettuata");
+                    // requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Iscrizione effettuata", Toast.LENGTH_SHORT).show());
                 })
                 .exceptionally(throwable -> {
-                    res.complete(false);
                     //TODO: check that the error is because of a missing questionario
                     requireActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Errore durante l'iscrizione", Toast.LENGTH_SHORT).show());
+                    Log.w(getClass().getName(), throwable);
                     return null;
                 });
+    }
 
-        res.thenAccept(aBoolean -> {
-            if (aBoolean) {
-                Log.d(getClass().getName(), "Iscrizione effettuata");
-                //refresh the fragment
-                requireActivity().runOnUiThread(() -> {
-                    NavOptions navOptions = new NavOptions.Builder()
-                            .setPopUpTo(R.id.appelliFragment, true)
-                            .build();
-                    navController.navigate(R.id.appelliFragment, null, navOptions);
+    public CompletableFuture<Void> cancelSubscription(AppelloLibretto appelloLibretto) {
+        Call<Void> call = calendarioEsamiService.deleteIscrizioneAppello(
+                appelloLibretto.getCdsId(),
+                appelloLibretto.getAdId(),
+                appelloLibretto.getAppId(),
+                API.getCarriera().getIdStudente()
+        );
+        return API.enqueueResource(call)
+                .thenAccept(aVoid -> {
+                    Snackbar.make(requireView(), R.string.unsubscribe_success, Snackbar.LENGTH_LONG).show();
+                    updateAppelli();
+                    Log.d(getClass().getName(), "Iscrizione cancellata");
                 });
-            }
-            else{
-                Log.w(getClass().getName(), "Errore durante l'iscrizione");
-            }
-        });
     }
 }

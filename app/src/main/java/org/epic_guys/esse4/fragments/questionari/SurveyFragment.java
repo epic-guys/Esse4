@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.QuestionariService;
@@ -42,6 +43,9 @@ public class SurveyFragment extends Fragment {
 
         long idRigaLibretto = SurveyFragmentArgs.fromBundle(getArguments()).getIdRigaLibretto();
         Button compileSurveyBtn = view.findViewById(R.id.btn_survey_compile);
+        TextView surveyDescription = view.findViewById(R.id.txt_survey_description);
+
+        compileSurveyBtn.setEnabled(false);
         questionariService = API.getService(QuestionariService.class);
 
         compileSurveyBtn.setOnClickListener(clickView -> createSurvey());
@@ -54,6 +58,7 @@ public class SurveyFragment extends Fragment {
         API.enqueueResource(questionarioCall)
                 .thenAccept(questionario -> {
                     this.questionario = questionario;
+                    surveyDescription.setText(questionario.getDes());
                     compileSurveyBtn.setEnabled(true);
                 });
 

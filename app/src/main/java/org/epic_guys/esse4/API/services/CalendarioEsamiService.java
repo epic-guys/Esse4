@@ -36,9 +36,12 @@ public interface CalendarioEsamiService extends ApiService {
             @Path("stuId") long idStudente
     );
 
-    enum FiltroPrenotazioni {
+    enum FiltroBacheca {
         BACHECA_ESITI
     }
+
+    @GET(BASE_URL + "/prenotazioni/{matId}?")
+    Call<List<IscrizioneAppello>> getBachecaPrenotazioni();
 
     @GET(BASE_URL + "/prenotazioni/{matId}/")
     Call<List<IscrizioneAppello>> getPrenotazioni(@Path("matId") Long carrieraId);
@@ -46,6 +49,6 @@ public interface CalendarioEsamiService extends ApiService {
     @GET(BASE_URL + "/prenotazioni/{matId}/") //Questo sarebbe quello da usare se capissi come far funzionare il filtro quindi per ora useremo quello sopra
     Call<List<IscrizioneAppello>> getPrenotazioni(
             @Path("matId") Long carrieraId,
-            @Path("q") FiltroPrenotazioni filtro
+            @Path("q") FiltroBacheca filtroEsiti
     );
 }

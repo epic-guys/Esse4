@@ -140,9 +140,6 @@ public class AppelliFragment extends Fragment {
 
         long idRigaLibretto = args.getIdRigaLibretto();
         this.idRigaLibretto = idRigaLibretto;
-        LibrettoService librettoService = API.getService(LibrettoService.class);
-
-        Call<List<AppelloLibretto>> appelli;
 
         Common.startLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
 

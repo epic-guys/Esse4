@@ -38,7 +38,7 @@
             android:paddingEnd="10dp">
 
             <ImageButton
-                android:id="@+id/btn_back"
+                android:id="@+id/btn_cancel_survey"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_weight="0"

@@ -96,7 +96,7 @@ public class CalendarFragment extends Fragment {
 
 
         //when back button is pressed, go back to home fragment
-        view.findViewById(R.id.btn_back).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_cancel_survey).setOnClickListener(v -> {
             NavOptions navOptions = new NavOptions.Builder()
                     .setPopUpTo(R.id.homeFragment, true)
                     .build();

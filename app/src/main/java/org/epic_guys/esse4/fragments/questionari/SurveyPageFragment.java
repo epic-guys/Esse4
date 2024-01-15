@@ -82,7 +82,7 @@ public class SurveyPageFragment extends Fragment {
             return Status.IGNITION;
         }
         // Se la pagina di provenienza è -1 e stiamo andando avanti, siamo arrivati alla fine
-        else if (idPaginaDiProvenienza == -1 && direction) {
+        else if (direction && paginaQuestionario != null && paginaQuestionario.getPaginaId()  == -1) {
             Log.i("SurveyPageFragment", "COMPLETING");
             return Status.COMPLETING; //check if this is correct
         }
@@ -205,6 +205,13 @@ public class SurveyPageFragment extends Fragment {
         ViewGroup container = requireView().findViewById(R.id.survey_container);
 
         renderButtons();
+
+        if(getStatus() == Status.COMPLETING && false){
+            TextView textView = new TextView(getContext());
+            textView.setText("Hai completato il questionario");
+            container.addView(textView);
+            return;
+        }
 
         this.paginaQuestionario.getParagrafi().forEach(paragrafo -> {
             container.addView(renderParagrafo(paragrafo));
@@ -491,12 +498,30 @@ public class SurveyPageFragment extends Fragment {
         }
          */
 
+        int pid = paginaQuestionario.getPaginaId() == null ? -1 : paginaQuestionario.getPaginaId();
+        int gcid = paginaQuestionario.getQuestCompId() == null ? -1 : paginaQuestionario.getQuestCompId();
+
+        if(getStatus() == Status.COMPLETING){
+            /*Call<String> saveCall = questionariService.confermaQuestionario(
+                    idStudente,
+                    idQuestionario,
+                    gcid,
+                    pid,
+
+                    QuestionariService.EventoCompilazione.EV_VAL_DID
+            );
+            API.enqueueResource(
+                    saveCall
+            )*/
+            return CompletableFuture.completedFuture(null);
+        }
+
         List<Answer> answers = new ArrayList<>(this.answers.values());
         Call<String> saveCall = questionariService.salvaPaginaQuestionario(
                 idStudente,
                 idQuestionario,
-                paginaQuestionario.getQuestCompId(),
-                paginaQuestionario.getPaginaId(),
+                gcid,
+                pid,
                 QuestionariService.EventoCompilazione.EV_VAL_DID,
                 answers
         );

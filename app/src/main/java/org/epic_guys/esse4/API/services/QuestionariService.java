@@ -125,4 +125,15 @@ public interface QuestionariService extends ApiService {
             @Path("pageId") long idPaginaQuestionario,
             @Query("userCompId") long idCompilazioneUtente
     );
+
+    @PUT(BASE_URL + "/questionari/compilazione/{stuId}/{adsceId}/quest/{questionarioId}/{questCompId}/conferma")
+    Call<String> confermaQuestionario(
+            @Path("stuId") long idStudente,
+            @Path("adsceId") long idRigaLibretto,
+            @Path("questionarioId") long idQuestionario,
+            @Path("questCompId") long idCompilazioneQuestionario,
+            @Query("userCompId") long idCompilazioneUtente,
+            @Query("eventCompId") EventoCompilazione eventoCompilazione,
+            @Query("questConfigId") long idConfigurazioneQuestionario
+    );
 }

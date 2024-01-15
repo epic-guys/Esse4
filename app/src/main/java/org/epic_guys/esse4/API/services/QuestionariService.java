@@ -102,7 +102,7 @@ public interface QuestionariService extends ApiService {
             @Path("questionarioId") long idQuestionario,
             @Path("questCompId") long idCompilazioneQuestionario,
             @Path("pageId") long idPaginaQuestionario,
-            @Query("userCompId") long idCompilazioneUtente,
+            @Query("eventCompId") EventoCompilazione eventoCompilazione,
             @Body List<Answer> answers
     );
 
@@ -117,7 +117,7 @@ public interface QuestionariService extends ApiService {
     );
 
     @GET(BASE_URL + "/questionari/compilazione/{stuId}/{adsceId}/quest/{questionarioId}/{questCompId}/pagina/{pageId}/prev")
-    Call<PaginaQuestionario> getPrevPagina(
+    Call<PaginaQuestionario> getPrevPaginaQuestionario(
             @Path("stuId") long idStudente,
             @Path("adsceId") long idRigaLibretto,
             @Path("questionarioId") long idQuestionario,

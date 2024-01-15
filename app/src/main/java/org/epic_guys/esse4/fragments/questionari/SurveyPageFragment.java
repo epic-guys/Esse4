@@ -2,12 +2,14 @@ package org.epic_guys.esse4.fragments.questionari;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -32,6 +34,7 @@ import org.epic_guys.esse4.models.questionari.Answer;
 import org.epic_guys.esse4.models.questionari.Domande;
 import org.epic_guys.esse4.models.questionari.PaginaQuestionario;
 import org.epic_guys.esse4.models.questionari.Paragrafi;
+import org.epic_guys.esse4.models.questionari.RisposteCompilate;
 import org.epic_guys.esse4.models.questionari.RisposteDisponibili;
 import org.epic_guys.esse4.models.questionari.TagsList;
 import org.epic_guys.esse4.models.questionari.UnitaDidatticaConQuestionario;
@@ -42,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 
@@ -87,6 +91,7 @@ public class SurveyPageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         SurveyPageFragmentArgs args = SurveyPageFragmentArgs.fromBundle(getArguments());
+        Log.d("SurveyPageFragment", args.toString());
         idQuestionario = args.getIdQuestionario();
         idCompilazione = args.getCompId();
         direction = args.getDirection();
@@ -96,6 +101,7 @@ public class SurveyPageFragment extends Fragment {
         idStudente = args.getStuId();
         questionariService = API.getService(QuestionariService.class);
         answers = new HashMap<>();
+
 
         navController = NavHostFragment.findNavController(this);
         OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
@@ -161,6 +167,13 @@ public class SurveyPageFragment extends Fragment {
     public void onNegativeButton(View view) {
         if(getStatus()!= Status.IGNITION) {
             //here the code to save and setup previous page
+            saveAnswers().exceptionally(throwable -> {
+                        Log.e("SurveyPageFragment", "Errore nel salvataggio delle risposte", throwable);
+                        // emergencyAbort("Errore nel salvataggio delle risposte");
+                        return null;
+                    }).thenRun(() -> movePage(false)
+                    );
+            return;
         }
         onCancelButton(view);
     }
@@ -215,6 +228,12 @@ public class SurveyPageFragment extends Fragment {
         }
     }
 
+    private List<Integer> getRisposteCompilate(Domande domanda) {
+        return domanda.getRispComplete().stream()
+                .map(RisposteCompilate::getQuesitoId)
+                .collect(Collectors.toList());
+    }
+
     private View renderRadioQuestion(Domande domanda, boolean horizontal){
         LinearLayout container = new LinearLayout(getContext());
         container.setOrientation(LinearLayout.VERTICAL);
@@ -234,14 +253,17 @@ public class SurveyPageFragment extends Fragment {
         for (RisposteDisponibili risposta : domanda.getRispDisponibili()) {
             RadioButton rad = new RadioButton(getContext());
             rad.setText(risposta.getElementiDes());
+            radioGroup.addView(rad);
+
+            Log.i("SurveyPageFragment", "Risposta corrente: " + risposta.getRispostaId().toString());
+            if (idRisposteCompletate.contains(risposta.getRispostaId())) {
+                Log.i("SurveyPageFragment", "Risposta già data");
+                rad.setChecked(true);
+            }
             Answer answer = new Answer()
                     .domandaId(domanda.getDomandaId())
                     .rispostaId(risposta.getRispostaId());
-            rad.setOnClickListener(v -> {
-                answers.put(domanda.getDomandaId(), answer);
-            });
-
-            radioGroup.addView(rad);
+            rad.setOnClickListener(v -> answers.put(domanda.getDomandaId(), answer));
         }
 
         container.addView(radioGroup);
@@ -285,13 +307,22 @@ public class SurveyPageFragment extends Fragment {
         LinearLayout container = new LinearLayout(getContext());
         container.setOrientation(LinearLayout.VERTICAL);
 
+        Log.d("SurveyPageFragment", "renderFreeTextQuestion: " + domanda.toString());
+
         TextView domanda_view = new TextView(getContext());
         domanda_view.setText(domanda.getElementiDes());
         container.addView(domanda_view);
-
-        TextView risposta_view = new TextView(getContext());
-        risposta_view.setText("Risposta");
+        EditText risposta_view = new EditText(getContext());
+        risposta_view.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         container.addView(risposta_view);
+        risposta_view.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                Answer answer = new Answer();
+                answer.domandaId(domanda.getDomandaId())
+                                .corpoRisposta(risposta_view.getText().toString());
+                answers.put(domanda.getDomandaId(), answer);
+            }
+        });
 
         return container;
     }
@@ -364,8 +395,14 @@ public class SurveyPageFragment extends Fragment {
         }
         // Backward direction
         else {
-            // TODO
-            throw new UnsupportedOperationException();
+            paginaCall = questionariService.getPrevPaginaQuestionario(
+                    idStudente,
+                    idRigaLibretto,
+                    idQuestionario,
+                    idCompilazione,
+                    idPaginaDiProvenienza,
+                    idCompilazioneUtente
+            );
         }
 
         return API.enqueueResource(paginaCall).thenAccept(paginaQuestionario -> this.paginaQuestionario = paginaQuestionario);
@@ -388,9 +425,11 @@ public class SurveyPageFragment extends Fragment {
     }
 
     private CompletableFuture<Void> saveAnswers() {
+        /*
         if (answers.isEmpty()) {
             return CompletableFuture.completedFuture(null);
         }
+         */
 
         List<Answer> answers = new ArrayList<>(this.answers.values());
         Call<String> saveCall = questionariService.salvaPaginaQuestionario(
@@ -398,7 +437,7 @@ public class SurveyPageFragment extends Fragment {
                 idQuestionario,
                 paginaQuestionario.getQuestCompId(),
                 paginaQuestionario.getPaginaId(),
-                idCompilazioneUtente,
+                QuestionariService.EventoCompilazione.EV_VAL_DID,
                 answers
         );
         return API.enqueueResource(saveCall).thenAccept(aVoid -> {});

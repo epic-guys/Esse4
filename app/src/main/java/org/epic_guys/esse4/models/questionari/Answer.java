@@ -27,7 +27,7 @@ public class Answer {
   private Integer rispostaId = null;
 
   @SerializedName("corpoRisposta")
-  private String corpoRisposta = null;
+  private String corpoRisposta = "";
 
   public Answer domandaId(Integer domandaId) {
     this.domandaId = domandaId;
@@ -91,8 +91,8 @@ public class Answer {
     }
     Answer answer = (Answer) o;
     return Objects.equals(this.domandaId, answer.domandaId) &&
-        Objects.equals(this.rispostaId, answer.rispostaId) &&
-        Objects.equals(this.corpoRisposta, answer.corpoRisposta);
+        Objects.equals(this.rispostaId, answer.rispostaId);// &&
+        // Objects.equals(this.corpoRisposta, answer.corpoRisposta);
   }
 
   @Override

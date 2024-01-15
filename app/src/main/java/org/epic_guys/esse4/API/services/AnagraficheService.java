@@ -13,6 +13,7 @@ public interface AnagraficheService extends ApiService {
     @GET(BASE_URL + "/persone")
     Call<List<Persona>> getPersone();
 
+    @Deprecated
     @GET(BASE_URL + "/carriere")
     Call<List<Carriera>> getCarriere();
 }

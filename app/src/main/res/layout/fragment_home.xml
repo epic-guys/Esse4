@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foregroundTint="#00FFFFFF"
     tools:context=".fragments.HomeFragment">
 
 
@@ -29,30 +30,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#673AB7"
+            android:gravity="center"
             android:isScrollContainer="false"
             android:orientation="horizontal"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             tools:visibility="visible">
-
-            <ImageButton
-                android:id="@+id/btn_settings"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="#00E8E8E8"
-                android:contentDescription="@string/settings_button_label"
-                android:padding="10dp"
-                android:scaleType="fitStart"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/toolbar"
-                app:srcCompat="@drawable/outline_settings_24" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
             <ImageButton
                 android:id="@+id/btn_logout"
@@ -64,11 +47,32 @@
                 android:padding="10dp"
                 android:rotation="180"
                 android:scaleType="fitStart"
+                app:tint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="@id/btn_settings"
                 app:layout_constraintTop_toTopOf="@+id/toolbar"
                 app:srcCompat="@drawable/baseline_logout_24" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/btn_settings"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="#00E8E8E8"
+                android:padding="10dp"
+                android:scaleType="fitStart"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbar"
+                app:srcCompat="@drawable/outline_settings_24"
+                app:tint="@color/white" />
 
         </LinearLayout>
 
@@ -90,7 +94,9 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Large" />
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Large"
+                app:srcCompat="@drawable/baseline_person_24"
+                app:strokeColor="#00FFFFFF" />
 
             <!--ImageView
                 android:id="@+id/profile_picture"
@@ -105,14 +111,14 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="10dp"
                 android:text="@string/matricola_label"
-                android:textSize="30sp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/data_matricola"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30sp" />
+                android:textSize="24sp" />
 
         </LinearLayout>
 
@@ -120,14 +126,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="0dp"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp">
+            android:padding="0dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
                 android:layout_marginBottom="30dp"
+                android:baselineAligned="false"
                 app:cardCornerRadius="50dp"
                 app:cardElevation="10dp"
                 app:contentPadding="30dp">
@@ -193,8 +202,10 @@
 
 
                     <Space
+                        android:id="@+id/last_space"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp" />
+                        android:layout_height="30dp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/text_part_time"
@@ -210,9 +221,18 @@
             <androidx.gridlayout.widget.GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:layoutDirection="locale"
+                android:layoutMode="opticalBounds"
+                android:longClickable="false"
+                android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:paddingBottom="32dp"
+                android:soundEffectsEnabled="false"
                 android:visibility="visible"
-                app:alignmentMode="alignMargins"
+                app:alignmentMode="alignBounds"
                 app:columnCount="2"
                 app:columnOrderPreserved="true"
                 app:rowCount="2"
@@ -242,7 +262,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/round_app_registration_24" />
+                            android:src="@drawable/round_app_registration_24_dark"
+                            app:srcCompat="@drawable/round_app_registration_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -275,7 +296,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/baseline_book_24" />
+                            android:src="@drawable/baseline_book_24_dark"
+                            app:srcCompat="@drawable/baseline_book_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -308,7 +330,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/baseline_edit_note_24" />
+                            android:src="@drawable/baseline_edit_note_24_dark"
+                            app:srcCompat="@drawable/baseline_edit_note_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -321,6 +344,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/btn_calendar"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     app:cardCornerRadius="30dp"
@@ -340,7 +364,8 @@
                             android:layout_gravity="center"
                             android:gravity="center_horizontal"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/baseline_calendar_month_24" />
+                            android:src="@drawable/baseline_calendar_month_24_dark"
+                            app:srcCompat="@drawable/baseline_calendar_month_24_light" />
 
                         <TextView
                             android:layout_width="match_parent"

@@ -36,6 +36,9 @@
             app:destination="@id/appelliFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_homeFragment_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
     </fragment>
     <fragment
         android:id="@+id/studyPlanFragment"
@@ -67,5 +70,77 @@
         <argument
             android:name="idRigaLibretto"
             app:argType="long" />
+        <action
+            android:id="@+id/action_appelliFragment_to_surveyPageFragment"
+            app:destination="@id/surveyPageFragment" >
+            <argument
+                android:name="pageId"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="compId"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="direction"
+                android:defaultValue="false" />
+            <argument
+                android:name="userCompId"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="idQuestionario"
+                android:defaultValue="-1L" />
+            <argument
+                android:name="basePageId"
+                android:defaultValue="-1L" />
+        </action>
+        <argument
+            android:name="idAppello"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="org.epic_guys.esse4.fragments.CalendarFragment"
+        android:label="CalendarFragment" >
+        <action
+            android:id="@+id/action_calendarFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/compileSurveyDialogFragment"
+        android:name="org.epic_guys.esse4.fragments.dialogs.CompileSurveyDialogFragment"
+        android:label="CompileSurveyDialogFragment" />
+    <fragment
+        android:id="@+id/surveyPageFragment"
+        android:name="org.epic_guys.esse4.fragments.questionari.SurveyPageFragment"
+        android:label="fragment_survey_page"
+        tools:layout="@layout/fragment_survey_page" >
+        <action
+            android:id="@+id/action_surveyPageFragment_self"
+            app:destination="@id/surveyPageFragment" />
+        <argument
+            android:name="pageId"
+            app:argType="long" />
+        <argument
+            android:name="compId"
+            app:argType="long" />
+        <argument
+            android:name="direction"
+            app:argType="boolean" />
+        <argument android:name="idRigaLibretto"
+            app:argType="long" />
+        <argument android:name="idQuestionario"
+            app:argType="long" />
+        <argument android:name="userCompId"
+            app:argType="long" />
+        <argument android:name="stuId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_surveyPageFragment_to_appelliFragment"
+            app:destination="@id/appelliFragment" />
+        <argument
+            android:name="basePageId"
+            app:argType="long" />
+        /compilazione/{{ _.stuId }}/{{ _.adsceId }}/quest/{{ _.questionarioId }}/{{ _.questCompId
+        }}/getPagina/{{ _.pageId}}/
     </fragment>
 </navigation>

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -42,7 +41,10 @@ public class HomeFragment extends Fragment {
         ImageView profilePicture = requireView().findViewById(R.id.profile_picture);
 
         API.getPhoto().thenCompose(photo -> {
-            requireActivity().runOnUiThread(() -> profilePicture.setImageBitmap(photo));
+            requireActivity().runOnUiThread(() -> {
+                profilePicture.setColorFilter(0x00000000);
+                profilePicture.setImageBitmap(photo);
+            });
             return null;
         });
     }
@@ -59,6 +61,7 @@ public class HomeFragment extends Fragment {
         requireView().<TextView>findViewById(R.id.data_year).setText(String.valueOf(c.getAnnoCorso()));
 
         if(c.isPartTime()) {
+            requireView().findViewById(R.id.last_space).setVisibility(View.VISIBLE); //the space between the two textviews
             requireView().findViewById(R.id.text_part_time).setVisibility(View.VISIBLE);
         }
 
@@ -107,7 +110,7 @@ public class HomeFragment extends Fragment {
             return;
         }
 
-
+        // why is this here? will always be null (needs clarification)
         if(API.getLoggedPersona() != null) {
             basicDataFuture = new CompletableFuture<>();
             basicDataFuture.complete(new Pair<>(API.getLoggedPersona(), API.getCarriera()));
@@ -117,6 +120,7 @@ public class HomeFragment extends Fragment {
         basicDataFuture = API.login(matricola, password)
                 .exceptionally(e -> {
                     Log.d("HomeFragment", e.toString());
+                    clearPreferences(); //clears secure preferences since they are not valid
                     return false;
                 })
                 .thenCompose(isLogged -> {
@@ -160,6 +164,7 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.btn_logout).setOnClickListener(v -> {
             SecurePreferences.removeValue("matricola", requireContext());
             SecurePreferences.removeValue("password", requireContext());
+            API.logout();
             launchLoginFragment();
         });
 
@@ -168,6 +173,9 @@ public class HomeFragment extends Fragment {
 
         //study book button
         view.findViewById(R.id.btn_student_book).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_studentBookFragment));
+
+        //calendar button
+        view.findViewById(R.id.btn_calendar).setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_calendarFragment));
 
         view.findViewById(R.id.btn_exams).setOnClickListener(v -> navController.navigate(
                 HomeFragmentDirections.actionHomeFragmentToAppelliFragment(

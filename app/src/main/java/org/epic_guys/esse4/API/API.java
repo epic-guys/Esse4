@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.core.util.Pair;
 
+import com.google.gson.Gson;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Credentials;
 import okhttp3.Request;
@@ -15,6 +17,7 @@ import org.epic_guys.esse4.API.services.AnagraficheService;
 import org.epic_guys.esse4.API.services.ApiService;
 import org.epic_guys.esse4.API.services.JwtService;
 import org.epic_guys.esse4.exceptions.ApiException;
+import org.epic_guys.esse4.models.ApiError;
 import org.epic_guys.esse4.models.Carriera;
 import org.epic_guys.esse4.models.Jwt;
 import org.epic_guys.esse4.models.Persona;
@@ -39,8 +42,8 @@ public class API {
     private Jwt jwt;
     private Persona loggedPersona;
     private Carriera carrieraStudente;
-    // public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
-    public static final String BASE_URL = "https://unive.esse3.pp.cineca.it/e3rest/api/";
+    public static final String BASE_URL = "https://esse3.unive.it/e3rest/api/";
+    // public static final String BASE_URL = "https://unive.esse3.pp.cineca.it/e3rest/api/";
 
 
     private Jwt getJwt() {
@@ -80,6 +83,10 @@ public class API {
         return instance == null ? instance = new API() : instance;
     }
 
+    public static void logout(){
+        API.instance = null;
+    }
+
     @NotNull
     public static CompletableFuture<Boolean> login (String username, String password) {
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
@@ -107,24 +114,24 @@ public class API {
         basicRetrofit.create(JwtService.class)
                 .newJwt()
                 .enqueue(new retrofit2.Callback<Jwt>() {
-            @Override
-            public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
-                // throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? t.getMessage() : "Unknown error"));
-                future.completeExceptionally(t);
-            }
+                    @Override
+                    public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
+                        // throw new RuntimeException("Could not perform login: " + (BuildConfig.DEBUG ? t.getMessage() : "Unknown error"));
+                        future.completeExceptionally(t);
+                    }
 
-            @Override
-            public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
-                boolean success = response.code() == 200;
-                if (success) {
-                    API.getInstance().jwt = response.body();
-                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
-                } else {
-                    Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
-                }
-                future.complete(success);
-            }
-        });
+                    @Override
+                    public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
+                        boolean success = response.code() == 200;
+                        if (success) {
+                            API.getInstance().jwt = response.body();
+                            Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login successful");
+                        } else {
+                            Log.d("Api", BuildConfig.DEBUG ? response.toString() : "Login failed");
+                        }
+                        future.complete(success);
+                    }
+                });
 
 
         return future;
@@ -137,10 +144,10 @@ public class API {
         return API.enqueueResource(callPersone).thenCombine(
                 API.enqueueResource(callCarriere),
                 (persone, carriere) -> {
-            API.getInstance().loggedPersona = persone.get(0);
-            API.getInstance().carrieraStudente = carriere.get(0);
-            return new Pair<>(persone.get(0), carriere.get(0));
-        });
+                    API.getInstance().loggedPersona = persone.get(0);
+                    API.getInstance().carrieraStudente = carriere.get(0);
+                    return new Pair<>(persone.get(0), carriere.get(0));
+                });
     }
 
     public static CompletableFuture<Bitmap> getPhoto() {
@@ -185,31 +192,17 @@ public class API {
     /**
      * Refreshes the current JWT and stores it.
      */
-    public static CompletableFuture<Void> refreshJwt() {
-        final CompletableFuture<Void> future = new CompletableFuture<>();
+    public static CompletableFuture<Void> refreshJwt() throws RuntimeException {
         JwtService jwtService = API.getService(JwtService.class);
-        Jwt jwt = API.getInstance().jwt;
-        jwtService.refreshJwt(jwt.toString())
-                .enqueue(new Callback<Jwt>() {
-                    @Override
-                    public void onResponse(@NotNull Call<Jwt> call, @NotNull Response<Jwt> response) {
-                        if (response.isSuccessful()) {
-                            API.getInstance().jwt = response.body();
-                            future.complete(null);
-                        }
-                        else {
-                            future.completeExceptionally(
-                                    new ApiException("Response " + response.code() + " when refreshing JWT."));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<Jwt> call, @NotNull Throwable t) {
-                        future.completeExceptionally(t);
-                    }
+        if(API.getInstance().jwt == null){
+            throw new RuntimeException("JWT is null");
+        };
+        String jwt = API.getInstance().jwt.toString();
+        Call<Jwt> jwtCall = jwtService.refreshJwt(jwt);
+        return API.enqueueResource(jwtCall)
+                .thenAccept(newJwt -> {
+                    API.getInstance().jwt = newJwt;
                 });
-        
-        return future;
     }
 
     /**
@@ -221,7 +214,6 @@ public class API {
      */
     public static <T extends ApiService> T getService(Class<T> serviceClass) {
         return API.getInstance().retrofit.create(serviceClass);
-
     }
 
     /**
@@ -240,7 +232,16 @@ public class API {
                 if (response.isSuccessful()) {
                     future.complete(response.body());
                 } else {
-                    ApiException exception = new ApiException("Error on response: " + response.code());
+                    Exception exception;
+
+                    try {
+                        Gson gson = new Gson();
+                        ApiError error = gson.fromJson(response.errorBody().string(), ApiError.class);
+                        exception = new ApiException(error);
+                    } catch (IOException | NullPointerException e) {
+                        exception = e;
+                    }
+
                     future.completeExceptionally(exception);
                 }
             }

@@ -10,5 +10,5 @@ public interface JwtService extends ApiService {
     Call<Jwt> newJwt();
 
     @GET("jwt/refresh")
-    Call<Jwt> refreshJwt(@Query("jwt") String jwt);
+    Call<Jwt> refreshJwt(@Query(value = "jwt",encoded = true) String jwt);
 }

@@ -71,7 +71,15 @@ public class StudyPlanFragment extends Fragment {
                 try {
                     Integer scePianoId = riga.getScePianoId();
                     if(scePianoId == 6 || scePianoId == 7 || scePianoId == 8) {
-                        exams.add(new SubjectCardView(this.getContext(), 0L, riga.getAdLibCod() + " - " + riga.getAdLibDes(), Integer.toString(riga.getAnnoCorso()), String.valueOf(riga.getPeso().intValue()), null, null));
+                        exams.add(new SubjectCardView(
+                                this.getContext(),
+                                0L,
+                                riga.getAdLibCod() + " - " + riga.getAdLibDes(),
+                                Integer.toString(riga.getAnnoCorso()),
+                                String.valueOf(riga.getPeso().intValue()),
+                                null,
+                                null)
+                        );
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,7 +87,7 @@ public class StudyPlanFragment extends Fragment {
             }
             RecyclerView recyclerView = requireView().findViewById(R.id.exams);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams);
+            SubjectCardAdapter adapter = new SubjectCardAdapter(getContext(), exams, true);
             recyclerView.setAdapter(adapter);
             Common.stopLoading(requireView().findViewById(R.id.exams),requireView(),R.id.loading);
         }).exceptionally(throwable -> {
@@ -88,7 +96,7 @@ public class StudyPlanFragment extends Fragment {
         });
 
         //when back button is pressed, go back to home fragment
-        view.findViewById(R.id.btn_back).setOnClickListener(v -> {
+        view.findViewById(R.id.btn_cancel_survey).setOnClickListener(v -> {
             NavOptions navOptions = new NavOptions.Builder()
                     .setPopUpTo(R.id.homeFragment, true)
                     .build();

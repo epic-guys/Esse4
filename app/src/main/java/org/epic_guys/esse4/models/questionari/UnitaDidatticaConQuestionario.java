@@ -110,5 +110,8 @@ public class UnitaDidatticaConQuestionario {
         return anonimoFlg == 1;
     }
 
+    public List<UdLogPdsListWeb> getUdLogPdsListWeb() {
+        return udLogPdsListWeb;
+    }
 }
 

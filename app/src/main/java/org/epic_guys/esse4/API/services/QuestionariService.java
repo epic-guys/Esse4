@@ -1,5 +1,6 @@
 package org.epic_guys.esse4.API.services;
 
+import org.epic_guys.esse4.models.questionari.Answer;
 import org.epic_guys.esse4.models.questionari.PaginaQuestionario;
 import org.epic_guys.esse4.models.questionari.RigaLibrettoConStatoQuestionario;
 import org.epic_guys.esse4.models.questionari.TagsList;
@@ -75,7 +76,7 @@ public interface QuestionariService extends ApiService {
     /**
      * Inizia la compilazione di un questionario.
      *
-     * @param idCarriera L'ID della carriera dello studente.
+     * @param idStudente L'ID dello studente.
      * @param idRigaLibretto L'ID della riga del libretto.
      * @param idQuestionario L'ID del questionario da iniziare.
      *                       Si recupera tramite {@link QuestionariService#getUnitaDidatticaConQuestionario(long, EventoCompilazione)}.
@@ -86,11 +87,42 @@ public interface QuestionariService extends ApiService {
      */
     @PUT(BASE_URL + "/questionari/compilazione/{stuId}/{adsceId}/quest/{questionarioId}/start"  )
     Call<PaginaQuestionario> iniziaQuestionario(
-            @Path("stuId") long idCarriera,
+            @Path("stuId") long idStudente,
             @Path("adsceId") long idRigaLibretto,
             @Path("questionarioId") long idQuestionario,
             @Query("eventCompId") EventoCompilazione eventoCompilazione,
             @Query("questConfigId") long idConfigurazioneQuestionario,
+            @Query("userCompId") long idCompilazioneUtente,
             @Body TagsList tagsList
             );
+
+    @PUT(BASE_URL + "/questionari/compilazione/{stuId}/quest/{questionarioId}/{questCompId}/save/{pageId}/")
+    Call<String> salvaPaginaQuestionario(
+            @Path("stuId") long idStudente,
+            @Path("questionarioId") long idQuestionario,
+            @Path("questCompId") long idCompilazioneQuestionario,
+            @Path("pageId") long idPaginaQuestionario,
+            @Query("userCompId") long idCompilazioneUtente,
+            @Body List<Answer> answers
+    );
+
+    @GET(BASE_URL + "/questionari/compilazione/{stuId}/{adsceId}/quest/{questionarioId}/{questCompId}/pagina/{pageId}/next")
+    Call<PaginaQuestionario> getNextPaginaQuestionario(
+            @Path("stuId") long idStudente,
+            @Path("adsceId") long idRigaLibretto,
+            @Path("questionarioId") long idQuestionario,
+            @Path("questCompId") long idCompilazioneQuestionario,
+            @Path("pageId") long idPaginaQuestionario,
+            @Query("userCompId") long idCompilazioneUtente
+    );
+
+    @GET(BASE_URL + "/questionari/compilazione/{stuId}/{adsceId}/quest/{questionarioId}/{questCompId}/pagina/{pageId}/prev")
+    Call<PaginaQuestionario> getPrevPagina(
+            @Path("stuId") long idStudente,
+            @Path("adsceId") long idRigaLibretto,
+            @Path("questionarioId") long idQuestionario,
+            @Path("questCompId") long idCompilazioneQuestionario,
+            @Path("pageId") long idPaginaQuestionario,
+            @Query("userCompId") long idCompilazioneUtente
+    );
 }

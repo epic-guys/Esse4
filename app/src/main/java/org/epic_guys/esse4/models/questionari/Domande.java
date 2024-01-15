@@ -221,6 +221,10 @@ public enum FormatoDomanda {
    * @return obbligatorioFlg
   **/
 
+ public boolean isObbligatorioFlg() {
+     return obbligatorioFlg == 1;
+ }
+
   public Integer getObbligatorioFlg() {
     return obbligatorioFlg;
   }

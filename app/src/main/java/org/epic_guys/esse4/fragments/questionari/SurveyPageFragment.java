@@ -206,7 +206,7 @@ public class SurveyPageFragment extends Fragment {
 
         renderButtons();
 
-        if(getStatus() == Status.COMPLETING && false){
+        if(getStatus() == Status.COMPLETING){
             TextView textView = new TextView(getContext());
             textView.setText("Hai completato il questionario");
             container.addView(textView);

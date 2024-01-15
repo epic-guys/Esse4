@@ -61,6 +61,7 @@ public class SurveyPageFragment extends Fragment {
     private long idCompilazioneUtente;
     private long idRigaLibretto;
     private long idStudente;
+    private long basePage;
     private QuestionariService questionariService;
 
     private Map<Integer, Answer> answers;
@@ -69,16 +70,23 @@ public class SurveyPageFragment extends Fragment {
     public enum Status {
         IGNITION,
         PROGRESS,
-        COMPLETING
+        COMPLETING,
+        ERROR
     }
 
     @NotNull
     public Status getStatus() {
-        if (idQuestionario == -1) {
+        if (idQuestionario == -1 || (basePage == idPaginaDiProvenienza && !direction)) {
             return Status.IGNITION;
-        } else {
+        }
+        else if (idPaginaDiProvenienza == -1 && direction) {
+            Log.i("SurveyPageFragment", "COMPLETING");
+            return Status.COMPLETING; //check if this is correct
+        }
+        else {
             return Status.PROGRESS;
         }
+        //TODO: check for status COMPLETING and ERROR
     }
 
     @Nullable
@@ -100,6 +108,7 @@ public class SurveyPageFragment extends Fragment {
         idRigaLibretto = args.getIdRigaLibretto();
         idStudente = args.getStuId();
         questionariService = API.getService(QuestionariService.class);
+        basePage = args.getBasePageId();
         answers = new HashMap<>();
 
 
@@ -124,19 +133,25 @@ public class SurveyPageFragment extends Fragment {
         Common.startLoading(view.findViewById(R.id.survey_container), view, R.id.loading);
 
         switch (getStatus()) {
+            case ERROR:
+                emergencyAbort("Errore nella compilazione del questionario");
             case IGNITION:
                 igniteSurvey().thenAccept(aVoid -> renderPage());
+                positiveButton.setText("Inizia");
                 break;
 
             case PROGRESS:
                 fetchPage().thenAccept(aVoid -> renderPage());
+                positiveButton.setText("Avanti");
+                negativeButton.setText("Indietro");
                 break;
 
             case COMPLETING:
+                positiveButton.setText("Salva e termina");
+                negativeButton.setText("Indietro");
                 //end survey by confirming
                 break;
         }
-            Common.stopLoading(view.findViewById(R.id.survey_container), view, R.id.loading);
 
 
     }
@@ -179,9 +194,11 @@ public class SurveyPageFragment extends Fragment {
     }
 
     private void renderPage(){
+        Common.stopLoading(requireView().findViewById(R.id.survey_container), requireView(), R.id.loading);
         //render the page
         ViewGroup container = requireView().findViewById(R.id.survey_container);
 
+        renderButtons();
 
         this.paginaQuestionario.getParagrafi().forEach(paragrafo -> {
             container.addView(renderParagrafo(paragrafo));
@@ -190,6 +207,8 @@ public class SurveyPageFragment extends Fragment {
             container.addView(separator);
         });
 
+
+        //DEBUG
         TextView textView = new TextView(getContext());
         textView.setText(this.paginaQuestionario.toString());
         container.addView(textView);
@@ -225,6 +244,21 @@ public class SurveyPageFragment extends Fragment {
                 return null;
             default:
                 throw new RuntimeException("Tipo domanda non supportato, try this tutorial: https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        }
+    }
+
+    private void renderButtons(){
+        View positiveButton = requireView().findViewById(R.id.btn_next_page);
+        View negativeButton = requireView().findViewById(R.id.btn_prev_page);
+        switch (getStatus()) {
+            case ERROR:
+                break;
+            case COMPLETING:
+            case PROGRESS:
+                negativeButton.setVisibility(View.VISIBLE);
+            case IGNITION:
+                positiveButton.setVisibility(View.VISIBLE);
+            break;
         }
     }
 
@@ -444,6 +478,11 @@ public class SurveyPageFragment extends Fragment {
     }
 
     private void movePage(boolean direction) {
+
+        if(getStatus() == Status.IGNITION){
+            basePage = paginaQuestionario.getPaginaId();
+        }
+
         SurveyPageFragmentDirections.ActionSurveyPageFragmentSelf action =
                 SurveyPageFragmentDirections.actionSurveyPageFragmentSelf(
                         paginaQuestionario.getPaginaId(),
@@ -452,7 +491,8 @@ public class SurveyPageFragment extends Fragment {
                         idRigaLibretto,
                         idQuestionario,
                         paginaQuestionario.getUserCompId(),
-                        idStudente
+                        idStudente,
+                        basePage
                 );
 
         NavOptions options = new NavOptions.Builder()

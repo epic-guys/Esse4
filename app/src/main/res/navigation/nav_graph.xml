@@ -88,6 +88,9 @@
             <argument
                 android:name="idQuestionario"
                 android:defaultValue="-1L" />
+            <argument
+                android:name="basePageId"
+                android:defaultValue="-1L" />
         </action>
         <argument
             android:name="idAppello"
@@ -134,6 +137,9 @@
         <action
             android:id="@+id/action_surveyPageFragment_to_appelliFragment"
             app:destination="@id/appelliFragment" />
+        <argument
+            android:name="basePageId"
+            app:argType="long" />
         /compilazione/{{ _.stuId }}/{{ _.adsceId }}/quest/{{ _.questionarioId }}/{{ _.questCompId
         }}/getPagina/{{ _.pageId}}/
     </fragment>

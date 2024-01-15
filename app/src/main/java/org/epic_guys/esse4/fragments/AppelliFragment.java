@@ -101,9 +101,7 @@ public class AppelliFragment extends Fragment {
                     return null;
                 });
 
-        return appelliFuture.thenAcceptBoth(prenotazioniFuture, (aVoid, aVoid2) -> {
-            Log.d(getClass().getName(), "Appelli aggiornati");
-        });
+        return appelliFuture.thenAcceptBoth(prenotazioniFuture, (aVoid, aVoid2) -> Log.d(getClass().getName(), "Appelli aggiornati"));
     }
 
 
@@ -140,8 +138,7 @@ public class AppelliFragment extends Fragment {
 
         AppelliFragmentArgs args = AppelliFragmentArgs.fromBundle(getArguments());
 
-        long idRigaLibretto = args.getIdRigaLibretto();
-        this.idRigaLibretto = idRigaLibretto;
+        this.idRigaLibretto = args.getIdRigaLibretto();
 
         Common.startLoading(requireView().findViewById(R.id.recycler_view_appelli), requireView(), R.id.loading);
 
@@ -179,14 +176,12 @@ public class AppelliFragment extends Fragment {
     }
 
     public void onStartCompileSurvey(AppelloLibretto appello) {
-        NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        assert navHostFragment != null;
         AppelliFragmentDirections.ActionAppelliFragmentToSurveyPageFragment direction =
                 AppelliFragmentDirections.actionAppelliFragmentToSurveyPageFragment(
                         appello.getIdRigaLibretto(),
                         API.getCarriera().getIdStudente()
                 );
-        NavHostFragment.findNavController(navHostFragment).navigate(direction);
+        navController.navigate(direction);
     }
 
     public void subscribe(
@@ -214,21 +209,14 @@ public class AppelliFragment extends Fragment {
                     ApiException apiException = (ApiException) throwable;
                     assert apiException.getApiError().getStatusCode() != null;
                     if (apiException.getApiError().getStatusCode() == 422) {
-                        Log.i("AppelliFragment", "CompletionException: SESSO");
 
-                        Log.i("AppelliFragment",
-                                getParentFragment() == null ? "null" : getParentFragment().getClass().getName()
-                                );
-
-                        requireActivity().runOnUiThread(() -> {
-                            new AlertDialog.Builder(requireContext())
-                                    .setTitle("NON HAI COMPILATO IL QUESTIONARIO")
-                                    .setMessage("Vuoi compilarlo adesso?")
-                                    .setPositiveButton(android.R.string.yes, (dialog, which) -> onStartCompileSurvey(appelloLibretto))
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
-                                    .show();
-                        });
+                        requireActivity().runOnUiThread(() -> new AlertDialog.Builder(requireContext())
+                                .setTitle("NON HAI COMPILATO IL QUESTIONARIO")
+                                .setMessage("Vuoi compilarlo adesso?")
+                                .setPositiveButton(android.R.string.yes, (dialog, which) -> onStartCompileSurvey(appelloLibretto))
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show());
 
                         return null;
                     }

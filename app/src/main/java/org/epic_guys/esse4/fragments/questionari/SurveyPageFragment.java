@@ -3,10 +3,18 @@ package org.epic_guys.esse4.fragments.questionari;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -16,8 +24,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
+import org.epic_guys.esse4.API.API;
+import org.epic_guys.esse4.API.services.QuestionariService;
 import org.epic_guys.esse4.R;
+import org.epic_guys.esse4.common.Common;
+import org.epic_guys.esse4.models.questionari.Answer;
+import org.epic_guys.esse4.models.questionari.Domande;
 import org.epic_guys.esse4.models.questionari.PaginaQuestionario;
+import org.epic_guys.esse4.models.questionari.Paragrafi;
+import org.epic_guys.esse4.models.questionari.RisposteDisponibili;
+import org.epic_guys.esse4.models.questionari.TagsList;
+import org.epic_guys.esse4.models.questionari.UnitaDidatticaConQuestionario;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -46,28 +63,9 @@ public class SurveyPageFragment extends Fragment {
 
 
     public enum Status {
-        STARTING,
+        IGNITION,
         PROGRESS,
         COMPLETING
-    }
-
-    public SurveyPageFragment() {
-        /*SurveyPageFragmentArgs args = SurveyPageFragmentArgs.fromBundle(getArguments());
-        idQuestionario = args.getIdQuestionario();
-        idCompilazione = args.getCompId();
-        direction = args.getDirection();
-        idPaginaDiProvenienza = args.getPageId();
-        idCompilazioneUtente = args.getUserCompId();
-        idRigaLibretto = args.getIdRigaLibretto();
-        idStudente = args.getStuId();*/
-        //fill with default values
-        idQuestionario = 0;
-        idCompilazione = 0;
-        direction = false;
-        idPaginaDiProvenienza = 0;
-        idCompilazioneUtente = 0;
-        idRigaLibretto = 0;
-        idStudente = 0;
     }
 
     @NotNull
@@ -109,16 +107,61 @@ public class SurveyPageFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), onBackPressedCallback);
 
         ImageButton cancelButton = view.findViewById(R.id.btn_cancel_survey);
-        cancelButton.setOnClickListener(v -> onCancelButton(v));
+        cancelButton.setOnClickListener(this::onCancelButton);
+
+        Button positiveButton = view.findViewById(R.id.btn_next_page);
+        positiveButton.setOnClickListener(this::onPositiveButton);
+
+        Button negativeButton = view.findViewById(R.id.btn_prev_page);
+        negativeButton.setOnClickListener(this::onNegativeButton);
+
+        Common.startLoading(view.findViewById(R.id.survey_container), view, R.id.loading);
+
+        switch (getStatus()) {
+            case IGNITION:
+                igniteSurvey().thenAccept(aVoid -> {
+                    renderPage();
+                });
+                break;
+
+            case PROGRESS:
+                fetchPage().thenAccept(aVoid -> {
+                    renderPage();
+                });
+                break;
+
+            case COMPLETING:
+                //end survey by confirming
+                break;
+        }
+            Common.stopLoading(view.findViewById(R.id.survey_container), view, R.id.loading);
+
 
     }
 
     public void onPositiveButton(View view) {
+        if(getStatus()!= Status.COMPLETING) {
+            //here the code to save and setup next page
+            saveAnswers()
+                    .thenRun(() -> movePage(true))
+                    .exceptionally(throwable -> {
+                        Log.e("SurveyPageFragment", "Errore nel salvataggio delle risposte", throwable);
+                        emergencyAbort("Errore nel salvataggio delle risposte");
+                        return null;
+                    });
+        }
+
+
+
+        //code for completing the survey and save everything
 
     }
 
     public void onNegativeButton(View view) {
-
+        if(getStatus()!= Status.IGNITION) {
+            //here the code to save and setup previous page
+        }
+        onCancelButton(view);
     }
 
     private void renderPage(){

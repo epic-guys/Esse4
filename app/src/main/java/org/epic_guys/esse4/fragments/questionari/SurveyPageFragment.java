@@ -1,7 +1,6 @@
 package org.epic_guys.esse4.fragments.questionari;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +27,7 @@ import org.epic_guys.esse4.API.API;
 import org.epic_guys.esse4.API.services.QuestionariService;
 import org.epic_guys.esse4.R;
 import org.epic_guys.esse4.common.Common;
+import org.epic_guys.esse4.exceptions.ApiException;
 import org.epic_guys.esse4.models.questionari.Answer;
 import org.epic_guys.esse4.models.questionari.Domande;
 import org.epic_guys.esse4.models.questionari.PaginaQuestionario;
@@ -119,15 +119,11 @@ public class SurveyPageFragment extends Fragment {
 
         switch (getStatus()) {
             case IGNITION:
-                igniteSurvey().thenAccept(aVoid -> {
-                    renderPage();
-                });
+                igniteSurvey().thenAccept(aVoid -> renderPage());
                 break;
 
             case PROGRESS:
-                fetchPage().thenAccept(aVoid -> {
-                    renderPage();
-                });
+                fetchPage().thenAccept(aVoid -> renderPage());
                 break;
 
             case COMPLETING:
@@ -146,12 +142,17 @@ public class SurveyPageFragment extends Fragment {
                     .thenRun(() -> movePage(true))
                     .exceptionally(throwable -> {
                         Log.e("SurveyPageFragment", "Errore nel salvataggio delle risposte", throwable);
-                        emergencyAbort("Errore nel salvataggio delle risposte");
+
+                        if(throwable.getCause() instanceof ApiException && ((ApiException) throwable.getCause()).getApiError().getStatusCode() == 422){
+                            Toast.makeText(getContext(), "Rispondi alle domande obbligatorie (quelle con *)", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            emergencyAbort("Errore nel salvataggio delle risposte");
+                        }
                         return null;
                     });
+            //return;
         }
-
-
 
         //code for completing the survey and save everything
 
@@ -171,9 +172,11 @@ public class SurveyPageFragment extends Fragment {
 
         this.paginaQuestionario.getParagrafi().forEach(paragrafo -> {
             container.addView(renderParagrafo(paragrafo));
+            //add a separator
+            View separator = new View(getContext());
+            container.addView(separator);
         });
 
-        //place a TextView inside the container dynamically
         TextView textView = new TextView(getContext());
         textView.setText(this.paginaQuestionario.toString());
         container.addView(textView);
@@ -187,9 +190,7 @@ public class SurveyPageFragment extends Fragment {
         paragrafo_view.setText(paragrafo.getElementiDes());
         paragraph.addView(paragrafo_view);
 
-        paragrafo.getDomande().forEach(domanda -> {
-            paragraph.addView(renderQuestion(domanda));
-        });
+        paragrafo.getDomande().forEach(domanda -> paragraph.addView(renderQuestion(domanda)));
 
         return paragraph;
     }
@@ -216,16 +217,20 @@ public class SurveyPageFragment extends Fragment {
 
     private View renderRadioQuestion(Domande domanda, boolean horizontal){
         LinearLayout container = new LinearLayout(getContext());
-
-        if(!horizontal){
-            container.setOrientation(LinearLayout.VERTICAL);
-        }
+        container.setOrientation(LinearLayout.VERTICAL);
 
         TextView domanda_view= new TextView(getContext());
         domanda_view.setText(domanda.getElementiDes());
         container.addView(domanda_view);
 
         RadioGroup radioGroup = new RadioGroup(getContext());
+
+        // TOOD: range slider
+        //if(horizontal){
+        //    radioGroup.setOrientation(LinearLayout.HORIZONTAL);
+        //}
+        List<Integer> idRisposteCompletate = getRisposteCompilate(domanda);
+        Log.i("SurveyPageFragment", "Risposte date: " + idRisposteCompletate.toString());
         for (RisposteDisponibili risposta : domanda.getRispDisponibili()) {
             RadioButton rad = new RadioButton(getContext());
             rad.setText(risposta.getElementiDes());
@@ -245,21 +250,33 @@ public class SurveyPageFragment extends Fragment {
 
     private View renderMultipleChoiceQuestion(Domande domanda, boolean horizontal){
         LinearLayout container = new LinearLayout(getContext());
-
-        if(!horizontal){
-            container.setOrientation(LinearLayout.VERTICAL);
-        }
+        container.setOrientation(LinearLayout.VERTICAL);
 
         TextView domanda_view = new TextView(getContext());
         domanda_view.setText(domanda.getElementiDes());
         container.addView(domanda_view);
 
-        for (int i = 0; i < domanda.getRispDisponibili().size(); i++) {
-            RisposteDisponibili risposta = domanda.getRispDisponibili().get(i);
+        LinearLayout checkboxGroup = new LinearLayout(getContext());
+        //if (horizontal) {
+        //    checkboxGroup.setOrientation(LinearLayout.HORIZONTAL);
+        //}
+
+        List<Integer> idRisposteCompletate = getRisposteCompilate(domanda);
+        for (RisposteDisponibili risposta : domanda.getRispDisponibili()) {
             CheckBox checkBox = new CheckBox(getContext());
             checkBox.setText(risposta.getElementiDes());
-            container.addView(checkBox);
+            checkboxGroup.addView(checkBox);
+            if (idRisposteCompletate.contains(risposta.getRispostaId())) {
+                checkBox.setChecked(true);
+            }
+
+            checkBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+                throw new UnsupportedOperationException("I checkbox sono troppo difficili da gestire, non li implemento");
+            }));
+
         }
+
+        container.addView(checkboxGroup);
 
         return container;
     }
@@ -310,19 +327,13 @@ public class SurveyPageFragment extends Fragment {
     }
 
     private void onCancelButton(View view) {
-        requireActivity().runOnUiThread(() -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("ATTENZIONE")
-                    .setMessage("Vuoi uscire dalla compilazione? \nPerderai i tuoi progressi.")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            requireActivity().getSupportFragmentManager().popBackStack();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, null)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        });
+        requireActivity().runOnUiThread(() -> new AlertDialog.Builder(requireContext())
+                .setTitle("ATTENZIONE")
+                .setMessage("Vuoi uscire dalla compilazione? \nPerderai i tuoi progressi.")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> requireActivity().getSupportFragmentManager().popBackStack())
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show());
     }
 
     private void emergencyAbort(String message){
@@ -357,9 +368,7 @@ public class SurveyPageFragment extends Fragment {
             throw new UnsupportedOperationException();
         }
 
-        return API.enqueueResource(paginaCall).thenAccept(paginaQuestionario -> {
-            this.paginaQuestionario = paginaQuestionario;
-        });
+        return API.enqueueResource(paginaCall).thenAccept(paginaQuestionario -> this.paginaQuestionario = paginaQuestionario);
     }
 
     private CompletableFuture<PaginaQuestionario> iniziaQuestionario(UnitaDidatticaConQuestionario questionario) {

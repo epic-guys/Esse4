@@ -76,13 +76,17 @@ public class SurveyPageFragment extends Fragment {
 
     @NotNull
     public Status getStatus() {
+        // Si sta iniziando il questionario quando non abbiamo ancora un idQuestionario
+        // oppure quando siamo tornati alla prima pagina
         if (idQuestionario == -1 || (basePage == idPaginaDiProvenienza && !direction)) {
             return Status.IGNITION;
         }
+        // Se la pagina di provenienza è -1 e stiamo andando avanti, siamo arrivati alla fine
         else if (idPaginaDiProvenienza == -1 && direction) {
             Log.i("SurveyPageFragment", "COMPLETING");
             return Status.COMPLETING; //check if this is correct
         }
+        // In tutti gli altri casi siamo in progress
         else {
             return Status.PROGRESS;
         }
@@ -113,6 +117,8 @@ public class SurveyPageFragment extends Fragment {
 
 
         navController = NavHostFragment.findNavController(this);
+
+        // Back esce dal questionario
         OnBackPressedCallback onBackPressedCallback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -269,6 +275,7 @@ public class SurveyPageFragment extends Fragment {
     }
 
     private View renderRadioQuestion(Domande domanda, boolean horizontal){
+        Log.d("SurveyPageFragment", "renderRadioQuestion: " + domanda.toString());
         LinearLayout container = new LinearLayout(getContext());
         container.setOrientation(LinearLayout.VERTICAL);
 
@@ -290,14 +297,18 @@ public class SurveyPageFragment extends Fragment {
             radioGroup.addView(rad);
 
             Log.i("SurveyPageFragment", "Risposta corrente: " + risposta.getRispostaId().toString());
-            if (idRisposteCompletate.contains(risposta.getRispostaId())) {
-                Log.i("SurveyPageFragment", "Risposta già data");
-                rad.setChecked(true);
-            }
+
             Answer answer = new Answer()
                     .domandaId(domanda.getDomandaId())
                     .rispostaId(risposta.getRispostaId());
             rad.setOnClickListener(v -> answers.put(domanda.getDomandaId(), answer));
+
+            if (idRisposteCompletate.contains(risposta.getRispostaId())) {
+                Log.i("SurveyPageFragment", "Risposta già data");
+                rad.setChecked(true);
+                rad.callOnClick();
+            }
+
         }
 
         container.addView(radioGroup);
@@ -349,14 +360,29 @@ public class SurveyPageFragment extends Fragment {
         EditText risposta_view = new EditText(getContext());
         risposta_view.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         container.addView(risposta_view);
+        if (domanda.getRispDisponibili().size() != 1) {
+            throw new UnsupportedOperationException("Domanda a risposta libera con più di una risposta disponibile");
+        }
+
+
+
+        // Quando esce dal focus salvo la risposta
         risposta_view.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 Answer answer = new Answer();
-                answer.domandaId(domanda.getDomandaId())
-                                .corpoRisposta(risposta_view.getText().toString());
+                answer
+                        .domandaId(domanda.getDomandaId())
+                        .rispostaId(domanda.getRispDisponibili().get(0).getRispostaId())
+                        .corpoRisposta(((EditText) v).getText().toString());
                 answers.put(domanda.getDomandaId(), answer);
             }
         });
+
+        // Se c'è una già una risposta, la salvo
+        if (domanda.getRispComplete().size() > 0) {
+            risposta_view.setText(domanda.getRispComplete().get(0).getTestoLibero());
+            risposta_view.getOnFocusChangeListener().onFocusChange(risposta_view, false);
+        }
 
         return container;
     }
